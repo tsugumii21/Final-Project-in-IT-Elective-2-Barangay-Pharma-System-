@@ -1,0 +1,56 @@
+@{
+    ViewData["Title"] = "Sign In";
+    Layout = "_Layout";
+}
+
+<div class="bps-auth-card">
+    <div class="text-center mb-4">
+        <div class="bps-auth-logo">
+            <i class="bi bi-hospital-fill"></i>
+        </div>
+        <h1 class="bps-auth-title">Barangay Pharma</h1>
+        <p class="bps-auth-subtitle">Sign in to your account</p>
+    </div>
+    <p class="text-center text-white-50 small">
+        Full login form coming in <strong>Part 2</strong>.
+    </p>
+</div>
+
+@section Styles {
+<style>
+.bps-auth-card {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.20);
+}
+.bps-auth-logo {
+    width: 64px; height: 64px;
+    background: rgba(255,255,255,0.20);
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+.bps-auth-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.625rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+.bps-auth-subtitle {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.9375rem;
+    margin-top: 0.25rem;
+}
+</style>
+}

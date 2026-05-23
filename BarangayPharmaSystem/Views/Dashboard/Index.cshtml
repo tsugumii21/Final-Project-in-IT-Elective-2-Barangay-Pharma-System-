@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"]     = "Dashboard";
+    ViewData["PageTitle"] = "Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="bps-page-header">
+    <div>
+        <h2 class="bps-page-title">Welcome to Barangay Pharma System</h2>
+        <p class="bps-page-subtitle">Your pharmacy management dashboard — full implementation coming in Part 3.</p>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-sm-6 col-xl-3">
+        <div class="bps-stat-card">
+            <div class="bps-stat-icon bps-stat-icon-primary">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="bps-stat-content">
+                <div class="bps-stat-value">—</div>
+                <div class="bps-stat-label">Total Patients</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="bps-stat-card">
+            <div class="bps-stat-icon bps-stat-icon-success">
+                <i class="bi bi-capsule"></i>
+            </div>
+            <div class="bps-stat-content">
+                <div class="bps-stat-value">—</div>
+                <div class="bps-stat-label">Medicines in Stock</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="bps-stat-card">
+            <div class="bps-stat-icon bps-stat-icon-warning">
+                <i class="bi bi-file-earmark-medical-fill"></i>
+            </div>
+            <div class="bps-stat-content">
+                <div class="bps-stat-value">—</div>
+                <div class="bps-stat-label">Prescriptions Today</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="bps-stat-card">
+            <div class="bps-stat-icon bps-stat-icon-danger">
+                <i class="bi bi-arrow-repeat"></i>
+            </div>
+            <div class="bps-stat-content">
+                <div class="bps-stat-value">—</div>
+                <div class="bps-stat-label">Pending Refills</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 bps-card">
+    <div class="bps-card-header">
+        <h3 class="bps-card-title"><i class="bi bi-info-circle me-2 text-primary"></i>Part 1 Setup Complete</h3>
+    </div>
+    <div class="bps-card-body">
+        <p class="mb-2">✅ Project scaffolded and database connected.</p>
+        <p class="mb-2">✅ All 9 entity models created.</p>
+        <p class="mb-2">✅ ASP.NET Core Identity configured.</p>
+        <p class="mb-2">✅ Design system (Medical Blue, DM Sans, Nunito) applied.</p>
+        <p class="mb-0">✅ Sidebar, navbar, and role-based nav ready.</p>
+    </div>
+</div>
