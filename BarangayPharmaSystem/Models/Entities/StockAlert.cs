@@ -7,7 +7,8 @@ public enum AlertType
 {
     LowStock = 0,
     NearExpiry = 1,
-    Expired = 2
+    Expired = 2,
+    OutOfStock = 3
 }
 
 /// <summary>

@@ -45,6 +45,9 @@ public class Medicine
 
     // ── Navigation properties ────────────────────────────────────────────────
 
+    public int? SupplierId { get; set; }
+    public Supplier? Supplier { get; set; }
+
     public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
     public ICollection<StockAlert> StockAlerts { get; set; } = new List<StockAlert>();
 

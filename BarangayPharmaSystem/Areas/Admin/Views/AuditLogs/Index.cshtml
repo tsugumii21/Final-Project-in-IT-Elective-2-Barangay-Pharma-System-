@@ -1,0 +1,92 @@
+@model IEnumerable<BarangayPharmaSystem.Models.Entities.AuditLog>
+@{
+    ViewData["Title"] = "System Audit Logs";
+}
+
+<div class="bps-page-header">
+    <div>
+        <h1 class="bps-page-title">Audit Logs</h1>
+        <p class="bps-page-subtitle">View system-wide activity, logins, and data modifications</p>
+    </div>
+</div>
+
+<div class="bps-card mb-4">
+    <div class="bps-card-header bg-white">
+        <form method="get" class="row g-2 w-100 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">User</label>
+                <select name="userId" class="form-select form-select-sm bg-light" asp-items="ViewBag.UsersList">
+                    <option value="">All Users</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small text-muted mb-1">Action Type</label>
+                <select name="actionType" class="form-select form-select-sm bg-light" asp-items="ViewBag.ActionTypes">
+                    <option value="">All Actions</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small text-muted mb-1">Start Date</label>
+                <input type="date" name="startDate" class="form-control form-control-sm bg-light" value="@ViewData["StartDate"]" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small text-muted mb-1">End Date</label>
+                <input type="date" name="endDate" class="form-control form-control-sm bg-light" value="@ViewData["EndDate"]" />
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-primary flex-grow-1">Apply Filters</button>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0" style="font-size: 0.875rem;">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Action</th>
+                    <th>User</th>
+                    <th>Table</th>
+                    <th>Record ID</th>
+                    <th>Details</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-shield-lock fs-1 d-block mb-2 text-black-50"></i>
+                            No audit logs found for the selected criteria.
+                        </td>
+                    </tr>
+                }
+                @foreach (var log in Model)
+                {
+                    <tr>
+                        <td class="text-nowrap">@log.Timestamp.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</td>
+                        <td>
+                            @{
+                                var actionColor = log.Action switch {
+                                    "Created" or "Registered" => "text-success",
+                                    "Updated" => "text-primary",
+                                    "Deleted" => "text-danger",
+                                    "Login" => "text-info",
+                                    "Logout" => "text-secondary",
+                                    _ => "text-dark"
+                                };
+                            }
+                            <span class="fw-bold @actionColor">@log.Action</span>
+                        </td>
+                        <td>@(log.User?.FullName ?? "System")</td>
+                        <td>@log.TableAffected</td>
+                        <td>@log.RecordId</td>
+                        <td>@log.Details</td>
+                        <td><small class="text-muted">@log.IPAddress</small></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

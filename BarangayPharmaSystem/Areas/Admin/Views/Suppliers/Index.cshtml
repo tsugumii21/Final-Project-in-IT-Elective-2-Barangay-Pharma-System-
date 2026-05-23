@@ -1,0 +1,99 @@
+@model IEnumerable<BarangayPharmaSystem.Areas.Admin.Models.SupplierListViewModel>
+@{
+    ViewData["Title"] = "Supplier Management";
+}
+
+<div class="bps-page-header">
+    <div>
+        <h1 class="bps-page-title">Supplier Management</h1>
+        <p class="bps-page-subtitle">Manage external medicine suppliers and vendors</p>
+    </div>
+    <div class="bps-nav-actions">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Add Supplier
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="bps-alert bps-alert-success">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="bps-card mb-4">
+    <div class="bps-card-header bg-white">
+        <form method="get" class="d-flex w-100 gap-2 align-items-center" style="max-width: 400px;">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Search suppliers..." value="@ViewData["SearchQuery"]" />
+            </div>
+            <button type="submit" class="btn btn-outline-primary">Search</button>
+            @if (!string.IsNullOrEmpty(ViewData["SearchQuery"]?.ToString()))
+            {
+                <a asp-action="Index" class="btn btn-link text-muted px-0">Clear</a>
+            }
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Supplier Name</th>
+                    <th>Contact Person</th>
+                    <th>Contact Number</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-truck fs-1 d-block mb-2 text-black-50"></i>
+                            No suppliers found.
+                        </td>
+                    </tr>
+                }
+                @foreach (var supplier in Model)
+                {
+                    <tr>
+                        <td class="fw-bold text-primary">@supplier.Name</td>
+                        <td>@(supplier.ContactPerson ?? "—")</td>
+                        <td>@(supplier.ContactNumber ?? "—")</td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@supplier.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger ms-1" data-bs-toggle="modal" data-bs-target="#deleteModal-@supplier.Id">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal-@supplier.Id" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0 shadow">
+                                <div class="modal-header border-bottom-0 pb-0">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center pb-4">
+                                    <i class="bi bi-exclamation-triangle-fill text-danger fs-1 mb-3"></i>
+                                    <h4 class="fw-bold">Delete Supplier</h4>
+                                    <p class="text-muted">Are you sure you want to delete <strong>@supplier.Name</strong>? This action cannot be undone.</p>
+                                    
+                                    <form asp-action="Delete" asp-route-id="@supplier.Id" method="post" class="mt-4">
+                                        <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger">Yes, delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,137 @@
+@model IEnumerable<BarangayPharmaSystem.Areas.Admin.Models.MedicineListViewModel>
+@{
+    ViewData["Title"] = "Medicine Management";
+}
+
+<div class="bps-page-header">
+    <div>
+        <h1 class="bps-page-title">Medicine Management</h1>
+        <p class="bps-page-subtitle">Track and manage inventory, expiry dates, and restocks</p>
+    </div>
+    <div class="bps-nav-actions">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Add Medicine
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="bps-alert bps-alert-success">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="bps-card mb-4">
+    <div class="bps-card-header bg-white d-flex flex-wrap gap-3">
+        <form method="get" class="d-flex flex-grow-1 gap-2 align-items-center" style="max-width: 500px;">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Search by name or category..." value="@ViewData["SearchQuery"]" />
+            </div>
+            
+            <select name="filter" class="form-select bg-light" style="width: 150px;">
+                <option value="">All Status</option>
+                <option value="lowstock" selected="@(ViewData["FilterQuery"]?.ToString() == "lowstock")">Low Stock</option>
+                <option value="expired" selected="@(ViewData["FilterQuery"]?.ToString() == "expired")">Expired</option>
+            </select>
+
+            <button type="submit" class="btn btn-outline-primary">Filter</button>
+            
+            @if (!string.IsNullOrEmpty(ViewData["SearchQuery"]?.ToString()) || !string.IsNullOrEmpty(ViewData["FilterQuery"]?.ToString()))
+            {
+                <a asp-action="Index" class="btn btn-link text-muted px-0">Clear</a>
+            }
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 50px;"></th>
+                    <th>Medicine Name</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Expiry Date</th>
+                    <th>Supplier</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-capsule fs-1 d-block mb-2 text-black-50"></i>
+                            No medicines found.
+                        </td>
+                    </tr>
+                }
+                @foreach (var medicine in Model)
+                {
+                    var stockBadge = "bg-success";
+                    if (medicine.IsOutOfStock) stockBadge = "bg-danger";
+                    else if (medicine.IsLowStock) stockBadge = "bg-warning text-dark";
+
+                    var expiryClass = "";
+                    if (medicine.IsExpired) expiryClass = "text-danger fw-bold";
+                    else if (medicine.IsNearExpiry) expiryClass = "text-warning fw-bold";
+
+                    <tr>
+                        <td>
+                            <div class="bps-nav-avatar" style="width:36px;height:36px;background:var(--bps-primary-subtle);color:var(--bps-primary);font-size:1.2rem;border-radius:var(--bps-radius-sm);">
+                                @if (!string.IsNullOrEmpty(medicine.PhotoPath))
+                                {
+                                    <img src="@medicine.PhotoPath" alt="Photo" style="width:100%;height:100%;border-radius:var(--bps-radius-sm);object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    <i class="bi bi-capsule"></i>
+                                }
+                            </div>
+                        </td>
+                        <td class="fw-bold">@medicine.Name</td>
+                        <td>@medicine.Category</td>
+                        <td>
+                            <span class="badge @stockBadge">@medicine.Stock</span>
+                        </td>
+                        <td class="@expiryClass">
+                            @medicine.ExpiryDate.ToString("MMM dd, yyyy")
+                            @if (medicine.IsExpired) { <i class="bi bi-exclamation-triangle-fill ms-1" title="Expired"></i> }
+                        </td>
+                        <td><small class="text-muted">@(medicine.SupplierName ?? "—")</small></td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@medicine.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger ms-1" data-bs-toggle="modal" data-bs-target="#deleteModal-@medicine.Id">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal-@medicine.Id" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0 shadow">
+                                <div class="modal-header border-bottom-0 pb-0">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center pb-4">
+                                    <i class="bi bi-exclamation-triangle-fill text-danger fs-1 mb-3"></i>
+                                    <h4 class="fw-bold">Delete Medicine</h4>
+                                    <p class="text-muted">Are you sure you want to delete <strong>@medicine.Name</strong>? This action cannot be undone.</p>
+                                    
+                                    <form asp-action="Delete" asp-route-id="@medicine.Id" method="post" class="mt-4">
+                                        <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger">Yes, delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,173 @@
+@model BarangayPharmaSystem.Areas.Admin.Models.AdminDashboardViewModel
+@using BarangayPharmaSystem.Models.Entities
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="bps-page-header">
+    <div>
+        <h1 class="bps-page-title">Admin Dashboard</h1>
+        <p class="bps-page-subtitle">Overview of the Barangay Pharma System</p>
+    </div>
+    <div class="bps-nav-actions">
+        <a asp-area="Admin" asp-controller="Medicines" asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Add Medicine
+        </a>
+        <a asp-area="Admin" asp-controller="Users" asp-action="Create" class="btn btn-outline-primary">
+            <i class="bi bi-person-plus"></i> Add User
+        </a>
+        <a asp-area="Admin" asp-controller="Reports" asp-action="Index" class="btn btn-outline-primary">
+            <i class="bi bi-graph-up"></i> Reports
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Total Patients -->
+    <div class="col-md-6 col-xl-3">
+        <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="bps-stat-card">
+            <div class="bps-stat-icon bps-stat-icon-primary">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="bps-stat-content">
+                <div class="bps-stat-value">@Model.TotalPatients</div>
+                <div class="bps-stat-label">Total Patients</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Total Medicines -->
+    <div class="col-md-6 col-xl-3">
+        <a asp-area="Admin" asp-controller="Medicines" asp-action="Index" class="bps-stat-card">
+            <div class="bps-stat-icon bps-stat-icon-success">
+                <i class="bi bi-capsule"></i>
+            </div>
+            <div class="bps-stat-content">
+                <div class="bps-stat-value">@Model.TotalMedicines</div>
+                <div class="bps-stat-label">Total Medicines</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Total Prescriptions -->
+    <div class="col-md-6 col-xl-3">
+        <a href="#" class="bps-stat-card">
+            <div class="bps-stat-icon bps-stat-icon-warning">
+                <i class="bi bi-file-earmark-medical-fill"></i>
+            </div>
+            <div class="bps-stat-content">
+                <div class="bps-stat-value">@Model.TotalPrescriptions</div>
+                <div class="bps-stat-label">Prescriptions</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Total Dispensing Records -->
+    <div class="col-md-6 col-xl-3">
+        <a asp-area="Admin" asp-controller="Reports" asp-action="Index" class="bps-stat-card">
+            <div class="bps-stat-icon bps-stat-icon-accent">
+                <i class="bi bi-box-seam-fill"></i>
+            </div>
+            <div class="bps-stat-content">
+                <div class="bps-stat-value">@Model.TotalDispensingRecords</div>
+                <div class="bps-stat-label">Dispensed Records</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Stock Alerts Panel -->
+    <div class="col-lg-6">
+        <div class="bps-card h-100">
+            <div class="bps-card-header">
+                <h3 class="bps-card-title"><i class="bi bi-bell-fill text-warning me-2"></i> Stock & Expiry Alerts</h3>
+                <a asp-area="Admin" asp-controller="Medicines" asp-action="Index" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="bps-card-body p-0">
+                @if (!Model.ActiveAlerts.Any())
+                {
+                    <div class="p-4 text-center text-muted">
+                        <i class="bi bi-check-circle-fill text-success fs-1 mb-2 d-block"></i>
+                        <p class="mb-0">All stocks are looking good!</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var alert in Model.ActiveAlerts)
+                        {
+                            var badgeClass = alert.AlertType switch
+                            {
+                                AlertType.Expired => "bg-danger",
+                                AlertType.OutOfStock => "bg-danger",
+                                AlertType.LowStock => "bg-warning text-dark",
+                                AlertType.NearExpiry => "bg-info text-dark",
+                                _ => "bg-secondary"
+                            };
+                            var iconClass = alert.AlertType switch {
+                                AlertType.OutOfStock => "bi-x-circle-fill text-danger",
+                                AlertType.Expired => "bi-exclamation-triangle-fill text-danger",
+                                AlertType.LowStock => "bi-arrow-down-circle-fill text-warning",
+                                AlertType.NearExpiry => "bi-clock-history text-warning",
+                                _ => "bi-info-circle text-info"
+                            };
+
+                            <div class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <i class="bi @iconClass fs-4"></i>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">@alert.Medicine.Name</h6>
+                                        <small class="text-muted">@alert.Message</small>
+                                    </div>
+                                </div>
+                                <span class="badge @badgeClass rounded-pill">
+                                    @alert.AlertType.ToString()
+                                </span>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Feed -->
+    <div class="col-lg-6">
+        <div class="bps-card h-100">
+            <div class="bps-card-header">
+                <h3 class="bps-card-title"><i class="bi bi-activity text-primary me-2"></i> Recent Activity</h3>
+                <a asp-area="Admin" asp-controller="AuditLogs" asp-action="Index" class="btn btn-sm btn-outline-primary">View Logs</a>
+            </div>
+            <div class="bps-card-body p-0">
+                @if (!Model.RecentActivity.Any())
+                {
+                    <div class="p-4 text-center text-muted">
+                        <p class="mb-0">No recent activity.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var log in Model.RecentActivity)
+                        {
+                            <div class="list-group-item p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="fw-bold text-dark">@log.Action</span>
+                                    <small class="text-muted">@log.Timestamp.ToLocalTime().ToString("MMM dd, hh:mm tt")</small>
+                                </div>
+                                <p class="mb-1 text-secondary small">@log.Details</p>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="bps-nav-avatar" style="width:20px;height:20px;font-size:0.6rem;background:var(--bps-primary-subtle);color:var(--bps-primary);">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                    <small class="text-muted">@(log.User?.FullName ?? "System") (@(log.User?.Email ?? "N/A"))</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

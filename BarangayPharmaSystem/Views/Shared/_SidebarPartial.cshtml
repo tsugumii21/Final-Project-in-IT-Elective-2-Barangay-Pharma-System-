@@ -1,125 +1,120 @@
 @* 
    _SidebarPartial.cshtml — Role-based navigation sidebar.
    Renders different nav items depending on the authenticated user's role.
-   Active link detection uses the current controller/action from RouteData.
 *@
 
 @{
+    var currentArea       = ViewContext.RouteData.Values["area"]?.ToString() ?? "";
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     var currentAction     = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 
-    // Helper: returns "active" CSS class if the given controller matches the current route
-    string NavClass(string controller, string? action = null)
+    string NavClass(string area, string controller, string? action = null)
     {
+        bool areaMatch       = string.Equals(currentArea, area, StringComparison.OrdinalIgnoreCase);
         bool controllerMatch = string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase);
         bool actionMatch     = action == null || string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase);
-        return (controllerMatch && actionMatch) ? "bps-nav-link active" : "bps-nav-link";
+        return (areaMatch && controllerMatch && actionMatch) ? "bps-nav-link active" : "bps-nav-link";
     }
 }
 
-@* ── SHARED: Dashboard ──────────────────────────────────────────────────────── *@
-<div class="bps-nav-section">
-    <span class="bps-nav-section-label">Overview</span>
-    <a href="/Dashboard" class="@NavClass("Dashboard")" id="nav-dashboard">
-        <i class="bi bi-grid-1x2-fill bps-nav-icon"></i>
-        <span>Dashboard</span>
-    </a>
-</div>
-
-@* ── ADMIN + STAFF: Core modules ────────────────────────────────────────────── *@
-@if (User.IsInRole("Admin") || User.IsInRole("Staff"))
-{
-    <div class="bps-nav-section">
-        <span class="bps-nav-section-label">Records</span>
-
-        <a href="/Patients" class="@NavClass("Patients")" id="nav-patients">
-            <i class="bi bi-people-fill bps-nav-icon"></i>
-            <span>Patients</span>
-        </a>
-
-        <a href="/Medicines" class="@NavClass("Medicines")" id="nav-medicines">
-            <i class="bi bi-capsule bps-nav-icon"></i>
-            <span>Medicines</span>
-        </a>
-
-        @if (User.IsInRole("Admin"))
-        {
-            <a href="/Suppliers" class="@NavClass("Suppliers")" id="nav-suppliers">
-                <i class="bi bi-truck bps-nav-icon"></i>
-                <span>Suppliers</span>
-            </a>
-        }
-    </div>
-
-    <div class="bps-nav-section">
-        <span class="bps-nav-section-label">Pharmacy</span>
-
-        <a href="/Prescriptions" class="@NavClass("Prescriptions")" id="nav-prescriptions">
-            <i class="bi bi-file-earmark-medical-fill bps-nav-icon"></i>
-            <span>Prescriptions</span>
-        </a>
-
-        <a href="/Dispensing" class="@NavClass("Dispensing")" id="nav-dispensing">
-            <i class="bi bi-bag-heart-fill bps-nav-icon"></i>
-            <span>Dispensing</span>
-        </a>
-
-        <a href="/RefillRequests" class="@NavClass("RefillRequests")" id="nav-refill-requests">
-            <i class="bi bi-arrow-repeat bps-nav-icon"></i>
-            <span>Refill Requests</span>
-            @{
-                var pendingRefills = ViewData["PendingRefillCount"] as int? ?? 0;
-            }
-            @if (pendingRefills > 0)
-            {
-                <span class="bps-nav-badge">@(pendingRefills > 99 ? "99+" : pendingRefills.ToString())</span>
-            }
-        </a>
-    </div>
-
-    <div class="bps-nav-section">
-        <span class="bps-nav-section-label">Monitoring</span>
-
-        <a href="/StockAlerts" class="@NavClass("StockAlerts")" id="nav-stock-alerts-sidebar">
-            <i class="bi bi-exclamation-triangle-fill bps-nav-icon"></i>
-            <span>Stock Alerts</span>
-        </a>
-
-        @if (User.IsInRole("Admin"))
-        {
-            <a href="/AuditLogs" class="@NavClass("AuditLogs")" id="nav-audit-logs">
-                <i class="bi bi-journal-text bps-nav-icon"></i>
-                <span>Audit Logs</span>
-            </a>
-        }
-    </div>
-}
-
-@* ── ADMIN ONLY: User management ─────────────────────────────────────────────── *@
+@* ── ADMIN ONLY ───────────────────────────────────────────────────────────── *@
 @if (User.IsInRole("Admin"))
 {
     <div class="bps-nav-section">
-        <span class="bps-nav-section-label">Administration</span>
+        <span class="bps-nav-section-label">Overview</span>
+        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="@NavClass("Admin", "Dashboard")">
+            <i class="bi bi-grid-1x2-fill bps-nav-icon"></i>
+            <span>Dashboard</span>
+        </a>
+    </div>
 
-        <a href="/Users" class="@NavClass("Users")" id="nav-users">
+    <div class="bps-nav-section">
+        <span class="bps-nav-section-label">Administration</span>
+        <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="@NavClass("Admin", "Users")">
             <i class="bi bi-person-badge-fill bps-nav-icon"></i>
             <span>User Accounts</span>
+        </a>
+        <a asp-area="Admin" asp-controller="AuditLogs" asp-action="Index" class="@NavClass("Admin", "AuditLogs")">
+            <i class="bi bi-shield-lock-fill bps-nav-icon"></i>
+            <span>Audit Logs</span>
+        </a>
+    </div>
+
+    <div class="bps-nav-section">
+        <span class="bps-nav-section-label">Inventory & Vendor</span>
+        <a asp-area="Admin" asp-controller="Medicines" asp-action="Index" class="@NavClass("Admin", "Medicines")">
+            <i class="bi bi-capsule bps-nav-icon"></i>
+            <span>Medicines</span>
+        </a>
+        <a asp-area="Admin" asp-controller="Suppliers" asp-action="Index" class="@NavClass("Admin", "Suppliers")">
+            <i class="bi bi-truck bps-nav-icon"></i>
+            <span>Suppliers</span>
+        </a>
+    </div>
+
+    <div class="bps-nav-section">
+        <span class="bps-nav-section-label">Analytics</span>
+        <a asp-area="Admin" asp-controller="Reports" asp-action="Index" class="@NavClass("Admin", "Reports")">
+            <i class="bi bi-graph-up-arrow bps-nav-icon"></i>
+            <span>Reports</span>
         </a>
     </div>
 }
 
-@* ── PATIENT ONLY: Personal view ─────────────────────────────────────────────── *@
+@* ── STAFF ONLY ───────────────────────────────────────────────────────────── *@
+@if (User.IsInRole("Staff"))
+{
+    <div class="bps-nav-section">
+        <span class="bps-nav-section-label">Overview</span>
+        <a asp-area="Staff" asp-controller="Dashboard" asp-action="Index" class="@NavClass("Staff", "Dashboard")">
+            <i class="bi bi-grid-1x2-fill bps-nav-icon"></i>
+            <span>Dashboard</span>
+        </a>
+    </div>
+
+    <div class="bps-nav-section">
+        <span class="bps-nav-section-label">Pharmacy Operations</span>
+        <a asp-area="Staff" asp-controller="Patients" asp-action="Index" class="@NavClass("Staff", "Patients")">
+            <i class="bi bi-people-fill bps-nav-icon"></i>
+            <span>Patients</span>
+        </a>
+        <a asp-area="Staff" asp-controller="Medicines" asp-action="Index" class="@NavClass("Staff", "Medicines")">
+            <i class="bi bi-capsule bps-nav-icon"></i>
+            <span>Medicines Stock</span>
+        </a>
+        <a asp-area="Staff" asp-controller="Prescriptions" asp-action="Index" class="@NavClass("Staff", "Prescriptions")">
+            <i class="bi bi-file-earmark-medical-fill bps-nav-icon"></i>
+            <span>Prescriptions</span>
+        </a>
+        <a asp-area="Staff" asp-controller="Dispensing" asp-action="Index" class="@NavClass("Staff", "Dispensing")">
+            <i class="bi bi-bag-heart-fill bps-nav-icon"></i>
+            <span>Dispensing</span>
+        </a>
+        <a asp-area="Staff" asp-controller="RefillRequests" asp-action="Index" class="@NavClass("Staff", "RefillRequests")">
+            <i class="bi bi-arrow-repeat bps-nav-icon"></i>
+            <span>Refill Requests</span>
+        </a>
+    </div>
+}
+
+@* ── PATIENT ONLY ─────────────────────────────────────────────────────────── *@
 @if (User.IsInRole("Patient"))
 {
     <div class="bps-nav-section">
-        <span class="bps-nav-section-label">My Health</span>
+        <span class="bps-nav-section-label">Overview</span>
+        <a asp-area="Patient" asp-controller="Dashboard" asp-action="Index" class="@NavClass("Patient", "Dashboard")">
+            <i class="bi bi-grid-1x2-fill bps-nav-icon"></i>
+            <span>Dashboard</span>
+        </a>
+    </div>
 
-        <a href="/MyPrescriptions" class="@NavClass("MyPrescriptions")" id="nav-my-prescriptions">
+    <div class="bps-nav-section">
+        <span class="bps-nav-section-label">My Health</span>
+        <a asp-area="Patient" asp-controller="MyPrescriptions" asp-action="Index" class="@NavClass("Patient", "MyPrescriptions")">
             <i class="bi bi-file-earmark-medical-fill bps-nav-icon"></i>
             <span>My Prescriptions</span>
         </a>
-
-        <a href="/MyRefillRequests" class="@NavClass("MyRefillRequests")" id="nav-my-refills">
+        <a asp-area="Patient" asp-controller="MyRefillRequests" asp-action="Index" class="@NavClass("Patient", "MyRefillRequests")">
             <i class="bi bi-arrow-repeat bps-nav-icon"></i>
             <span>My Refill Requests</span>
         </a>
