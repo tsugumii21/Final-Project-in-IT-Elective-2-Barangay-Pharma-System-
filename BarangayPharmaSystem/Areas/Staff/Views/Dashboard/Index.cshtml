@@ -1,0 +1,128 @@
+@model BarangayPharmaSystem.Areas.Staff.Models.StaffDashboardViewModel
+@{
+    ViewData["Title"] = "Staff Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Staff Dashboard</h1>
+    <div>
+        <a asp-area="Staff" asp-controller="Patients" asp-action="Create" class="btn btn-primary shadow-sm mr-2">
+            <i class="fas fa-user-plus fa-sm text-white-50 mr-1"></i> New Patient
+        </a>
+        <a asp-area="Staff" asp-controller="Prescriptions" asp-action="Create" class="btn btn-info shadow-sm mr-2">
+            <i class="fas fa-file-medical fa-sm text-white-50 mr-1"></i> New Prescription
+        </a>
+        <a asp-area="Staff" asp-controller="Dispensing" asp-action="Create" class="btn btn-success shadow-sm">
+            <i class="fas fa-pills fa-sm text-white-50 mr-1"></i> Dispense
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Patients Today Card -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2 glass-card">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            My Patients Today</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.MyPatientsToday</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Refills Card -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2 glass-card">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Pending Refill Requests</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.PendingRefillRequests</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-sync fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+            @if(Model.PendingRefillRequests > 0)
+            {
+                <a asp-area="Staff" asp-controller="RefillRequests" asp-action="Index" class="stretched-link"></a>
+            }
+        </div>
+    </div>
+
+    <!-- Low Stock Alerts Card -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2 glass-card">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            Active Stock Alerts</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.LowStockAlerts</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+            <a asp-area="Staff" asp-controller="Medicines" asp-action="Index" class="stretched-link"></a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Today's Activity -->
+    <div class="col-lg-12">
+        <div class="card shadow mb-4 glass-card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">My Dispensing Activity Today</h6>
+            </div>
+            <div class="card-body">
+                @if (Model.TodaysDispensing.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Patient</th>
+                                    <th>Medicine</th>
+                                    <th>Qty Dispensed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.TodaysDispensing)
+                                {
+                                    <tr>
+                                        <td>@item.DateDispensed.ToLocalTime().ToString("hh:mm tt")</td>
+                                        <td>@item.Patient.FullName</td>
+                                        <td>@item.Prescription.Medicine.Name</td>
+                                        <td>
+                                            <span class="badge badge-success">@item.QuantityDispensed</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-clipboard-list fa-3x text-gray-300 mb-3"></i>
+                        <p class="text-muted">No dispensing activity yet today.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

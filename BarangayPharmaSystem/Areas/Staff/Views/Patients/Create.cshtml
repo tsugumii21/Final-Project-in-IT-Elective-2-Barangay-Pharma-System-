@@ -1,0 +1,88 @@
+@model BarangayPharmaSystem.Areas.Staff.Models.StaffPatientFormViewModel
+@{
+    ViewData["Title"] = "Add New Patient";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Add New Patient</h1>
+    <a asp-action="Index" class="btn btn-secondary shadow-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50 mr-1"></i> Back to Directory
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow mb-4 glass-card border-left-primary">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Patient Information</h6>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="PhotoFile" class="font-weight-bold text-gray-700"></label>
+                        <div class="custom-file">
+                            <input asp-for="PhotoFile" class="custom-file-input" id="customFile" accept="image/*">
+                            <label class="custom-file-label" for="customFile">Choose patient photo...</label>
+                        </div>
+                        <small class="form-text text-muted">Optional. A clear face photo helps with identification.</small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="FullName" class="font-weight-bold text-gray-700"></label>
+                        <input asp-for="FullName" class="form-control form-control-lg bg-light" placeholder="e.g. Juan dela Cruz" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Birthdate" class="font-weight-bold text-gray-700"></label>
+                                <input asp-for="Birthdate" class="form-control bg-light" />
+                                <span asp-validation-for="Birthdate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="ContactNumber" class="font-weight-bold text-gray-700"></label>
+                                <input asp-for="ContactNumber" class="form-control bg-light" placeholder="09XX XXX XXXX" />
+                                <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="Address" class="font-weight-bold text-gray-700"></label>
+                        <textarea asp-for="Address" class="form-control bg-light" rows="3" placeholder="Full residential address..."></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="alert alert-info border-left-info shadow-sm mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-info-circle fa-2x mr-3 text-info"></i>
+                            <div>
+                                <strong>System Notice:</strong> A unique Patient ID (PAT-YYYY-NNNNN) will be automatically generated upon saving.
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg shadow-sm">
+                        <i class="fas fa-save mr-2"></i> Create Patient Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('.custom-file-input').on('change', function() {
+            var fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+    </script>
+}

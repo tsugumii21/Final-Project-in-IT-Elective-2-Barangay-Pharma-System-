@@ -1,0 +1,83 @@
+@model BarangayPharmaSystem.Areas.Staff.Models.StaffPrescriptionFormViewModel
+@{
+    ViewData["Title"] = "Write Prescription";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Write New Prescription</h1>
+    <a asp-action="Index" class="btn btn-secondary shadow-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50 mr-1"></i> Back to Directory
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow mb-4 glass-card border-left-info">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-info">Prescription Details</h6>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="PatientId" class="font-weight-bold text-gray-700"></label>
+                        <select asp-for="PatientId" asp-items="ViewBag.Patients" class="form-control form-control-lg bg-light" required>
+                            <option value="">-- Select Patient --</option>
+                        </select>
+                        <span asp-validation-for="PatientId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="MedicineId" class="font-weight-bold text-gray-700"></label>
+                        <select asp-for="MedicineId" asp-items="ViewBag.Medicines" class="form-control form-control-lg bg-light" required>
+                            <option value="">-- Select Medicine --</option>
+                        </select>
+                        <span asp-validation-for="MedicineId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="DoctorName" class="font-weight-bold text-gray-700"></label>
+                        <input asp-for="DoctorName" class="form-control bg-light" placeholder="e.g. Dr. Juan dela Cruz" />
+                        <span asp-validation-for="DoctorName" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label asp-for="Dosage" class="font-weight-bold text-gray-700"></label>
+                                <input asp-for="Dosage" class="form-control bg-light" placeholder="e.g. 1 tablet twice a day" />
+                                <span asp-validation-for="Dosage" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label asp-for="Duration" class="font-weight-bold text-gray-700"></label>
+                                <input asp-for="Duration" class="form-control bg-light" placeholder="e.g. 7 days" />
+                                <span asp-validation-for="Duration" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info border-left-info shadow-sm mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-info-circle fa-2x mr-3 text-info"></i>
+                            <div>
+                                <strong>Note:</strong> Saving this prescription will <strong>NOT</strong> deduct stock. Stock is only deducted when the medicine is physically dispensed.
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <button type="submit" class="btn btn-info btn-block btn-lg shadow-sm">
+                        <i class="fas fa-save mr-2"></i> Save Prescription
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

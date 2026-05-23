@@ -1,0 +1,88 @@
+@model BarangayPharmaSystem.Areas.Staff.Models.StaffPatientFormViewModel
+@{
+    ViewData["Title"] = "Edit Patient Profile";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Edit Patient: @Model.PatientCode</h1>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary shadow-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50 mr-1"></i> Back to Details
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow mb-4 glass-card border-left-primary">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Patient Information Update</h6>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="PatientCode" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    @if (!string.IsNullOrEmpty(Model.CurrentPhotoPath))
+                    {
+                        <div class="text-center mb-4">
+                            <img src="~/@Model.CurrentPhotoPath" alt="Current Photo" class="rounded-circle shadow-sm" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #fff;" />
+                        </div>
+                    }
+
+                    <div class="form-group mb-4">
+                        <label asp-for="PhotoFile" class="font-weight-bold text-gray-700">Update Profile Photo</label>
+                        <div class="custom-file">
+                            <input asp-for="PhotoFile" class="custom-file-input" id="customFile" accept="image/*">
+                            <label class="custom-file-label" for="customFile">Choose new photo...</label>
+                        </div>
+                        <small class="form-text text-muted">Leave empty to keep the current photo.</small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="FullName" class="font-weight-bold text-gray-700"></label>
+                        <input asp-for="FullName" class="form-control form-control-lg bg-light" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Birthdate" class="font-weight-bold text-gray-700"></label>
+                                <input asp-for="Birthdate" class="form-control bg-light" />
+                                <span asp-validation-for="Birthdate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="ContactNumber" class="font-weight-bold text-gray-700"></label>
+                                <input asp-for="ContactNumber" class="form-control bg-light" />
+                                <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="Address" class="font-weight-bold text-gray-700"></label>
+                        <textarea asp-for="Address" class="form-control bg-light" rows="3"></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg shadow-sm">
+                        <i class="fas fa-save mr-2"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('.custom-file-input').on('change', function() {
+            var fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+    </script>
+}

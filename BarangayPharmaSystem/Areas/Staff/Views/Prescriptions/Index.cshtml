@@ -1,0 +1,121 @@
+@using BarangayPharmaSystem.Models.Entities
+@model IEnumerable<BarangayPharmaSystem.Areas.Staff.Models.StaffPrescriptionListViewModel>
+@{
+    ViewData["Title"] = "Prescriptions Directory";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Prescriptions</h1>
+    <a asp-action="Create" class="btn btn-info shadow-sm glass-button">
+        <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Write New Prescription
+    </a>
+</div>
+
+<div class="card shadow mb-4 glass-card">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-info">Prescription Directory</h6>
+        <form method="get" asp-action="Index" class="form-inline">
+            <div class="input-group mr-2">
+                <select name="statusFilter" class="form-control bg-light border-0 small">
+                    <option value="">All Statuses</option>
+                    @foreach (var status in Enum.GetValues(typeof(PrescriptionStatus)))
+                    {
+                        @if (ViewData["StatusFilter"]?.ToString() == status.ToString())
+                        {
+                            <option value="@status" selected>@status</option>
+                        }
+                        else
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="input-group">
+                <input type="text" name="searchPatient" value="@ViewData["SearchPatient"]" class="form-control bg-light border-0 small" placeholder="Search patient..." aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-info" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                    @if (!string.IsNullOrEmpty(ViewData["SearchPatient"]?.ToString()) || ViewData["StatusFilter"] != null)
+                    {
+                        <a asp-action="Index" class="btn btn-secondary">Clear</a>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Patient</th>
+                        <th>Medicine</th>
+                        <th>Dosage & Duration</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">@item.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            <td class="align-middle font-weight-bold">@item.PatientName<br/><small class="text-muted">@item.PatientCode</small></td>
+                            <td class="align-middle text-primary font-weight-bold">@item.MedicineName</td>
+                            <td class="align-middle">@item.Dosage<br/><small class="text-info">Duration: @item.Duration</small></td>
+                            <td class="align-middle text-center">
+                                @switch (item.Status)
+                                {
+                                    case PrescriptionStatus.Active:
+                                        <span class="badge badge-primary px-2 py-1">Active</span>
+                                        break;
+                                    case PrescriptionStatus.Completed:
+                                        <span class="badge badge-success px-2 py-1">Completed</span>
+                                        break;
+                                    case PrescriptionStatus.Expired:
+                                        <span class="badge badge-warning text-dark px-2 py-1">Expired</span>
+                                        break;
+                                    case PrescriptionStatus.Cancelled:
+                                        <span class="badge badge-danger px-2 py-1">Cancelled</span>
+                                        break;
+                                    case PrescriptionStatus.Refilled:
+                                        <span class="badge badge-info px-2 py-1">Refilled</span>
+                                        break;
+                                }
+                            </td>
+                            <td class="align-middle text-center">
+                                @if (item.Status == PrescriptionStatus.Active)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-circle btn-sm" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this prescription?');">
+                                        <button type="submit" class="btn btn-danger btn-circle btn-sm" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small"><i class="fas fa-lock"></i> Locked</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                <i class="fas fa-info-circle mb-2"></i><br/>
+                                No prescriptions found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

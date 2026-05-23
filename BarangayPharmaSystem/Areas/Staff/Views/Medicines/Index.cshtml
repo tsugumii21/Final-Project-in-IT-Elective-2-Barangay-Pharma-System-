@@ -1,0 +1,115 @@
+@model IEnumerable<BarangayPharmaSystem.Areas.Staff.Models.StaffInventoryViewModel>
+@{
+    ViewData["Title"] = "Pharmacy Inventory";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Pharmacy Inventory</h1>
+</div>
+
+<div class="card shadow mb-4 glass-card border-left-primary">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Medicine Stock Levels</h6>
+        <form method="get" asp-action="Index" class="form-inline">
+            <div class="input-group mr-2">
+                <select name="category" class="form-control bg-light border-0 small" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    @foreach (var cat in ViewBag.Categories as List<string> ?? new List<string>())
+                    {
+                        @if (ViewData["CategoryFilter"]?.ToString() == cat)
+                        {
+                            <option value="@cat" selected>@cat</option>
+                        }
+                        else
+                        {
+                            <option value="@cat">@cat</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="input-group">
+                <input type="text" name="search" value="@ViewData["SearchQuery"]" class="form-control bg-light border-0 small" placeholder="Search medicine..." aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                    @if (!string.IsNullOrEmpty(ViewData["SearchQuery"]?.ToString()) || !string.IsNullOrEmpty(ViewData["CategoryFilter"]?.ToString()))
+                    {
+                        <a asp-action="Index" class="btn btn-secondary">Clear</a>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Medicine Name</th>
+                        <th>Category</th>
+                        <th>Expiry Date</th>
+                        <th>Stock Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        bool isExpired = item.ExpiryDate < DateTime.UtcNow;
+                        bool isNearExpiry = !isExpired && item.ExpiryDate < DateTime.UtcNow.AddDays(30);
+                        bool isOutOfStock = item.Stock == 0;
+                        bool isLowStock = !isOutOfStock && item.Stock <= item.MinStockLevel;
+
+                        <tr>
+                            <td class="text-center align-middle">
+                                @if (!string.IsNullOrEmpty(item.PhotoPath))
+                                {
+                                    <img src="~/@item.PhotoPath" class="rounded shadow-sm" style="width: 40px; height: 40px; object-fit: cover;" alt="Photo" />
+                                }
+                                else
+                                {
+                                    <div class="rounded bg-secondary d-flex align-items-center justify-content-center text-white mx-auto shadow-sm" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-pills"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td class="align-middle font-weight-bold">
+                                @item.Name
+                                @if (isExpired) { <span class="badge badge-danger ml-1">Expired</span> }
+                                else if (isNearExpiry) { <span class="badge badge-warning text-dark ml-1">Near Expiry</span> }
+                            </td>
+                            <td class="align-middle text-muted">@item.Category</td>
+                            <td class="align-middle @(isExpired ? "text-danger font-weight-bold" : isNearExpiry ? "text-warning font-weight-bold" : "")">
+                                @item.ExpiryDate.ToString("MMM dd, yyyy")
+                            </td>
+                            <td class="align-middle text-center">
+                                @if (isOutOfStock)
+                                {
+                                    <span class="badge badge-danger px-3 py-2" style="font-size: 1rem;">Out of Stock</span>
+                                }
+                                else if (isLowStock)
+                                {
+                                    <span class="badge badge-warning text-dark px-3 py-2" style="font-size: 1rem;">Low: @item.Stock</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-success px-3 py-2" style="font-size: 1rem;">@item.Stock</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                <i class="fas fa-info-circle mb-2"></i><br/>
+                                No medicines found matching your criteria.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

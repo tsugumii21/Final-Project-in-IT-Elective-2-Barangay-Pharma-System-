@@ -1,0 +1,176 @@
+@using BarangayPharmaSystem.Models.Entities
+@model BarangayPharmaSystem.Areas.Staff.Models.StaffPatientDetailsViewModel
+@{
+    ViewData["Title"] = "Patient Profile";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Patient Profile</h1>
+    <div>
+        <a asp-action="Index" class="btn btn-secondary shadow-sm mr-2">
+            <i class="fas fa-arrow-left fa-sm text-white-50 mr-1"></i> Back
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.Patient.Id" class="btn btn-primary shadow-sm">
+            <i class="fas fa-edit fa-sm text-white-50 mr-1"></i> Edit
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Profile Info Card -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4 glass-card border-left-info">
+            <div class="card-body text-center p-5">
+                @if (!string.IsNullOrEmpty(Model.Patient.ProfilePhotoPath))
+                {
+                    <img src="~/@Model.Patient.ProfilePhotoPath" alt="Profile Photo" class="rounded-circle shadow mb-3" style="width: 150px; height: 150px; object-fit: cover; border: 5px solid #fff;" />
+                }
+                else
+                {
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mx-auto shadow mb-3" style="width: 150px; height: 150px; border: 5px solid #fff;">
+                        <i class="fas fa-user fa-4x"></i>
+                    </div>
+                }
+                <h4 class="font-weight-bold text-gray-800 mb-1">@Model.Patient.FullName</h4>
+                <p class="text-primary font-weight-bold mb-3" style="letter-spacing: 1px;">@Model.Patient.PatientCode</p>
+                
+                @if (!string.IsNullOrEmpty(Model.Patient.LinkedUserId))
+                {
+                    <span class="badge badge-success px-3 py-2 rounded-pill"><i class="fas fa-check-circle mr-1"></i> Account Linked</span>
+                }
+                else
+                {
+                    <span class="badge badge-warning text-dark px-3 py-2 rounded-pill"><i class="fas fa-clock mr-1"></i> Pending Registration</span>
+                }
+                
+                <hr class="my-4">
+                
+                <div class="text-left">
+                    <p class="mb-2"><i class="fas fa-phone text-muted mr-2"></i> <strong>Contact:</strong> @(string.IsNullOrEmpty(Model.Patient.ContactNumber) ? "N/A" : Model.Patient.ContactNumber)</p>
+                    <p class="mb-2"><i class="fas fa-birthday-cake text-muted mr-2"></i> <strong>Birthdate:</strong> @Model.Patient.Birthdate.ToString("MMM dd, yyyy") (@Model.Patient.Age yrs)</p>
+                    <p class="mb-2"><i class="fas fa-map-marker-alt text-muted mr-2"></i> <strong>Address:</strong> @Model.Patient.Address</p>
+                    <p class="mb-0"><i class="fas fa-calendar-alt text-muted mr-2"></i> <strong>Registered:</strong> @Model.Patient.CreatedAt.ToString("MMM dd, yyyy")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Tabs -->
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4 glass-card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active font-weight-bold text-primary" id="prescriptions-tab" data-toggle="tab" href="#prescriptions" role="tab" aria-controls="prescriptions" aria-selected="true">
+                            <i class="fas fa-file-medical mr-1"></i> Prescriptions (@Model.Prescriptions.Count)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link font-weight-bold text-primary" id="dispensing-tab" data-toggle="tab" href="#dispensing" role="tab" aria-controls="dispensing" aria-selected="false">
+                            <i class="fas fa-pills mr-1"></i> Dispensing History (@Model.DispensingHistory.Count)
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="myTabContent">
+                    
+                    <!-- Prescriptions Tab -->
+                    <div class="tab-pane fade show active" id="prescriptions" role="tabpanel" aria-labelledby="prescriptions-tab">
+                        @if (Model.Prescriptions.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Medicine</th>
+                                            <th>Doctor</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Prescriptions)
+                                        {
+                                            <tr>
+                                                <td>@item.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                                <td><strong>@item.Medicine.Name</strong><br/><small class="text-muted">@item.Dosage (@item.Duration)</small></td>
+                                                <td>@item.DoctorName</td>
+                                                <td>
+                                                    @switch (item.Status)
+                                                    {
+                                                        case PrescriptionStatus.Active:
+                                                            <span class="badge badge-primary">Active</span>
+                                                            break;
+                                                        case PrescriptionStatus.Completed:
+                                                            <span class="badge badge-success">Completed</span>
+                                                            break;
+                                                        case PrescriptionStatus.Expired:
+                                                            <span class="badge badge-warning text-dark">Expired</span>
+                                                            break;
+                                                        case PrescriptionStatus.Cancelled:
+                                                            <span class="badge badge-danger">Cancelled</span>
+                                                            break;
+                                                        case PrescriptionStatus.Refilled:
+                                                            <span class="badge badge-info">Refilled</span>
+                                                            break;
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-file-medical-alt fa-3x text-gray-300 mb-3"></i>
+                                <p class="text-muted">No prescriptions found for this patient.</p>
+                                <a asp-area="Staff" asp-controller="Prescriptions" asp-action="Create" asp-route-patientId="@Model.Patient.Id" class="btn btn-outline-primary mt-2">Add New Prescription</a>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Dispensing Tab -->
+                    <div class="tab-pane fade" id="dispensing" role="tabpanel" aria-labelledby="dispensing-tab">
+                        @if (Model.DispensingHistory.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Medicine</th>
+                                            <th>Qty</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.DispensingHistory)
+                                        {
+                                            <tr>
+                                                <td>@item.DateDispensed.ToString("MMM dd, yyyy hh:mm tt")</td>
+                                                <td>@item.Prescription.Medicine.Name</td>
+                                                <td><span class="badge badge-success px-2 py-1">@item.QuantityDispensed</span></td>
+                                                <td>@item.Notes</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-pills fa-3x text-gray-300 mb-3"></i>
+                                <p class="text-muted">No dispensing history for this patient.</p>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
