@@ -5,9 +5,20 @@ namespace BarangayPharmaSystem.Models.Entities;
 /// <summary>Possible lifecycle states of a prescription.</summary>
 public enum PrescriptionStatus
 {
+    /// <summary>Prescription is active and can be dispensed.</summary>
     Active = 0,
+
+    /// <summary>All dispensing is complete; prescription is fully fulfilled.</summary>
     Completed = 1,
-    Cancelled = 2
+
+    /// <summary>Prescription was cancelled by staff or admin.</summary>
+    Cancelled = 2,
+
+    /// <summary>Prescription duration has elapsed without full fulfilment.</summary>
+    Expired = 3,
+
+    /// <summary>A refill has been approved and dispensed for this prescription.</summary>
+    Refilled = 4
 }
 
 /// <summary>

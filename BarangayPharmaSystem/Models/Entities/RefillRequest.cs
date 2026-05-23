@@ -5,9 +5,14 @@ namespace BarangayPharmaSystem.Models.Entities;
 /// <summary>Possible states of a refill request.</summary>
 public enum RefillRequestStatus
 {
+    /// <summary>Request submitted and awaiting staff review.</summary>
     Pending = 0,
+
+    /// <summary>Request approved — prescription refill is authorised.</summary>
     Approved = 1,
-    Denied = 2
+
+    /// <summary>Request rejected by staff (e.g., too early, no stock, clinical reason).</summary>
+    Rejected = 2
 }
 
 /// <summary>

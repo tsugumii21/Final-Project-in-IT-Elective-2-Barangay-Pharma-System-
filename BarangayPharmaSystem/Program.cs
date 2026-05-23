@@ -61,8 +61,8 @@ using (var scope = app.Services.CreateScope())
         // Apply any pending migrations automatically
         await context.Database.MigrateAsync();
 
-        // Seed roles and default admin
-        await DbSeeder.SeedAsync(roleManager, userManager);
+        // Seed roles, users, and sample data
+        await DbSeeder.SeedAsync(context, roleManager, userManager);
     }
     catch (Exception ex)
     {
