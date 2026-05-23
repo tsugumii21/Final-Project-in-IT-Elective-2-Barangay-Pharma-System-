@@ -1,56 +1,69 @@
+@model BarangayPharmaSystem.Models.ViewModels.LoginViewModel
 @{
-    ViewData["Title"] = "Sign In";
-    Layout = "_Layout";
+    ViewData["Title"] = "Log In";
+    // We don't want the default Layout because the auth page is full screen,
+    // but _Layout is dual-mode. It will wrap this in bps-auth-page if user is not authenticated.
 }
 
 <div class="bps-auth-card">
     <div class="text-center mb-4">
-        <div class="bps-auth-logo">
-            <i class="bi bi-hospital-fill"></i>
+        <div class="bps-auth-icon mx-auto mb-3">
+            <i class="bi bi-shield-lock-fill"></i>
         </div>
-        <h1 class="bps-auth-title">Barangay Pharma</h1>
-        <p class="bps-auth-subtitle">Sign in to your account</p>
+        <h1 class="h3 font-weight-bold text-white mb-1">Welcome Back</h1>
+        <p class="text-white-50 small">Log in to your Barangay Pharma System account</p>
     </div>
-    <p class="text-center text-white-50 small">
-        Full login form coming in <strong>Part 2</strong>.
-    </p>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger border-0 bg-danger bg-opacity-25 text-white" role="alert">
+            <div asp-validation-summary="All" class="mb-0 small"></div>
+        </div>
+    }
+
+    <form asp-controller="Account" asp-action="Login" method="post">
+        <input type="hidden" asp-for="ReturnUrl" />
+        
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label text-white-50">Email Address</label>
+            <div class="input-group bps-glass-input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+            </div>
+            <span asp-validation-for="Email" class="text-warning small mt-1 d-block"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Password" class="form-label text-white-50">Password</label>
+            <div class="input-group bps-glass-input-group">
+                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                <input asp-for="Password" class="form-control" placeholder="••••••••" />
+            </div>
+            <span asp-validation-for="Password" class="text-warning small mt-1 d-block"></span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="form-check">
+                <input asp-for="RememberMe" class="form-check-input custom-checkbox" />
+                <label asp-for="RememberMe" class="form-check-label text-white-50 small">
+                    Remember me
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-light w-100 py-2 fw-bold mb-3 bps-btn-glow">
+            Log In <i class="bi bi-arrow-right-short ms-1"></i>
+        </button>
+    </form>
+
+    <div class="text-center mt-4 pt-3 border-top border-light border-opacity-25">
+        <p class="text-white-50 small mb-0">Are you a new patient?</p>
+        <a asp-controller="Account" asp-action="Register" class="text-white fw-bold text-decoration-none">
+            Register with Patient ID
+        </a>
+    </div>
 </div>
 
-@section Styles {
-<style>
-.bps-auth-card {
-    background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 16px;
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.20);
-}
-.bps-auth-logo {
-    width: 64px; height: 64px;
-    background: rgba(255,255,255,0.20);
-    border-radius: 16px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.75rem;
-    color: #fff;
-    margin-bottom: 1rem;
-}
-.bps-auth-title {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1.625rem;
-    font-weight: 700;
-    color: #fff;
-    margin: 0;
-}
-.bps-auth-subtitle {
-    color: rgba(255,255,255,0.75);
-    font-size: 0.9375rem;
-    margin-top: 0.25rem;
-}
-</style>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

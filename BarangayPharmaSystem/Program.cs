@@ -1,5 +1,6 @@
 using BarangayPharmaSystem.Data;
 using BarangayPharmaSystem.Models.Entities;
+using BarangayPharmaSystem.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +44,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 // ── MVC ───────────────────────────────────────────────────────────────────────
+builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+
 builder.Services.AddControllersWithViews();
 
 // ── Build ─────────────────────────────────────────────────────────────────────
