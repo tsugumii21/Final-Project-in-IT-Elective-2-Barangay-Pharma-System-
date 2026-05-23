@@ -38,7 +38,8 @@ public class UsersController : Controller
         if (!string.IsNullOrWhiteSpace(search))
         {
             search = search.Trim().ToLower();
-            query = query.Where(u => u.FullName.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+            query = query.Where(u => (u.FullName != null && u.FullName.ToLower().Contains(search)) || 
+                                     (u.Email != null && u.Email.ToLower().Contains(search)));
         }
 
         var users = await query.OrderBy(u => u.FullName).ToListAsync();
@@ -51,7 +52,7 @@ public class UsersController : Controller
             {
                 Id = user.Id,
                 FullName = user.FullName,
-                Email = user.Email,
+                Email = user.Email ?? "",
                 PhoneNumber = user.PhoneNumber ?? "",
                 Role = roles.FirstOrDefault() ?? "None",
                 ProfilePhotoPath = user.ProfilePhotoPath,
@@ -179,7 +180,7 @@ public class UsersController : Controller
         {
             Id = user.Id,
             FullName = user.FullName,
-            Email = user.Email,
+            Email = user.Email ?? "",
             ContactNumber = user.PhoneNumber,
             Role = role,
             CurrentPhotoPath = user.ProfilePhotoPath
