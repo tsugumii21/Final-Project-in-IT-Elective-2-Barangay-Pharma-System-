@@ -1,0 +1,136 @@
+@model BarangayPharmaSystem.Areas.Patient.Models.PatientDashboardViewModel
+@{
+    ViewData["Title"] = "Patient Dashboard";
+}
+
+<div class="d-flex align-items-center mb-4 p-4 bg-white shadow-sm rounded" style="border-left: 5px solid #1A6FA3;">
+    @if (!string.IsNullOrEmpty(Model.ProfilePhotoPath))
+    {
+        <img src="~/@Model.ProfilePhotoPath" alt="Profile" class="rounded-circle shadow-sm mr-4" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #EAF4FB;" />
+    }
+    else
+    {
+        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mr-4 shadow-sm" style="width: 80px; height: 80px; border: 3px solid #EAF4FB;">
+            <i class="fas fa-user fa-2x"></i>
+        </div>
+    }
+    <div>
+        <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Welcome back, @Model.PatientName!</h1>
+        <p class="mb-0 text-muted">Here is the latest update on your pharmacy records.</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Active Prescriptions -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-0 shadow-sm rounded h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" style="color: #1A6FA3 !important;">
+                            Active Prescriptions</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ActivePrescriptions</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-file-medical fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+            <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index" class="stretched-link"></a>
+        </div>
+    </div>
+
+    <!-- Dispensing Records -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-0 shadow-sm rounded h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Total Dispensings</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalDispensingRecords</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-pills fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+            <a asp-area="Patient" asp-controller="History" asp-action="Index" class="stretched-link"></a>
+        </div>
+    </div>
+
+    <!-- Pending Refills -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-0 shadow-sm rounded h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Pending Refill Requests</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.PendingRefillRequests</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-sync fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+            @if(Model.PendingRefillRequests > 0)
+            {
+                <a asp-area="Patient" asp-controller="Refills" asp-action="Index" class="stretched-link"></a>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <!-- Latest Prescription Widget -->
+    <div class="col-lg-12">
+        <div class="card shadow-sm border-0 rounded mb-4">
+            <div class="card-header py-3 bg-white" style="border-bottom: 1px solid #EAF4FB;">
+                <h6 class="m-0 font-weight-bold" style="color: #1A6FA3;">Latest Prescription Activity</h6>
+            </div>
+            <div class="card-body">
+                @if (Model.LatestPrescription != null)
+                {
+                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between p-3 rounded" style="background-color: #EAF4FB;">
+                        <div class="mb-3 mb-md-0">
+                            <h5 class="font-weight-bold mb-1" style="color: #1A6FA3;">@Model.LatestPrescription.Medicine.Name</h5>
+                            <p class="mb-0 text-muted">@Model.LatestPrescription.Dosage (@Model.LatestPrescription.Duration)</p>
+                            <small class="text-muted">Prescribed on @Model.LatestPrescription.CreatedAt.ToString("MMM dd, yyyy")</small>
+                        </div>
+                        <div class="text-center text-md-right">
+                            <div class="mb-2">
+                                @switch (Model.LatestPrescription.Status)
+                                {
+                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Active:
+                                        <span class="badge badge-primary px-3 py-2" style="background-color: #1A6FA3;">Active</span>
+                                        break;
+                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Completed:
+                                        <span class="badge badge-success px-3 py-2">Completed</span>
+                                        break;
+                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Expired:
+                                        <span class="badge badge-warning text-dark px-3 py-2">Expired</span>
+                                        break;
+                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Cancelled:
+                                        <span class="badge badge-danger px-3 py-2">Cancelled</span>
+                                        break;
+                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Refilled:
+                                        <span class="badge badge-info px-3 py-2">Refilled</span>
+                                        break;
+                                }
+                            </div>
+                            <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index" class="btn btn-sm btn-outline-primary" style="border-color: #1A6FA3; color: #1A6FA3;">View All</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-file-medical-alt fa-3x text-gray-300 mb-3"></i>
+                        <p class="text-muted mb-0">You have no recorded prescriptions yet.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

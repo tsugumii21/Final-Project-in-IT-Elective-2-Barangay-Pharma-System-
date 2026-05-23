@@ -1,0 +1,48 @@
+@model BarangayPharmaSystem.Areas.Patient.Models.PatientRefillRequestFormViewModel
+@{
+    ViewData["Title"] = "Request Refill";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Request Prescription Refill</h1>
+    <a asp-action="Index" asp-controller="Prescriptions" class="btn btn-secondary shadow-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50 mr-1"></i> Back to Prescriptions
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-sm border-0 rounded mb-4" style="border-top: 4px solid #1A6FA3 !important;">
+            <div class="card-header py-3 bg-white border-bottom">
+                <h6 class="m-0 font-weight-bold" style="color: #1A6FA3;">Refill Details</h6>
+            </div>
+            <div class="card-body p-4">
+                
+                <div class="alert alert-info border-0 rounded mb-4" style="background-color: #EAF4FB; color: #1A6FA3;">
+                    <i class="fas fa-check-circle mr-2"></i> 
+                    <strong>Eligibility Confirmed:</strong> You have passed the 20-day cooldown period and are eligible to request a refill for this medicine.
+                </div>
+
+                <div class="mb-4 p-3 bg-light rounded border">
+                    <h5 class="font-weight-bold" style="color: #1A6FA3;">@Model.MedicineName</h5>
+                    <p class="mb-0 text-muted">@Model.Dosage</p>
+                </div>
+
+                <form asp-action="Create" method="post">
+                    <input type="hidden" asp-for="PrescriptionId" />
+                    
+                    <div class="form-group mb-4">
+                        <label asp-for="Notes" class="font-weight-bold text-gray-700"></label>
+                        <textarea asp-for="Notes" class="form-control bg-light" rows="3" placeholder="Optional: Any notes for the pharmacy staff..."></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <hr class="my-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg shadow-sm" style="background-color: #1A6FA3; border-color: #1A6FA3;">
+                        <i class="fas fa-paper-plane mr-2"></i> Submit Refill Request
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

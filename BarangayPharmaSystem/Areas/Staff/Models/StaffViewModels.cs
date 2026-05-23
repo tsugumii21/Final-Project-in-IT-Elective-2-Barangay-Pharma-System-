@@ -58,7 +58,7 @@ public class StaffPatientFormViewModel
 
 public class StaffPatientDetailsViewModel
 {
-    public Patient Patient { get; set; } = null!;
+    public BarangayPharmaSystem.Models.Entities.Patient Patient { get; set; } = null!;
     public List<Prescription> Prescriptions { get; set; } = new();
     public List<DispensingRecord> DispensingHistory { get; set; } = new();
 }

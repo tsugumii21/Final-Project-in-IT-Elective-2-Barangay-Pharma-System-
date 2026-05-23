@@ -116,7 +116,7 @@ public class PatientsController : Controller
 
         string patientCode = $"PAT-{currentYear}-{nextNumber:D5}";
 
-        var patient = new Patient
+        var patient = new BarangayPharmaSystem.Models.Entities.Patient
         {
             PatientCode = patientCode,
             FullName = model.FullName,
