@@ -1,0 +1,46 @@
+## ASP.NET Core MVC — .gitignore
+
+# Build output
+bin/
+obj/
+
+# Visual Studio / Rider user files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.idea/
+
+# NuGet packages (restored on build)
+packages/
+*.nupkg
+**/[Pp]ackages/
+
+# Published output
+publish/
+**/publish/
+
+# ASP.NET Core secrets & environment overrides
+appsettings.Development.json
+appsettings.Production.json
+secrets.json
+
+# User-uploaded files (not committed to source control)
+wwwroot/uploads/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Entity Framework migrations snapshot (keep migrations, exclude some generated files)
+# Keep: Migrations/*.cs
+# Exclude nothing extra here — migrations are committed
+
+# dotnet tools
+.dotnet/
