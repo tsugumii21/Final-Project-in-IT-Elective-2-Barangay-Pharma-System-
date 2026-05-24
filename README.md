@@ -27,7 +27,7 @@ The **Barangay Pharma System** is a robust web application built for local baran
 
 ## 🌍 Sustainable Development Goal 3 (SDG 3) Alignment
 
-The system directly supports **UN Sustainable Development Goal 3: Good Health and Well-being**. By automating medicine tracking, prescription workflows, and refill requests within **rural barangay communities in Calamba City, Laguna**, this application removes administrative barriers to essential healthcare. It ensures that local health centers can prevent critical medicine stockouts, monitor drug expiration dates to avoid dispensing unsafe medication, and provide patients with an active self-service portal. This digital transformation directly improves health outcomes, ensures timely access to life-saving maintenance medications, and fosters a healthier, more resilient barangay community.
+The Barangay Pharma System directly supports UN Sustainable Development Goal 3: Good Health and Well-being. By digitizing medicine inventory, prescription management, and refill workflows for barangay health centers and rural communities, the system eliminates the administrative barriers that delay access to essential medicines. Health workers can monitor stock levels in real time, receive alerts before medicines expire, and maintain accurate dispensing records ensuring that no patient is turned away due to stockouts or outdated supplies. Patients gain a self-service portal to track their own prescriptions and request refills without repeated clinic visits. Through these capabilities, the Barangay Pharma System strengthens community health infrastructure, promotes timely access to life-saving maintenance medications, and supports a healthier, more resilient barangay population.
 
 ---
 
