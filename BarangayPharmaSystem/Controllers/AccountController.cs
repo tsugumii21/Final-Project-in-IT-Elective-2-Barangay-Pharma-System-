@@ -110,6 +110,12 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
+        // Extra server-side date validation (defence-in-depth beyond ViewModel attribute)
+        if (model.Birthdate.Date > DateTime.Today)
+        {
+            ModelState.AddModelError(nameof(model.Birthdate), "Birthdate cannot be in the future.");
+        }
+
         if (!ModelState.IsValid)
             return View(model);
 

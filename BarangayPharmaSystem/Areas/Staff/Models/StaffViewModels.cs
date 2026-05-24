@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using BarangayPharmaSystem.Models.Entities;
+using BarangayPharmaSystem.Models.Validation;
 
 namespace BarangayPharmaSystem.Areas.Staff.Models;
 
@@ -32,22 +33,25 @@ public class StaffPatientFormViewModel
 
     public string? PatientCode { get; set; } // Auto-generated for Create
 
-    [Required]
-    [MaxLength(150)]
+    [Required(ErrorMessage = "Full name is required.")]
+    [MaxLength(100, ErrorMessage = "Full name cannot exceed 100 characters.")]
     [Display(Name = "Full Name")]
     public string FullName { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Birthdate is required.")]
+    [NotFutureDate(ErrorMessage = "Birthdate cannot be in the future.")]
     [DataType(DataType.Date)]
     [Display(Name = "Birthdate")]
     public DateTime Birthdate { get; set; } = DateTime.Today.AddYears(-20);
 
-    [Required]
-    [MaxLength(300)]
+    [Required(ErrorMessage = "Address is required.")]
+    [MaxLength(300, ErrorMessage = "Address cannot exceed 300 characters.")]
+    [Display(Name = "Address")]
     public string Address { get; set; } = string.Empty;
 
-    [MaxLength(20)]
-    [Display(Name = "Contact Number")]
+    [MaxLength(11, ErrorMessage = "Contact number must be 11 digits.")]
+    [RegularExpression(@"^09\d{9}$", ErrorMessage = "Contact number must be in Philippine format (09XXXXXXXXX).")]
+    [Display(Name = "Contact Number (09XXXXXXXXX)")]
     public string? ContactNumber { get; set; }
 
     [Display(Name = "Profile Photo")]

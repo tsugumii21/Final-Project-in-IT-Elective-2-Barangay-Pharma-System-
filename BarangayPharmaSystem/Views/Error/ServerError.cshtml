@@ -1,0 +1,33 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Server Error";
+}
+
+<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh; text-align: center; padding: 2rem;">
+    <div style="font-size: 6rem; line-height: 1; color: var(--bps-warning); opacity: 0.15; font-family: var(--bps-font-heading); font-weight: 900; margin-bottom: -1rem;">500</div>
+    <div style="background: var(--bps-warning-subtle); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+        <i class="bi bi-exclamation-triangle-fill" style="font-size: 2rem; color: var(--bps-warning);"></i>
+    </div>
+    <h1 class="h3 mb-2" style="font-family: var(--bps-font-heading); font-weight: 700; color: var(--bps-gray-800);">Something Went Wrong</h1>
+    <p class="mb-4" style="color: var(--bps-gray-500); max-width: 420px; line-height: 1.7;">
+        An unexpected error occurred while processing your request. 
+        Our team has been notified. Please try again or return to the dashboard.
+    </p>
+    <div class="d-flex gap-3 flex-wrap justify-content-center">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i> Try Again
+        </a>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary" style="background-color: var(--bps-primary); border-color: var(--bps-primary);">
+                <i class="bi bi-house-door-fill me-2"></i> Back to Dashboard
+            </a>
+        }
+        else
+        {
+            <a href="/Account/Login" class="btn btn-primary" style="background-color: var(--bps-primary); border-color: var(--bps-primary);">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Go to Login
+            </a>
+        }
+    </div>
+</div>

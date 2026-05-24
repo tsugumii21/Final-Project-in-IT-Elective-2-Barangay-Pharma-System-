@@ -114,11 +114,11 @@ public class FileUploadService : IFileUploadService
         if (!AllowedMimeTypes.Contains(file.ContentType.ToLowerInvariant()))
             return new FileUploadResult(false, null, "Invalid file type. Only JPEG and PNG images are accepted.");
 
-        // 4. Build safe file path
+        // 4. Build safe file path — use GUID to prevent filename conflicts and ID exposure
         var uploadDir    = Path.Combine(_env.WebRootPath, folder.Replace('/', Path.DirectorySeparatorChar));
         Directory.CreateDirectory(uploadDir); // ensure directory exists
 
-        var safeFileName = $"{fileNameBase}{extension}";
+        var safeFileName = $"{Guid.NewGuid():N}{extension}";
         var absolutePath = Path.Combine(uploadDir, safeFileName);
         var relativePath = $"/{folder}/{safeFileName}";
 

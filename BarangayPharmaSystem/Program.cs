@@ -36,7 +36,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath         = "/Account/Login";
     options.LogoutPath        = "/Account/Logout";
-    options.AccessDeniedPath  = "/Account/AccessDenied";
+    options.AccessDeniedPath  = "/error/403";      // Custom 403 page
     options.ExpireTimeSpan    = TimeSpan.FromHours(8);
     options.SlidingExpiration = true;
     options.Cookie.HttpOnly   = true;
@@ -77,11 +77,20 @@ using (var scope = app.Services.CreateScope())
 }
 
 // ── Middleware pipeline ───────────────────────────────────────────────────────
-if (!app.Environment.IsDevelopment())
+
+// Exception handler — show detailed page in dev, friendly page in production
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/error/500");
     app.UseHsts();
 }
+
+// Handle 404 / 403 / other HTTP status errors with custom pages (all environments)
+app.UseStatusCodePagesWithRedirects("/error/{0}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
