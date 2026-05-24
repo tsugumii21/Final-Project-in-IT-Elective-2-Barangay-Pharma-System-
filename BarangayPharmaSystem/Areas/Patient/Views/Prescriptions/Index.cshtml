@@ -78,7 +78,7 @@
                                 }
                                 else if (item.Status == PrescriptionStatus.Active || item.Status == PrescriptionStatus.Refilled)
                                 {
-                                    <button class="btn btn-sm btn-light text-muted" data-toggle="tooltip" data-placement="top" title="@item.RefillBlockReason">
+                                    <button class="btn btn-sm btn-light text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="@item.RefillBlockReason">
                                         <i class="fas fa-ban mr-1"></i> Blocked
                                     </button>
                                 }
@@ -103,11 +103,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
-}

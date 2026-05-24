@@ -3,107 +3,110 @@
     ViewData["Title"] = "Patient Registration";
 }
 
-<div class="bps-auth-card bps-auth-card-wide">
-    <div class="text-center mb-4">
-        <div class="bps-auth-icon mx-auto mb-3">
-            <i class="bi bi-person-vcard-fill"></i>
+<div class="bps-hospital-card bps-hospital-card-wide stagger-1">
+    <div class="bps-hospital-header">
+        <div class="bps-hospital-icon-wrapper">
+            <i class="bi bi-person-vcard"></i>
         </div>
-        <h1 class="h3 font-weight-bold text-white mb-1">Patient Registration</h1>
-        <p class="text-white-50 small">Enter the Patient ID provided by your health center</p>
+        <h1>Patient Registration</h1>
+        <p>Enter the Patient ID provided by your health center to activate your online account</p>
     </div>
 
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger border-0 bg-danger bg-opacity-25 text-white" role="alert">
-            <div asp-validation-summary="All" class="mb-0 small"></div>
+    <div class="px-2">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger p-3 mb-4 rounded-3" role="alert">
+                <div asp-validation-summary="All" class="mb-0 small fw-medium"></div>
+            </div>
+        }
+
+        <form asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label asp-for="PatientCode" class="form-label text-secondary">Patient ID</label>
+                    <div class="input-group bps-hospital-input-group">
+                        <span class="input-group-text"><i class="bi bi-qr-code"></i></span>
+                        <input asp-for="PatientCode" class="form-control text-uppercase" placeholder="PAT-YYYY-NNNNN" required autocomplete="off" />
+                    </div>
+                    <span asp-validation-for="PatientCode" class="text-danger small mt-1 d-block"></span>
+                </div>
+                
+                <div class="col-md-6">
+                    <label asp-for="FullName" class="form-label text-secondary">Full Name</label>
+                    <div class="input-group bps-hospital-input-group">
+                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                        <input asp-for="FullName" class="form-control" placeholder="Juan dela Cruz" required autocomplete="name" />
+                    </div>
+                    <span asp-validation-for="FullName" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label text-secondary">Email Address</label>
+                    <div class="input-group bps-hospital-input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                        <input asp-for="Email" class="form-control" placeholder="name@example.com" required autocomplete="email" />
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="ContactNumber" class="form-label text-secondary">Contact Number</label>
+                    <div class="input-group bps-hospital-input-group">
+                        <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                        <input asp-for="ContactNumber" class="form-control" placeholder="0917 123 4567" autocomplete="tel" />
+                    </div>
+                    <span asp-validation-for="ContactNumber" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label text-secondary">Password</label>
+                    <div class="input-group bps-hospital-input-group">
+                        <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                        <input asp-for="Password" class="form-control" placeholder="••••••••" required autocomplete="new-password" />
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="ConfirmPassword" class="form-label text-secondary">Confirm Password</label>
+                    <div class="input-group bps-hospital-input-group">
+                        <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••••" required autocomplete="new-password" />
+                    </div>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Birthdate" class="form-label text-secondary">Date of Birth</label>
+                    <div class="input-group bps-hospital-input-group">
+                        <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
+                        <input asp-for="Birthdate" class="form-control" type="date" required />
+                    </div>
+                    <span asp-validation-for="Birthdate" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="ProfilePhoto" class="form-label text-secondary">Profile Photo (Optional)</label>
+                    <div class="input-group bps-hospital-input-group">
+                        <span class="input-group-text"><i class="bi bi-camera-fill"></i></span>
+                        <input asp-for="ProfilePhoto" class="form-control" type="file" accept=".jpg,.jpeg,.png" />
+                    </div>
+                    <span asp-validation-for="ProfilePhoto" class="text-danger small mt-1 d-block"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                Register Account <i class="bi bi-check-circle-fill ms-2"></i>
+            </button>
+        </form>
+
+        <div class="bps-hospital-footer">
+            <p class="mb-1 text-muted">Already have an account?</p>
+            <a asp-controller="Account" asp-action="Login">
+                Log in instead <i class="bi bi-arrow-right-short"></i>
+            </a>
         </div>
-    }
-
-    <form asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data">
-        <div class="row g-3 mb-3">
-            <div class="col-md-6">
-                <label asp-for="PatientCode" class="form-label text-white-50">Patient ID</label>
-                <div class="input-group bps-glass-input-group">
-                    <span class="input-group-text"><i class="bi bi-qr-code"></i></span>
-                    <input asp-for="PatientCode" class="form-control text-uppercase" placeholder="PAT-YYYY-NNNNN" />
-                </div>
-                <span asp-validation-for="PatientCode" class="text-warning small mt-1 d-block"></span>
-            </div>
-            
-            <div class="col-md-6">
-                <label asp-for="FullName" class="form-label text-white-50">Full Name</label>
-                <div class="input-group bps-glass-input-group">
-                    <span class="input-group-text"><i class="bi bi-person"></i></span>
-                    <input asp-for="FullName" class="form-control" placeholder="Juan dela Cruz" />
-                </div>
-                <span asp-validation-for="FullName" class="text-warning small mt-1 d-block"></span>
-            </div>
-
-            <div class="col-md-6">
-                <label asp-for="Email" class="form-label text-white-50">Email Address</label>
-                <div class="input-group bps-glass-input-group">
-                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                    <input asp-for="Email" class="form-control" placeholder="name@example.com" />
-                </div>
-                <span asp-validation-for="Email" class="text-warning small mt-1 d-block"></span>
-            </div>
-
-            <div class="col-md-6">
-                <label asp-for="ContactNumber" class="form-label text-white-50">Contact Number</label>
-                <div class="input-group bps-glass-input-group">
-                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                    <input asp-for="ContactNumber" class="form-control" placeholder="0917 123 4567" />
-                </div>
-                <span asp-validation-for="ContactNumber" class="text-warning small mt-1 d-block"></span>
-            </div>
-
-            <div class="col-md-6">
-                <label asp-for="Password" class="form-label text-white-50">Password</label>
-                <div class="input-group bps-glass-input-group">
-                    <span class="input-group-text"><i class="bi bi-key"></i></span>
-                    <input asp-for="Password" class="form-control" placeholder="••••••••" />
-                </div>
-                <span asp-validation-for="Password" class="text-warning small mt-1 d-block"></span>
-            </div>
-
-            <div class="col-md-6">
-                <label asp-for="ConfirmPassword" class="form-label text-white-50">Confirm Password</label>
-                <div class="input-group bps-glass-input-group">
-                    <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
-                    <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••••" />
-                </div>
-                <span asp-validation-for="ConfirmPassword" class="text-warning small mt-1 d-block"></span>
-            </div>
-
-            <div class="col-md-6">
-                <label asp-for="Birthdate" class="form-label text-white-50">Date of Birth</label>
-                <div class="input-group bps-glass-input-group">
-                    <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-                    <input asp-for="Birthdate" class="form-control" type="date" />
-                </div>
-                <span asp-validation-for="Birthdate" class="text-warning small mt-1 d-block"></span>
-            </div>
-
-            <div class="col-md-6">
-                <label asp-for="ProfilePhoto" class="form-label text-white-50">Profile Photo (Optional)</label>
-                <div class="input-group bps-glass-input-group">
-                    <span class="input-group-text"><i class="bi bi-camera"></i></span>
-                    <input asp-for="ProfilePhoto" class="form-control" type="file" accept=".jpg,.jpeg,.png" />
-                </div>
-                <span asp-validation-for="ProfilePhoto" class="text-warning small mt-1 d-block"></span>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-light w-100 py-2 fw-bold mb-3 mt-2 bps-btn-glow">
-            Register Account <i class="bi bi-check2-circle ms-1"></i>
-        </button>
-    </form>
-
-    <div class="text-center mt-3 pt-3 border-top border-light border-opacity-25">
-        <p class="text-white-50 small mb-0">Already have an account?</p>
-        <a asp-controller="Account" asp-action="Login" class="text-white fw-bold text-decoration-none">
-            Log in instead
-        </a>
     </div>
 </div>
 

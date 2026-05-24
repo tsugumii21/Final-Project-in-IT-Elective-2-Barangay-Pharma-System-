@@ -65,8 +65,8 @@
     --bps-shadow-xl:        0 8px 32px rgba(0,0,0,0.12);
 
     /* Layout */
-    --bps-sidebar-width:    260px;
-    --bps-navbar-height:    64px;
+    --bps-sidebar-width:    240px;
+    --bps-navbar-height:    60px;
     --bps-sidebar-bg:       #ffffff;
     --bps-navbar-bg:        var(--bps-primary);
     --bps-content-bg:       var(--bps-gray-50);
@@ -559,7 +559,7 @@ h1, h2, h3, h4, h5, h6,
 
 .bps-stat-value {
     font-family: var(--bps-font-heading);
-    font-size: 1.875rem;
+    font-size: 2.25rem;
     font-weight: 700;
     color: var(--bps-gray-900);
     line-height: 1.2;
@@ -1267,4 +1267,334 @@ h1, h2, h3, h4, h5, h6,
     font-size: 2.25rem;
     margin: 0 auto var(--bps-space-md);
     border: 3px solid var(--bps-primary);
+}
+
+/* ============================================================
+   IMPECCABLE OVERHAUL STYLES
+   ============================================================ */
+
+/* ── Typography Size & Font Enforcement ──────────────────────── */
+body, button, input, select, textarea, .form-control, .form-select {
+    font-family: var(--bps-font-body) !important;
+}
+h1, h2, h3, h4, .bps-page-title, .bps-card-title {
+    font-family: var(--bps-font-heading) !important;
+    font-weight: 700 !important;
+}
+.bps-page-title {
+    font-size: 24px !important;
+    letter-spacing: -0.02em;
+}
+.bps-card-title, h3 {
+    font-size: 18px !important;
+}
+.form-label, .bps-sidebar-user-role, .bps-nav-section-label {
+    font-size: 13px !important;
+    font-weight: 600;
+}
+.table td, .bps-empty-state-subtitle {
+    font-size: 14px !important;
+}
+.btn, .bps-public-nav-link, .bps-public-nav-btn {
+    font-size: 14px !important;
+    font-weight: 500 !important; /* Medium */
+}
+
+/* ── Button Styles ───────────────────────────────────────────── */
+.btn {
+    height: 38px !important;
+    padding: 8px 20px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--bps-radius-md);
+    transition: transform var(--bps-transition-fast), background-color var(--bps-transition-fast), border-color var(--bps-transition-fast), box-shadow var(--bps-transition-fast) !important;
+}
+.btn:hover:not(:disabled) {
+    transform: scale(1.02);
+}
+.btn-primary {
+    background-color: var(--bps-primary) !important;
+    border-color: var(--bps-primary) !important;
+    color: #ffffff !important;
+}
+.btn-primary:hover {
+    background-color: var(--bps-primary-dark) !important;
+    border-color: var(--bps-primary-dark) !important;
+}
+
+/* ── Table Alignment ─────────────────────────────────────────── */
+.table th, .table td {
+    padding: 12px 16px !important;
+}
+.table tbody tr {
+    transition: background-color var(--bps-transition-fast);
+}
+.table tbody tr:hover {
+    background-color: var(--bps-primary-subtle) !important;
+}
+
+/* ── Card Overrides ──────────────────────────────────────────── */
+.bps-card, .card {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+    border: 1px solid var(--bps-gray-200) !important;
+}
+
+/* ── Forms Focus Transition ──────────────────────────────────── */
+.form-control, .form-select {
+    transition: border-color var(--bps-transition-fast), box-shadow var(--bps-transition-fast) !important;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--bps-primary) !important;
+    box-shadow: 0 0 0 3px rgba(26, 111, 163, 0.15) !important;
+}
+
+/* ── Animations ──────────────────────────────────────────────── */
+/* Page Load Animation */
+.bps-content, .bps-auth-page {
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered Card Animation Helper */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+
+/* Sidebar Navigation Link Hover Effect */
+.bps-nav-link {
+    transition: border-left-color var(--bps-transition-fast), background-color var(--bps-transition-fast), color var(--bps-transition-fast);
+}
+
+/* Navbar Scrolled Shadow */
+.bps-navbar-scrolled {
+    box-shadow: var(--bps-shadow-lg) !important;
+}
+
+/* Badge Pulse Animation on Pending */
+.bps-badge-pending-pulse {
+    animation: pulseBadge 2s infinite;
+}
+
+@keyframes pulseBadge {
+    0% {
+        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(217, 119, 6, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0);
+    }
+}
+
+/* Toast Slide In Animation */
+.bps-alert {
+    animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Profile Photo Hover Animation */
+.bps-profile-photo, .bps-avatar-img, .bps-medicine-photo-thumbnail {
+    transition: transform var(--bps-transition-fast), box-shadow var(--bps-transition-fast) !important;
+}
+.bps-profile-photo:hover {
+    transform: scale(1.05);
+    box-shadow: var(--bps-shadow-lg) !important;
+}
+
+/* Empty State Float Icon Animation */
+.bps-empty-state-icon-float {
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* ── Stock Level Indicators ──────────────────────────────────── */
+.bps-stock-progress-container {
+    width: 100%;
+    height: 6px;
+    background-color: var(--bps-gray-200);
+    border-radius: var(--bps-radius-full);
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+.bps-stock-progress-bar {
+    height: 100%;
+    border-radius: var(--bps-radius-full);
+}
+
+.bps-stock-progress-green {
+    background-color: var(--bps-success);
+}
+
+.bps-stock-progress-yellow {
+    background-color: var(--bps-warning);
+}
+
+.bps-stock-progress-red {
+    background-color: var(--bps-danger);
+}
+
+/* ── Medical Blue Hospital-Style Login / Register Card ───────── */
+.bps-hospital-card {
+    background: #ffffff;
+    border: 1px solid var(--bps-gray-200);
+    border-radius: var(--bps-radius-lg);
+    box-shadow: var(--bps-shadow-lg);
+    width: 100%;
+    max-width: 440px;
+    padding: var(--bps-space-xl) var(--bps-space-lg);
+    color: var(--bps-gray-800);
+    z-index: 10;
+}
+
+.bps-hospital-card-wide {
+    max-width: 700px;
+}
+
+.bps-hospital-header {
+    background-color: var(--bps-primary);
+    color: #ffffff;
+    margin: calc(var(--bps-space-xl) * -1) calc(var(--bps-space-lg) * -1) var(--bps-space-lg);
+    padding: var(--bps-space-lg);
+    border-top-left-radius: var(--bps-radius-lg);
+    border-top-right-radius: var(--bps-radius-lg);
+    text-align: center;
+}
+
+.bps-hospital-header h1 {
+    font-family: var(--bps-font-heading);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #ffffff !important;
+}
+
+.bps-hospital-header p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+}
+
+.bps-hospital-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #ffffff;
+    margin: 0 auto 0.5rem;
+}
+
+.bps-hospital-input-group {
+    margin-bottom: var(--bps-space-md);
+}
+
+.bps-hospital-input-group .input-group-text {
+    background-color: var(--bps-gray-100);
+    border-color: var(--bps-gray-300);
+    color: var(--bps-gray-500);
+    font-size: 14px;
+}
+
+.bps-hospital-input-group .form-control {
+    border-color: var(--bps-gray-300);
+    color: var(--bps-gray-800);
+    font-size: 14px;
+}
+
+.bps-hospital-input-group .form-control:focus {
+    border-color: var(--bps-primary);
+    box-shadow: 0 0 0 3px rgba(26, 111, 163, 0.15);
+}
+
+.bps-hospital-footer {
+    text-align: center;
+    margin-top: var(--bps-space-md);
+    padding-top: var(--bps-space-md);
+    border-top: 1px solid var(--bps-gray-200);
+    font-size: 13px;
+    color: var(--bps-gray-500);
+}
+
+.bps-hospital-footer a {
+    color: var(--bps-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.bps-hospital-footer a:hover {
+    text-decoration: underline;
+}
+
+.bps-login-bg {
+    background: var(--bps-primary-subtle) !important;
+}
+
+/* ── Thumbnails ────────────────────────────────────────────── */
+.bps-thumbnail-container {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--bps-gray-100);
+    border: 1px solid var(--bps-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bps-thumbnail-container-rect {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: var(--bps-gray-100);
+    border: 1px solid var(--bps-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bps-thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

@@ -99,18 +99,20 @@
                 <!-- Right-side nav items -->
                 <div class="bps-nav-actions">
 
-                    <!-- Stock alerts badge -->
-                    @{
+                    <!-- Stock alerts badge (Admin & Staff only) -->
+                    @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                    {
                         var alertCount = ViewData["UnresolvedAlertCount"] as int? ?? 0;
+                        var alertsLink = User.IsInRole("Admin") ? "/Admin/Dashboard#alerts-section" : "/Staff/Dashboard#alerts-section";
+                        <a href="@alertsLink" class="bps-nav-icon-btn @(alertCount > 0 ? "bps-has-badge" : "")"
+                           title="Stock Alerts" id="nav-stock-alerts">
+                            <i class="bi bi-bell-fill"></i>
+                            @if (alertCount > 0)
+                            {
+                                <span class="bps-badge">@(alertCount > 99 ? "99+" : alertCount.ToString())</span>
+                            }
+                        </a>
                     }
-                    <a href="/StockAlerts" class="bps-nav-icon-btn @(alertCount > 0 ? "bps-has-badge" : "")"
-                       title="Stock Alerts" id="nav-stock-alerts">
-                        <i class="bi bi-bell-fill"></i>
-                        @if (alertCount > 0)
-                        {
-                            <span class="bps-badge">@(alertCount > 99 ? "99+" : alertCount.ToString())</span>
-                        }
-                    </a>
 
                     <!-- User dropdown -->
                     <div class="dropdown">
@@ -128,7 +130,12 @@
                                 }
                             </div>
                             <div class="d-none d-md-flex flex-column align-items-start">
-                                <span class="bps-nav-username">@userFullName</span>
+                                @{
+                                    var hour = DateTime.Now.Hour;
+                                    var greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+                                    var firstName = userFullName.Split(' ')[0];
+                                }
+                                <span class="bps-nav-username">@greeting, @firstName!</span>
                                 <span class="bps-nav-user-role-badge">
                                     @if (User.IsInRole("Admin")) { <text>Admin</text> }
                                     else if (User.IsInRole("Staff")) { <text>Staff</text> }
@@ -163,9 +170,24 @@
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li>
-                                <a class="dropdown-item" href="/Account/Profile" id="nav-profile">
-                                    <i class="bi bi-person-circle me-2"></i> My Profile
-                                </a>
+                                @if (User.IsInRole("Patient"))
+                                {
+                                    <a class="dropdown-item" href="/Patient/Profile" id="nav-profile">
+                                        <i class="bi bi-person-circle me-2"></i> My Profile
+                                    </a>
+                                }
+                                else if (User.IsInRole("Staff"))
+                                {
+                                    <a class="dropdown-item" href="/Staff/Dashboard" id="nav-profile">
+                                        <i class="bi bi-grid-1x2-fill me-2"></i> My Dashboard
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="dropdown-item" href="/Admin/Dashboard" id="nav-profile">
+                                        <i class="bi bi-grid-1x2-fill me-2"></i> My Dashboard
+                                    </a>
+                                }
                             </li>
                             <li>
                                 <a class="dropdown-item" href="/Account/ChangePassword" id="nav-change-password">
@@ -248,7 +270,7 @@ else
         </div>
     </nav>
 
-    <main class="bps-auth-page">
+    <main class="bps-auth-page @ViewData["AuthPageClass"]">
         @RenderBody()
     </main>
 }

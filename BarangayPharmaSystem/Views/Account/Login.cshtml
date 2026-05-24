@@ -1,66 +1,72 @@
 @model BarangayPharmaSystem.Models.ViewModels.LoginViewModel
 @{
     ViewData["Title"] = "Log In";
-    // We don't want the default Layout because the auth page is full screen,
-    // but _Layout is dual-mode. It will wrap this in bps-auth-page if user is not authenticated.
 }
 
-<div class="bps-auth-card">
-    <div class="text-center mb-4">
-        <div class="bps-auth-icon mx-auto mb-3">
-            <i class="bi bi-shield-lock-fill"></i>
+<div class="bps-hospital-card stagger-1">
+    <div class="bps-hospital-header">
+        <div class="bps-hospital-icon-wrapper">
+            <i class="bi bi-hospital"></i>
         </div>
-        <h1 class="h3 font-weight-bold text-white mb-1">Welcome Back</h1>
-        <p class="text-white-50 small">Log in to your Barangay Pharma System account</p>
+        <h1>Barangay Health Center</h1>
+        <p>Pharmacy Management System</p>
     </div>
 
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger border-0 bg-danger bg-opacity-25 text-white" role="alert">
-            <div asp-validation-summary="All" class="mb-0 small"></div>
+    <div class="px-2">
+        <div class="text-center mb-4">
+            <h2 class="h5 fw-bold text-gray-800">Welcome Back</h2>
+            <p class="text-muted small">Log in to manage prescriptions, inventory, and refills</p>
         </div>
-    }
 
-    <form asp-controller="Account" asp-action="Login" method="post">
-        <input type="hidden" asp-for="ReturnUrl" />
-        
-        <div class="mb-3">
-            <label asp-for="Email" class="form-label text-white-50">Email Address</label>
-            <div class="input-group bps-glass-input-group">
-                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger p-3 mb-4 rounded-3" role="alert">
+                <div asp-validation-summary="All" class="mb-0 small fw-medium"></div>
             </div>
-            <span asp-validation-for="Email" class="text-warning small mt-1 d-block"></span>
-        </div>
+        }
 
-        <div class="mb-4">
-            <label asp-for="Password" class="form-label text-white-50">Password</label>
-            <div class="input-group bps-glass-input-group">
-                <span class="input-group-text"><i class="bi bi-key"></i></span>
-                <input asp-for="Password" class="form-control" placeholder="••••••••" />
+        <form asp-controller="Account" asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ReturnUrl" />
+            
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label text-secondary">Email Address</label>
+                <div class="input-group bps-hospital-input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                    <input asp-for="Email" class="form-control" placeholder="name@example.com" required autocomplete="email" />
+                </div>
+                <span asp-validation-for="Email" class="text-danger small mt-1 d-block"></span>
             </div>
-            <span asp-validation-for="Password" class="text-warning small mt-1 d-block"></span>
-        </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div class="form-check">
-                <input asp-for="RememberMe" class="form-check-input custom-checkbox" />
-                <label asp-for="RememberMe" class="form-check-label text-white-50 small">
-                    Remember me
-                </label>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label text-secondary">Password</label>
+                <div class="input-group bps-hospital-input-group">
+                    <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                    <input asp-for="Password" class="form-control" placeholder="••••••••" required autocomplete="current-password" />
+                </div>
+                <span asp-validation-for="Password" class="text-danger small mt-1 d-block"></span>
             </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label text-secondary small">
+                        Keep me signed in
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                Log In <i class="bi bi-box-arrow-in-right ms-2"></i>
+            </button>
+        </form>
+
+        <div class="bps-hospital-footer">
+            <p class="mb-1 text-muted">Are you a new patient?</p>
+            <a asp-controller="Account" asp-action="Register">
+                Register with Patient Code <i class="bi bi-arrow-right-short"></i>
+            </a>
         </div>
-
-        <button type="submit" class="btn btn-light w-100 py-2 fw-bold mb-3 bps-btn-glow">
-            Log In <i class="bi bi-arrow-right-short ms-1"></i>
-        </button>
-    </form>
-
-    <div class="text-center mt-4 pt-3 border-top border-light border-opacity-25">
-        <p class="text-white-50 small mb-0">Are you a new patient?</p>
-        <a asp-controller="Account" asp-action="Register" class="text-white fw-bold text-decoration-none">
-            Register with Patient ID
-        </a>
     </div>
 </div>
 

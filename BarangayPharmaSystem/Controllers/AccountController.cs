@@ -47,6 +47,7 @@ public class AccountController : Controller
         }
 
         ViewData["ReturnUrl"] = returnUrl;
+        ViewData["AuthPageClass"] = "bps-login-bg";
         return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
 
@@ -56,6 +57,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         ViewData["ReturnUrl"] = model.ReturnUrl;
+        ViewData["AuthPageClass"] = "bps-login-bg";
 
         if (!ModelState.IsValid)
             return View(model);
@@ -102,6 +104,7 @@ public class AccountController : Controller
             return await RedirectToRoleDashboardAsync();
         }
 
+        ViewData["AuthPageClass"] = "bps-login-bg";
         return View(new RegisterViewModel());
     }
 
@@ -110,6 +113,8 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
+        ViewData["AuthPageClass"] = "bps-login-bg";
+
         // Extra server-side date validation (defence-in-depth beyond ViewModel attribute)
         if (model.Birthdate.Date > DateTime.Today)
         {
@@ -199,6 +204,58 @@ public class AccountController : Controller
         }
 
         return RedirectToAction(nameof(Login));
+    }
+
+    // ── Change Password ───────────────────────────────────────────────────────
+
+    [Authorize]
+    [HttpGet]
+    public IActionResult ChangePassword()
+    {
+        ViewData["Title"] = "Change Password";
+        ViewData["PageTitle"] = "Change Password";
+        return View();
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction(nameof(Login));
+        }
+
+        var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View(model);
+        }
+
+        // Sign user back in to refresh cookies/claims
+        await _signInManager.RefreshSignInAsync(user);
+
+        // Audit Log
+        await _auditService.LogAsync(
+            "ChangePassword",
+            "Users",
+            user.Id,
+            "User successfully changed their password."
+        );
+
+        TempData["SuccessMessage"] = "Your password has been changed successfully.";
+        return await RedirectToRoleDashboardAsync(user);
     }
 
     // ── Access Denied ─────────────────────────────────────────────────────────

@@ -16,12 +16,18 @@ public class ProfileController : Controller
     private readonly AppDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IFileUploadService _fileUploadService;
+    private readonly IAuditService _auditService;
 
-    public ProfileController(AppDbContext db, UserManager<ApplicationUser> userManager, IFileUploadService fileUploadService)
+    public ProfileController(
+        AppDbContext db,
+        UserManager<ApplicationUser> userManager,
+        IFileUploadService fileUploadService,
+        IAuditService auditService)
     {
         _db = db;
         _userManager = userManager;
         _fileUploadService = fileUploadService;
+        _auditService = auditService;
     }
 
     public async Task<IActionResult> Index()
@@ -79,6 +85,15 @@ public class ProfileController : Controller
                 }
 
                 await _db.SaveChangesAsync();
+
+                // Log audit event for profile photo update
+                await _auditService.LogAsync(
+                    "UpdatePhoto",
+                    "Patients",
+                    patient.Id.ToString(),
+                    "Patient updated their profile photo."
+                );
+
                 TempData["SuccessMessage"] = "Profile photo updated successfully.";
             }
             else

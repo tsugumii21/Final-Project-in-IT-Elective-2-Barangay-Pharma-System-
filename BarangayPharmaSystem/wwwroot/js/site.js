@@ -1,6 +1,6 @@
 /**
  * Barangay Pharma System — Main Application JavaScript
- * Handles: sidebar toggle, toast auto-dismiss, form loading spinner, UX enhancements.
+ * Handles: sidebar toggle, toast auto-dismiss, form loading spinner, UX enhancements, dynamic confirmations, scroll handlers.
  */
 
 (function () {
@@ -46,22 +46,42 @@
         });
     }
 
-    // ── Toast Auto-Dismiss ──────────────────────────────────────────────────
-    const AUTO_DISMISS_DELAY_MS = 5000;
+    // ── Navbar Scroll Drop Shadow ──────────────────────────────────────────
+    const navbar = document.querySelector('.bps-navbar');
+    if (navbar) {
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 10) {
+                navbar.classList.add('bps-navbar-scrolled');
+            } else {
+                navbar.classList.remove('bps-navbar-scrolled');
+            }
+        });
+    }
+
+    // ── Toast Auto-Dismiss (3 Seconds) ──────────────────────────────────────
+    const AUTO_DISMISS_DELAY_MS = 3000;
 
     function autoDismissAlerts() {
         const alerts = document.querySelectorAll('.bps-alert.alert-dismissible');
         alerts.forEach(function (alertEl) {
             setTimeout(function () {
-                const bsAlert = bootstrap.Alert.getOrCreateInstance(alertEl);
-                if (bsAlert) bsAlert.close();
+                // Apply a smooth fade out transition
+                alertEl.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                alertEl.style.opacity = '0';
+                alertEl.style.transform = 'translateX(50px)';
+                setTimeout(function () {
+                    const bsAlert = bootstrap.Alert.getOrCreateInstance(alertEl);
+                    if (bsAlert) bsAlert.close();
+                }, 500);
             }, AUTO_DISMISS_DELAY_MS);
         });
     }
 
     // ── Form Loading Spinner ────────────────────────────────────────────────
     function initFormSpinner() {
-        // Create the global spinner overlay once
+        // Create the global spinner overlay once if it doesn't exist
+        if (document.getElementById('bps-form-spinner')) return;
+
         const spinner = document.createElement('div');
         spinner.className = 'bps-form-spinner';
         spinner.id = 'bps-form-spinner';
@@ -71,13 +91,12 @@
         `;
         document.body.appendChild(spinner);
 
-        // Hook all forms that have data-loading attribute, or POST forms
+        // Hook all POST forms
         document.querySelectorAll('form[method="post"], form[method="POST"]').forEach(function (form) {
             // Skip logout forms — they should be instant
             if (form.id === 'logout-form') return;
 
             form.addEventListener('submit', function () {
-                // Show spinner
                 spinner.classList.add('is-active');
 
                 // Safety: hide after 15 seconds in case something goes wrong
@@ -88,11 +107,12 @@
         });
     }
 
-    // ── Delete Confirmation ─────────────────────────────────────────────────
-    function initDeleteConfirmation() {
+    // ── Dynamic Confirmations ──────────────────────────────────────────────
+    function initConfirmations() {
         document.querySelectorAll('[data-confirm]').forEach(function (el) {
+            // Remove previous event listeners if any (by replacing node, though not strictly needed here)
             el.addEventListener('click', function (e) {
-                const message = el.getAttribute('data-confirm') || 'Are you sure you want to delete this record? This action cannot be undone.';
+                const message = el.getAttribute('data-confirm') || 'Are you sure?';
                 if (!confirm(message)) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -101,11 +121,12 @@
         });
     }
 
-    // ── File Input Label Update ─────────────────────────────────────────────
+    // ── Vanilla JS File Input Handlers ─────────────────────────────────────
     function initFileInputs() {
+        // Handle native browser file inputs
         document.querySelectorAll('input[type="file"]').forEach(function (input) {
             input.addEventListener('change', function () {
-                const label = document.querySelector('label[for="' + input.id + '"]');
+                const label = document.querySelector('label[for="' + input.id + '"]') || input.nextElementSibling;
                 if (label && input.files && input.files.length > 0) {
                     label.textContent = input.files[0].name;
                 }
@@ -113,12 +134,19 @@
         });
     }
 
+    // ── Vanilla Bootstrap Tooltip/Popver Auto-Init ──────────────────────────
+    function initTooltips() {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    }
+
     // ── DOM Ready ───────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
         autoDismissAlerts();
         initFormSpinner();
-        initDeleteConfirmation();
+        initConfirmations();
         initFileInputs();
+        initTooltips();
     });
 
 })();

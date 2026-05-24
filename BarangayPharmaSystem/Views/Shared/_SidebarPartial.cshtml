@@ -34,10 +34,6 @@
             <i class="bi bi-person-badge-fill bps-nav-icon"></i>
             <span>User Accounts</span>
         </a>
-        <a asp-area="Admin" asp-controller="AuditLogs" asp-action="Index" class="@NavClass("Admin", "AuditLogs")">
-            <i class="bi bi-shield-lock-fill bps-nav-icon"></i>
-            <span>Audit Logs</span>
-        </a>
     </div>
 
     <div class="bps-nav-section">
@@ -57,6 +53,10 @@
         <a asp-area="Admin" asp-controller="Reports" asp-action="Index" class="@NavClass("Admin", "Reports")">
             <i class="bi bi-graph-up-arrow bps-nav-icon"></i>
             <span>Reports</span>
+        </a>
+        <a asp-area="Admin" asp-controller="AuditLogs" asp-action="Index" class="@NavClass("Admin", "AuditLogs")">
+            <i class="bi bi-shield-lock-fill bps-nav-icon"></i>
+            <span>Audit Logs</span>
         </a>
     </div>
 }
@@ -78,10 +78,6 @@
             <i class="bi bi-people-fill bps-nav-icon"></i>
             <span>Patients</span>
         </a>
-        <a asp-area="Staff" asp-controller="Medicines" asp-action="Index" class="@NavClass("Staff", "Medicines")">
-            <i class="bi bi-capsule bps-nav-icon"></i>
-            <span>Medicines Stock</span>
-        </a>
         <a asp-area="Staff" asp-controller="Prescriptions" asp-action="Index" class="@NavClass("Staff", "Prescriptions")">
             <i class="bi bi-file-earmark-medical-fill bps-nav-icon"></i>
             <span>Prescriptions</span>
@@ -93,6 +89,10 @@
         <a asp-area="Staff" asp-controller="RefillRequests" asp-action="Index" class="@NavClass("Staff", "RefillRequests")">
             <i class="bi bi-arrow-repeat bps-nav-icon"></i>
             <span>Refill Requests</span>
+        </a>
+        <a asp-area="Staff" asp-controller="Medicines" asp-action="Index" class="@NavClass("Staff", "Medicines")">
+            <i class="bi bi-capsule bps-nav-icon"></i>
+            <span>Medicines Stock</span>
         </a>
     </div>
 }
@@ -110,10 +110,6 @@
 
     <div class="bps-nav-section">
         <span class="bps-nav-section-label">My Health</span>
-        <a asp-area="Patient" asp-controller="Profile" asp-action="Index" class="@NavClass("Patient", "Profile")">
-            <i class="bi bi-person-circle bps-nav-icon"></i>
-            <span>My Profile</span>
-        </a>
         <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index" class="@NavClass("Patient", "Prescriptions")">
             <i class="bi bi-file-earmark-medical-fill bps-nav-icon"></i>
             <span>My Prescriptions</span>
@@ -125,6 +121,10 @@
         <a asp-area="Patient" asp-controller="Refills" asp-action="Index" class="@NavClass("Patient", "Refills")">
             <i class="bi bi-arrow-repeat bps-nav-icon"></i>
             <span>Refill Requests</span>
+        </a>
+        <a asp-area="Patient" asp-controller="Profile" asp-action="Index" class="@NavClass("Patient", "Profile")">
+            <i class="bi bi-person-circle bps-nav-icon"></i>
+            <span>Profile</span>
         </a>
     </div>
 }

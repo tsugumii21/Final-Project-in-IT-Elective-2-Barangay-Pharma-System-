@@ -32,7 +32,7 @@
                     <div class="form-group mb-4">
                         <label asp-for="PhotoFile" class="font-weight-bold text-gray-700">Update Profile Photo</label>
                         <div class="custom-file">
-                            <input asp-for="PhotoFile" class="custom-file-input" id="customFile" accept="image/*">
+                            <input asp-for="PhotoFile" class="custom-file-input" id="customFile" accept=".jpg,.jpeg,.png">
                             <label class="custom-file-label" for="customFile">Choose new photo...</label>
                         </div>
                         <small class="form-text text-muted">Leave empty to keep the current photo.</small>
@@ -68,7 +68,7 @@
                     </div>
 
                     <hr class="mt-4 mb-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg shadow-sm">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg shadow-sm w-100">
                         <i class="fas fa-save mr-2"></i> Save Changes
                     </button>
                 </form>
@@ -79,10 +79,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        $('.custom-file-input').on('change', function() {
-            var fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').addClass("selected").html(fileName);
-        });
-    </script>
 }

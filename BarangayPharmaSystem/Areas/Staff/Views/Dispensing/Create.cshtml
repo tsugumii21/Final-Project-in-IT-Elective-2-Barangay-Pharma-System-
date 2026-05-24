@@ -47,30 +47,28 @@
                     </div>
 
                     <hr class="mt-4 mb-4">
-                    <button type="button" class="btn btn-success btn-block btn-lg shadow-sm" data-toggle="modal" data-target="#confirmModal">
-                        <i class="fas fa-check-circle mr-2"></i> Dispense Now
+                    <button type="button" class="btn btn-primary btn-block btn-lg shadow-sm w-100" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                        <i class="bi bi-check-circle-fill mr-2"></i> Dispense Now
                     </button>
 
                     <!-- Confirmation Modal -->
-                    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content border-0 shadow-lg">
                                 <div class="modal-header bg-warning text-dark border-0">
-                                    <h5 class="modal-title font-weight-bold" id="confirmModalLabel"><i class="fas fa-exclamation-triangle mr-2"></i> Confirm Dispensing</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <h5 class="modal-title font-weight-bold" id="confirmModalLabel"><i class="bi bi-exclamation-triangle-fill mr-2"></i> Confirm Dispensing</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body py-4">
                                     <p class="mb-0 text-center" style="font-size: 1.1rem;">
-                                        You are about to deduct stock and record this transaction. <br/><br/>
+                                        You are about to deduct stock and record this dispensing transaction. <br/><br/>
                                         <strong>This action cannot be undone by Staff.</strong> <br/><br/>
                                         Are you sure the details are correct?
                                     </p>
                                 </div>
                                 <div class="modal-footer border-0 d-flex justify-content-center">
-                                    <button type="button" class="btn btn-secondary px-4" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-success px-4" onclick="document.getElementById('dispenseForm').submit(); this.disabled=true; this.innerHTML='<i class=\'fas fa-spinner fa-spin\'></i> Dispensing...';">
+                                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary px-4" onclick="document.getElementById('dispenseForm').submit(); this.disabled=true; this.innerHTML='<i class=\'bi bi-arrow-repeat\'></i> Dispensing...';">
                                         Yes, Dispense
                                     </button>
                                 </div>

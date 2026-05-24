@@ -4,88 +4,135 @@
     ViewData["Title"] = "Patient Profile";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Patient Profile</h1>
+<div class="bps-page-header">
     <div>
-        <a asp-action="Index" class="btn btn-secondary shadow-sm mr-2">
-            <i class="fas fa-arrow-left fa-sm text-white-50 mr-1"></i> Back
+        <h1 class="bps-page-title">Patient Profile</h1>
+        <p class="bps-page-subtitle">Demographics, prescriptions, and dispensing history</p>
+    </div>
+    <div class="bps-nav-actions">
+        <a asp-action="Index" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Patients
         </a>
-        <a asp-action="Edit" asp-route-id="@Model.Patient.Id" class="btn btn-primary shadow-sm">
-            <i class="fas fa-edit fa-sm text-white-50 mr-1"></i> Edit
+        <a asp-action="Edit" asp-route-id="@Model.Patient.Id" class="btn btn-primary">
+            <i class="bi bi-pencil-fill me-1"></i> Edit Patient
         </a>
     </div>
 </div>
 
-<div class="row">
-    <!-- Profile Info Card -->
+<div class="row g-4">
+    <!-- Profile Info Card (Left Column) -->
     <div class="col-xl-4 col-lg-5">
-        <div class="card shadow mb-4 glass-card border-left-info">
-            <div class="card-body text-center p-5">
-                @if (!string.IsNullOrEmpty(Model.Patient.ProfilePhotoPath))
-                {
-                    <img src="~/@Model.Patient.ProfilePhotoPath" alt="Profile Photo" class="rounded-circle shadow mb-3" style="width: 150px; height: 150px; object-fit: cover; border: 5px solid #fff;" />
-                }
-                else
-                {
-                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mx-auto shadow mb-3" style="width: 150px; height: 150px; border: 5px solid #fff;">
-                        <i class="fas fa-user fa-4x"></i>
+        <div class="bps-card mb-4">
+            <div class="bps-card-body text-center py-5">
+                <div class="d-flex justify-content-center mb-4">
+                    @if (!string.IsNullOrEmpty(Model.Patient.ProfilePhotoPath))
+                    {
+                        <img src="~/@Model.Patient.ProfilePhotoPath" alt="Profile Photo" class="bps-profile-photo shadow-sm" style="width: 140px; height: 140px;" />
+                    }
+                    else
+                    {
+                        <div class="bps-profile-photo-placeholder shadow-sm mx-auto" style="width: 140px; height: 140px; font-size: 3.5rem;">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                    }
+                </div>
+                
+                <h3 class="fw-bold text-gray-900 mb-1" style="font-family: var(--bps-font-heading);">@Model.Patient.FullName</h3>
+                <p class="text-primary fw-bold mb-3 small tracking-wider" style="letter-spacing: 1px;">@Model.Patient.PatientCode</p>
+                
+                <div class="mb-4">
+                    @if (!string.IsNullOrEmpty(Model.Patient.LinkedUserId))
+                    {
+                        <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-medium">
+                            <i class="bi bi-check-circle-fill me-1"></i> Account Linked
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill fw-medium">
+                            <i class="bi bi-clock-history me-1"></i> Pending Register
+                        </span>
+                    }
+                </div>
+                
+                <hr class="my-4 text-muted opacity-25">
+                
+                <div class="text-start px-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bps-stat-icon-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                            <i class="bi bi-telephone-fill"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Contact Number</div>
+                            <div class="fw-semibold text-gray-800">@(string.IsNullOrEmpty(Model.Patient.ContactNumber) ? "N/A" : Model.Patient.ContactNumber)</div>
+                        </div>
                     </div>
-                }
-                <h4 class="font-weight-bold text-gray-800 mb-1">@Model.Patient.FullName</h4>
-                <p class="text-primary font-weight-bold mb-3" style="letter-spacing: 1px;">@Model.Patient.PatientCode</p>
-                
-                @if (!string.IsNullOrEmpty(Model.Patient.LinkedUserId))
-                {
-                    <span class="badge badge-success px-3 py-2 rounded-pill"><i class="fas fa-check-circle mr-1"></i> Account Linked</span>
-                }
-                else
-                {
-                    <span class="badge badge-warning text-dark px-3 py-2 rounded-pill"><i class="fas fa-clock mr-1"></i> Pending Registration</span>
-                }
-                
-                <hr class="my-4">
-                
-                <div class="text-left">
-                    <p class="mb-2"><i class="fas fa-phone text-muted mr-2"></i> <strong>Contact:</strong> @(string.IsNullOrEmpty(Model.Patient.ContactNumber) ? "N/A" : Model.Patient.ContactNumber)</p>
-                    <p class="mb-2"><i class="fas fa-birthday-cake text-muted mr-2"></i> <strong>Birthdate:</strong> @Model.Patient.Birthdate.ToString("MMM dd, yyyy") (@Model.Patient.Age yrs)</p>
-                    <p class="mb-2"><i class="fas fa-map-marker-alt text-muted mr-2"></i> <strong>Address:</strong> @Model.Patient.Address</p>
-                    <p class="mb-0"><i class="fas fa-calendar-alt text-muted mr-2"></i> <strong>Registered:</strong> @Model.Patient.CreatedAt.ToString("MMM dd, yyyy")</p>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bps-stat-icon-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                            <i class="bi bi-cake2-fill"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Date of Birth</div>
+                            <div class="fw-semibold text-gray-800">@Model.Patient.Birthdate.ToString("MMM dd, yyyy") (@Model.Patient.Age yrs old)</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bps-stat-icon-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Home Address</div>
+                            <div class="fw-semibold text-gray-800">@Model.Patient.Address</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <div class="bps-stat-icon-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                            <i class="bi bi-calendar-event-fill"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Registered Date</div>
+                            <div class="fw-semibold text-gray-800">@Model.Patient.CreatedAt.ToString("MMM dd, yyyy")</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- History Tabs -->
+    <!-- History Tabs (Right Column) -->
     <div class="col-xl-8 col-lg-7">
-        <div class="card shadow mb-4 glass-card">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active font-weight-bold text-primary" id="prescriptions-tab" data-toggle="tab" href="#prescriptions" role="tab" aria-controls="prescriptions" aria-selected="true">
-                            <i class="fas fa-file-medical mr-1"></i> Prescriptions (@Model.Prescriptions.Count)
-                        </a>
+        <div class="bps-card mb-4">
+            <div class="bps-card-header bg-white border-bottom p-0">
+                <ul class="nav nav-tabs border-bottom-0 px-3 pt-2" id="patientTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-bold py-3" id="prescriptions-tab" data-bs-toggle="tab" data-bs-target="#prescriptions" type="button" role="tab" aria-controls="prescriptions" aria-selected="true">
+                            <i class="bi bi-file-earmark-medical me-1"></i> Prescriptions (@Model.Prescriptions.Count)
+                        </button>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link font-weight-bold text-primary" id="dispensing-tab" data-toggle="tab" href="#dispensing" role="tab" aria-controls="dispensing" aria-selected="false">
-                            <i class="fas fa-pills mr-1"></i> Dispensing History (@Model.DispensingHistory.Count)
-                        </a>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold py-3" id="dispensing-tab" data-bs-toggle="tab" data-bs-target="#dispensing" type="button" role="tab" aria-controls="dispensing" aria-selected="false">
+                            <i class="bi bi-capsule me-1"></i> Dispensing History (@Model.DispensingHistory.Count)
+                        </button>
                     </li>
                 </ul>
             </div>
-            <div class="card-body">
-                <div class="tab-content" id="myTabContent">
+            <div class="bps-card-body p-4">
+                <div class="tab-content" id="patientTabContent">
                     
                     <!-- Prescriptions Tab -->
                     <div class="tab-pane fade show active" id="prescriptions" role="tabpanel" aria-labelledby="prescriptions-tab">
                         @if (Model.Prescriptions.Any())
                         {
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
-                                    <thead>
+                                <table class="table align-middle table-hover">
+                                    <thead class="table-light">
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Medicine</th>
-                                            <th>Doctor</th>
+                                            <th>Date Issued</th>
+                                            <th>Medicine Details</th>
+                                            <th>Prescribing Doctor</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -93,26 +140,29 @@
                                         @foreach (var item in Model.Prescriptions)
                                         {
                                             <tr>
-                                                <td>@item.CreatedAt.ToString("MMM dd, yyyy")</td>
-                                                <td><strong>@item.Medicine.Name</strong><br/><small class="text-muted">@item.Dosage (@item.Duration)</small></td>
-                                                <td>@item.DoctorName</td>
+                                                <td class="text-secondary small">@item.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                                <td>
+                                                    <span class="fw-bold text-gray-900">@item.Medicine.Name</span>
+                                                    <div class="text-muted small">@item.Dosage — @item.Duration</div>
+                                                </td>
+                                                <td class="text-secondary">@item.DoctorName</td>
                                                 <td>
                                                     @switch (item.Status)
                                                     {
                                                         case PrescriptionStatus.Active:
-                                                            <span class="badge badge-primary">Active</span>
+                                                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fw-semibold">Active</span>
                                                             break;
                                                         case PrescriptionStatus.Completed:
-                                                            <span class="badge badge-success">Completed</span>
+                                                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1.5 fw-semibold">Completed</span>
                                                             break;
                                                         case PrescriptionStatus.Expired:
-                                                            <span class="badge badge-warning text-dark">Expired</span>
+                                                            <span class="badge bg-warning-subtle text-warning rounded-pill px-3 py-1.5 fw-semibold">Expired</span>
                                                             break;
                                                         case PrescriptionStatus.Cancelled:
-                                                            <span class="badge badge-danger">Cancelled</span>
+                                                            <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-1.5 fw-semibold">Cancelled</span>
                                                             break;
                                                         case PrescriptionStatus.Refilled:
-                                                            <span class="badge badge-info">Refilled</span>
+                                                            <span class="badge bg-info-subtle text-info rounded-pill px-3 py-1.5 fw-semibold">Refilled</span>
                                                             break;
                                                     }
                                                 </td>
@@ -125,9 +175,13 @@
                         else
                         {
                             <div class="text-center py-5">
-                                <i class="fas fa-file-medical-alt fa-3x text-gray-300 mb-3"></i>
-                                <p class="text-muted">No prescriptions found for this patient.</p>
-                                <a asp-area="Staff" asp-controller="Prescriptions" asp-action="Create" asp-route-patientId="@Model.Patient.Id" class="btn btn-outline-primary mt-2">Add New Prescription</a>
+                                <div class="bps-empty-state-icon-float text-muted fs-1 mb-3">
+                                    <i class="bi bi-file-earmark-medical text-primary" style="opacity: 0.4;"></i>
+                                </div>
+                                <p class="text-muted mb-3">No prescriptions found for this patient.</p>
+                                <a asp-area="Staff" asp-controller="Prescriptions" asp-action="Create" asp-route-patientId="@Model.Patient.Id" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus-lg me-1"></i> Add New Prescription
+                                </a>
                             </div>
                         }
                     </div>
@@ -137,10 +191,10 @@
                         @if (Model.DispensingHistory.Any())
                         {
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
-                                    <thead>
+                                <table class="table align-middle table-hover">
+                                    <thead class="table-light">
                                         <tr>
-                                            <th>Date</th>
+                                            <th>Date Dispensed</th>
                                             <th>Medicine</th>
                                             <th>Qty</th>
                                             <th>Notes</th>
@@ -150,10 +204,10 @@
                                         @foreach (var item in Model.DispensingHistory)
                                         {
                                             <tr>
-                                                <td>@item.DateDispensed.ToString("MMM dd, yyyy hh:mm tt")</td>
-                                                <td>@item.Prescription.Medicine.Name</td>
-                                                <td><span class="badge badge-success px-2 py-1">@item.QuantityDispensed</span></td>
-                                                <td>@item.Notes</td>
+                                                <td class="text-secondary small">@item.DateDispensed.ToString("MMM dd, yyyy hh:mm tt")</td>
+                                                <td class="fw-bold text-gray-900">@item.Prescription.Medicine.Name</td>
+                                                <td><span class="badge bg-success-subtle text-success px-3 py-1.5 fw-semibold">@item.QuantityDispensed</span></td>
+                                                <td class="text-secondary small">@(string.IsNullOrEmpty(item.Notes) ? "—" : item.Notes)</td>
                                             </tr>
                                         }
                                     </tbody>
@@ -163,7 +217,9 @@
                         else
                         {
                             <div class="text-center py-5">
-                                <i class="fas fa-pills fa-3x text-gray-300 mb-3"></i>
+                                <div class="bps-empty-state-icon-float text-muted fs-1 mb-3">
+                                    <i class="bi bi-capsule text-primary" style="opacity: 0.4;"></i>
+                                </div>
                                 <p class="text-muted">No dispensing history for this patient.</p>
                             </div>
                         }

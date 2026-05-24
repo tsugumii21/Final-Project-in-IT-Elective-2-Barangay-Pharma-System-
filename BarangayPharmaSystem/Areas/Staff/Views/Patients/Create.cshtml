@@ -23,7 +23,7 @@
                     <div class="form-group mb-4">
                         <label asp-for="PhotoFile" class="font-weight-bold text-gray-700"></label>
                         <div class="custom-file">
-                            <input asp-for="PhotoFile" class="custom-file-input" id="customFile" accept="image/*">
+                            <input asp-for="PhotoFile" class="custom-file-input" id="customFile" accept=".jpg,.jpeg,.png">
                             <label class="custom-file-label" for="customFile">Choose patient photo...</label>
                         </div>
                         <small class="form-text text-muted">Optional. A clear face photo helps with identification.</small>
@@ -68,7 +68,7 @@
                     </div>
 
                     <hr class="mt-4 mb-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg shadow-sm">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg shadow-sm w-100">
                         <i class="fas fa-save mr-2"></i> Create Patient Profile
                     </button>
                 </form>
@@ -79,10 +79,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        $('.custom-file-input').on('change', function() {
-            var fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').addClass("selected").html(fileName);
-        });
-    </script>
 }

@@ -1,10 +1,12 @@
 using BarangayPharmaSystem.Areas.Patient.Models;
 using BarangayPharmaSystem.Data;
 using BarangayPharmaSystem.Models.Entities;
+using BarangayPharmaSystem.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace BarangayPharmaSystem.Areas.Patient.Controllers;
 
@@ -14,11 +16,19 @@ public class RefillsController : Controller
 {
     private readonly AppDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IConfiguration _config;
+    private readonly IAuditService _auditService;
 
-    public RefillsController(AppDbContext db, UserManager<ApplicationUser> userManager)
+    public RefillsController(
+        AppDbContext db,
+        UserManager<ApplicationUser> userManager,
+        IConfiguration config,
+        IAuditService auditService)
     {
         _db = db;
         _userManager = userManager;
+        _config = config;
+        _auditService = auditService;
     }
 
     // ── Index ─────────────────────────────────────────────────────────────────
@@ -87,10 +97,11 @@ public class RefillsController : Controller
         var latestDispensing = prescription.DispensingRecords.OrderByDescending(d => d.DateDispensed).FirstOrDefault();
         if (latestDispensing != null)
         {
+            var cooldownDays = _config.GetValue<int>("AppSettings:RefillCooldownDays", 7);
             var daysSinceDispensed = (DateTime.UtcNow - latestDispensing.DateDispensed).TotalDays;
-            if (daysSinceDispensed < 20)
+            if (daysSinceDispensed < cooldownDays)
             {
-                var availableDate = latestDispensing.DateDispensed.AddDays(20);
+                var availableDate = latestDispensing.DateDispensed.AddDays(cooldownDays);
                 TempData["ErrorMessage"] = $"Refill blocked: Cooldown period active. You can request a refill after {availableDate.ToLocalTime():MMM dd, yyyy}.";
                 return RedirectToAction("Index", "Prescriptions");
             }
@@ -150,10 +161,11 @@ public class RefillsController : Controller
         var latestDispensing = prescription.DispensingRecords.OrderByDescending(d => d.DateDispensed).FirstOrDefault();
         if (latestDispensing != null)
         {
+            var cooldownDays = _config.GetValue<int>("AppSettings:RefillCooldownDays", 7);
             var daysSinceDispensed = (DateTime.UtcNow - latestDispensing.DateDispensed).TotalDays;
-            if (daysSinceDispensed < 20)
+            if (daysSinceDispensed < cooldownDays)
             {
-                var availableDate = latestDispensing.DateDispensed.AddDays(20);
+                var availableDate = latestDispensing.DateDispensed.AddDays(cooldownDays);
                 TempData["ErrorMessage"] = $"Cooldown period active. You can request after {availableDate.ToLocalTime():MMM dd, yyyy}.";
                 return RedirectToAction("Index", "Prescriptions");
             }
@@ -176,6 +188,14 @@ public class RefillsController : Controller
 
         _db.RefillRequests.Add(request);
         await _db.SaveChangesAsync();
+
+        // Log audit event for patient requesting refill
+        await _auditService.LogAsync(
+            "RequestRefill",
+            "RefillRequests",
+            request.Id.ToString(),
+            $"Patient requested refill for prescription of {prescription.Medicine.Name}."
+        );
 
         TempData["SuccessMessage"] = "Refill request submitted successfully! Staff will review it shortly.";
         return RedirectToAction(nameof(Index));
