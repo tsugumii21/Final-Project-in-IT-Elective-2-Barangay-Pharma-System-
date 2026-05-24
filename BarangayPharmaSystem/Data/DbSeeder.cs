@@ -2,6 +2,8 @@ using BarangayPharmaSystem.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.EntityFrameworkCore.Infrastructure;
+
 namespace BarangayPharmaSystem.Data;
 
 /// <summary>
@@ -36,21 +38,74 @@ public static class DbSeeder
     /// Entry point called from Program.cs on every startup.
     /// All methods are safe to call multiple times.
     /// </summary>
-    public static async Task SeedAsync(
-        AppDbContext          db,
-        RoleManager<IdentityRole>    roleManager,
-        UserManager<ApplicationUser> userManager)
+    public static async Task SeedAsync(AppDbContext db)
     {
-        await EnsureRolesAsync(roleManager);
+        var roleManager = db.GetService<RoleManager<IdentityRole>>();
+        var userManager = db.GetService<UserManager<ApplicationUser>>();
 
-        var adminUser   = await EnsureUserAsync(userManager, AdminEmail,   AdminPassword,   AdminFullName,   AdminRoleName);
-        var staffUser   = await EnsureUserAsync(userManager, StaffEmail,   StaffPassword,   StaffFullName,   StaffRoleName);
-        var patientUser = await EnsureUserAsync(userManager, PatientEmail, PatientPassword, PatientFullName, PatientRoleName);
+        // 1. Roles
+        if (!await db.Roles.AnyAsync())
+        {
+            await EnsureRolesAsync(roleManager);
+        }
 
-        await EnsureSuppliersAsync(db);
-        var medicines = await EnsureMedicinesAsync(db);
-        var patient   = await EnsurePatientAsync(db, patientUser);
-        await EnsurePrescriptionAndDispensingAsync(db, patient, staffUser, medicines);
+        // 2. Users
+        ApplicationUser? adminUser = null;
+        ApplicationUser? staffUser = null;
+        ApplicationUser? patientUser = null;
+
+        if (!await db.Users.IgnoreQueryFilters().AnyAsync())
+        {
+            adminUser   = await EnsureUserAsync(userManager, AdminEmail,   AdminPassword,   AdminFullName,   AdminRoleName);
+            staffUser   = await EnsureUserAsync(userManager, StaffEmail,   StaffPassword,   StaffFullName,   StaffRoleName);
+            patientUser = await EnsureUserAsync(userManager, PatientEmail, PatientPassword, PatientFullName, PatientRoleName);
+        }
+        else
+        {
+            adminUser   = await userManager.FindByEmailAsync(AdminEmail);
+            staffUser   = await userManager.FindByEmailAsync(StaffEmail);
+            patientUser = await userManager.FindByEmailAsync(PatientEmail);
+        }
+
+        // 3. Suppliers
+        if (!await db.Suppliers.IgnoreQueryFilters().AnyAsync())
+        {
+            await EnsureSuppliersAsync(db);
+        }
+
+        // 4. Medicines
+        List<Medicine> medicines = new List<Medicine>();
+        if (!await db.Medicines.IgnoreQueryFilters().AnyAsync())
+        {
+            medicines = await EnsureMedicinesAsync(db);
+        }
+        else
+        {
+            medicines = await db.Medicines.IgnoreQueryFilters().ToListAsync();
+        }
+
+        // 5. Patients
+        Patient? patient = null;
+        if (!await db.Patients.IgnoreQueryFilters().AnyAsync())
+        {
+            if (patientUser != null)
+            {
+                patient = await EnsurePatientAsync(db, patientUser);
+            }
+        }
+        else
+        {
+            patient = await db.Patients.IgnoreQueryFilters().FirstOrDefaultAsync(p => p.LinkedUserId == (patientUser != null ? patientUser.Id : ""));
+        }
+
+        // 6. Prescriptions, DispensingRecords, StockAlerts
+        if (!await db.Prescriptions.IgnoreQueryFilters().AnyAsync() && 
+            !await db.DispensingRecords.AnyAsync() && 
+            patient != null && 
+            staffUser != null)
+        {
+            await EnsurePrescriptionAndDispensingAsync(db, patient, staffUser, medicines);
+        }
     }
 
     // ── Roles ────────────────────────────────────────────────────────────────

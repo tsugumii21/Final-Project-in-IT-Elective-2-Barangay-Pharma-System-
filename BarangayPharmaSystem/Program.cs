@@ -58,15 +58,13 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var context     = services.GetRequiredService<AppDbContext>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var context = services.GetRequiredService<AppDbContext>();
 
         // Apply any pending migrations automatically
-        await context.Database.MigrateAsync();
+        context.Database.Migrate();
 
         // Seed roles, users, and sample data
-        await DbSeeder.SeedAsync(context, roleManager, userManager);
+        await DbSeeder.SeedAsync(context);
     }
     catch (Exception ex)
     {
