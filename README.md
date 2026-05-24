@@ -1,33 +1,67 @@
-# 🏥 Barangay Pharma System
+<div align="center">
+  <h1>Bicol University Polangui - Barangay Pharma System</h1>
+</div>
 
-A modern, secure, and user-friendly Web-Based Pharmacy Management System tailored for barangay health centers. The system handles patient records, medicine inventory, prescriptions, stock dispensing, and patient-initiated refill requests, complete with real-time audit logging and analytics.
+<div align="center">
+  <img src="https://raw.githubusercontent.com/tsugumii21/BU-Polangui-Student-Management-System/main/frontend/images/bup-logo.png" alt="BU Logo" width="150" height="auto" />
+  <h3>Good Health and Well-being for Calamba Communities</h3>
+  <p>A modern, secure, and production-ready Web-Based Pharmacy Management System designed to manage patient records, medicine inventory, prescriptions, stock dispensing, and patient refill requests.</p>
+
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)]()
+
+  <br/>
+
+![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=flat&logo=c-sharp&logoColor=white)
+![.NET 8](https://img.shields.io/badge/.net%208-%23512BD4.svg?style=flat&logo=.net&logoColor=white)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E)
+![SQL Server](https://img.shields.io/badge/sql%20server-%23CC292B.svg?style=flat&logo=microsoft-sql-server&logoColor=white)
+
+</div>
+
+---
+
+## 📋 Overview
+
+The **Barangay Pharma System** is a robust web application built for local barangay health centers and Rural Health Units (RHUs). It serves as a centralized platform for healthcare staff to maintain patient records, manage pharmaceutical inventory, issue prescriptions, and dispense medicine. It also provides patients with a self-service portal to review active prescriptions, track dispensing history, and submit refill requests securely.
 
 ---
 
 ## 🌍 Sustainable Development Goal 3 (SDG 3) Alignment
 
-The **Barangay Pharma System** directly supports **UN Sustainable Development Goal 3: Good Health and Well-being**. By automating and streamlining medicine tracking, prescription workflows, and refill requests within **rural barangay communities in Calamba City, Laguna**, this application removes administrative barriers to essential healthcare. It ensures that local health centers can prevent critical medicine stockouts, monitor drug expiration dates to avoid dispensing unsafe medication, and provide patients with an active self-service portal. This digital transformation directly improves health outcomes, ensures timely access to life-saving maintenance medications, and fosters a healthier, more resilient barangay community.
+The system directly supports **UN Sustainable Development Goal 3: Good Health and Well-being**. By automating medicine tracking, prescription workflows, and refill requests within **rural barangay communities in Calamba City, Laguna**, this application removes administrative barriers to essential healthcare. It ensures that local health centers can prevent critical medicine stockouts, monitor drug expiration dates to avoid dispensing unsafe medication, and provide patients with an active self-service portal. This digital transformation directly improves health outcomes, ensures timely access to life-saving maintenance medications, and fosters a healthier, more resilient barangay community.
 
 ---
 
-## 🛠️ Technology Stack
+## 👥 Submitted By:
 
-- **Core Framework**: ASP.NET Core MVC (.NET 8)
-- **Database**: SQL Server 2022/2025 via Entity Framework Core
-- **Front-End Styling**: Vanilla CSS + Bootstrap 5 (Medical Blue Theme: `#1A6FA3`)
-- **Typography**: *DM Sans* (for headings) & *Nunito* (for body text and labels)
-- **UI Enhancement**: FontAwesome Icons, Chart.js (for analytics), and DataTables.js (for interactive tables)
+- **Allen P. Del Valle**
+- **Michael Justin B. Surbnano**
+- **Asthan Eilexer J. Patanao**
 
 ---
 
-## 🚀 Getting Started & Local Setup
+## 🔑 Default Login Credentials
+
+On first run, the database is seeded automatically with three roles and default user accounts:
+
+| Role | Email Address | Password | Extra Info |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@bps.com` | `Admin@1234` | Full access (Dashboard, Users, Medicines, Suppliers, Audit Logs, Reports) |
+| **Staff** | `staff@bps.com` | `Staff@1234` | Clinical operations (Dashboard, Patients, Prescriptions, Dispensing, Refills) |
+| **Patient** | `patient@bps.com` | `Patient@1234` | Self-Service (Dashboard, Profile Photo upload, Prescriptions, Dispensing History, Refills) |
+
+---
+
+## 🚀 Setup & Installation Instructions
 
 ### Prerequisites
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/) (Express or LocalDB)
 - Git
 
-### Installation Steps
+### Local Setup
 
 1. **Clone the Repository:**
    ```bash
@@ -35,17 +69,16 @@ The **Barangay Pharma System** directly supports **UN Sustainable Development Go
    cd Final-Project-in-IT-Elective-2-Barangay-Pharma-System-
    ```
 
-2. **Configure the Connection String:**
-   Open `BarangayPharmaSystem/appsettings.json` and adjust the `DefaultConnection` string under `ConnectionStrings` to point to your local SQL Server instance:
+2. **Configure Connection String:**
+   Open `BarangayPharmaSystem/appsettings.json` and verify the `DefaultConnection` string points to your local SQL Server instance:
    ```json
    "ConnectionStrings": {
-     "DefaultConnection": "Server=YOUR_SERVER_NAME;Database=BarangayPharmaDB;Trusted_Connection=True;TrustServerCertificate=True"
+     "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=BarangayPharmaDB;Trusted_Connection=True;TrustServerCertificate=True"
    }
    ```
-   *(Note: The default connection string is configured for `localhost\SQLEXPRESS`.)*
 
 3. **Apply Database Migrations:**
-   Ensure SQL Server is running, then apply the migrations to create the database schema:
+   Ensure SQL Server is running, then run EF migrations to create the database:
    ```bash
    dotnet ef database update
    ```
@@ -54,46 +87,28 @@ The **Barangay Pharma System** directly supports **UN Sustainable Development Go
    ```bash
    dotnet run
    ```
-   Open your browser and navigate to the local address displayed in your terminal (typically `http://localhost:5269` or `https://localhost:5001`). The database seeder will automatically seed baseline roles, users, medicines, and sample records on startup.
+   Open your browser and navigate to the local address displayed in the console (typically `http://localhost:5269` or `https://localhost:5001`).
 
 ---
 
-## 🔑 Default Login Credentials
+## 📦 Features Implemented
 
-On application startup, three roles are created and seeded with default accounts:
-
-| Role | Email Address | Password | Extra Info |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@bps.com` | `Admin@1234` | Full access (Dashboard, Users, Medicines, Suppliers, Audit Logs, Reports) |
-| **Staff** | `staff@bps.com` | `Staff@1234` | Clinical operations (Dashboard, Patients, Prescriptions, Dispensing, Refills) |
-| **Patient** | `patient@bps.com` | `Patient@1234` | Self-Service (Dashboard, Profile Photo upload, Prescriptions, Dispensing History, Refill requests) |
-
----
-
-## 📦 Key Features Implemented
-
-### 🛡️ Admin Module
+### 🛡️ Admin Dashboard
 - **User Management**: Create, edit, and soft-delete user accounts (Admin, Staff, Patient). Automatically links to a clinical Patient profile when the `Patient` role is assigned.
 - **Medicine Inventory**: CRUD operations for medicines, including photo uploads, stock level thresholds, and expiration date tracking.
 - **Supplier Directory**: CRUD operations for medicine suppliers/vendors.
 - **Audit Logging**: Read-only log tracing all create, update, and delete actions with timestamps, IP addresses, and user details.
 - **Reports & Analytics**: Visual charts showing top dispensed medications, patient activity rankings, low-stock overviews, and date-filtered dispensing metrics.
 
-### 🩺 Staff Module
+### 🩺 Staff Dashboard
 - **Patient Management**: Manage patient profiles, view detailed histories (prescriptions, dispensing dates, refills), and generate unique patient IDs (`PAT-YYYY-NNNNN`).
 - **Prescription Creation**: Create and edit prescriptions for patients. Integrates checks to prevent selecting expired or deleted medicines.
 - **Dispensing Records**: Deduct stock and record dispensing actions against prescriptions. Includes double-submission protection and expired medicine blocks.
 - **Refill Request Review**: Approve or reject patient-submitted refill requests. Approvals automatically trigger stock deduction and log audit trails.
 - **Automated Stock Alerts**: Real-time background checking that raises alerts for Low Stock, Out of Stock, or Near Expiry conditions.
 
-### 👤 Patient Module
+### 👤 Patient Dashboard
 - **Self-Service Dashboard**: Personalized greeting banner, profile photo display, and KPI summary counters.
 - **Secure Photo Upload**: Patients can upload and update their profile photos (validated for `.jpg`/`.png` and maximum size of 2MB). Overwritten photo files are cleaned from the server disk.
 - **My Prescriptions & Refill Cooldown**: Lists all prescriptions and their statuses. Restricts refill requests with a strict **20-day server-side cooldown** since the last dispensing date and blocks requests for expired medicines.
 - **My Dispensing History**: Read-only date-filtered log of all medicine collections.
-
----
-
-## 👥 Developers
-*   **Built for IT Elective 2 Final Project**
-*   *Co-developed with Google Antigravity (Agentic AI)*
