@@ -203,14 +203,237 @@ public static class DbSeeder
                 DosageInfo    = "500mg — Take one to two tablets every 4–6 hours as needed. Do not exceed 8 tablets in 24 hours.",
                 IsDeleted     = false,
                 CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Mefenamic Acid 500mg Capsule",
+                Category      = "Analgesic",
+                Stock         = 150,
+                MinStockLevel = 25,
+                ExpiryDate    = DateTime.Today.AddMonths(30),
+                DosageInfo    = "500mg — Take 1 capsule 3x daily after meals as needed for pain.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Cetirizine 10mg Tablet",
+                Category      = "Antihistamine",
+                Stock         = 120,
+                MinStockLevel = 20,
+                ExpiryDate    = DateTime.Today.AddMonths(28),
+                DosageInfo    = "10mg — Take 1 tablet once daily at bedtime.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Losartan 50mg Tablet",
+                Category      = "Antihypertensive",
+                Stock         = 160,
+                MinStockLevel = 25,
+                ExpiryDate    = DateTime.Today.AddMonths(24),
+                DosageInfo    = "50mg — Take 1 tablet once daily.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Salbutamol 2mg Tablet",
+                Category      = "Bronchodilator",
+                Stock         = 90,
+                MinStockLevel = 15,
+                ExpiryDate    = DateTime.Today.AddMonths(22),
+                DosageInfo    = "2mg — Take 1 tablet 3x daily as needed.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Omeprazole 20mg Capsule",
+                Category      = "Gastrointestinal",
+                Stock         = 130,
+                MinStockLevel = 20,
+                ExpiryDate    = DateTime.Today.AddMonths(26),
+                DosageInfo    = "20mg — Take 1 capsule once daily before breakfast.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Cotrimoxazole 400mg/80mg Tablet",
+                Category      = "Antibiotic",
+                Stock         = 110,
+                MinStockLevel = 20,
+                ExpiryDate    = DateTime.Today.AddMonths(20),
+                DosageInfo    = "400mg/80mg — Take 2 tablets twice daily for 5 days.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Ferrous Sulfate 325mg Tablet",
+                Category      = "Iron Supplement",
+                Stock         = 200,
+                MinStockLevel = 40,
+                ExpiryDate    = DateTime.Today.AddMonths(32),
+                DosageInfo    = "325mg — Take 1 tablet once daily.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Ascorbic Acid 500mg Tablet",
+                Category      = "Vitamin / Supplement",
+                Stock         = 300,
+                MinStockLevel = 50,
+                ExpiryDate    = DateTime.Today.AddMonths(36),
+                DosageInfo    = "500mg — Take 1 tablet once daily after meals.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Cloxacillin 500mg Capsule",
+                Category      = "Antibiotic",
+                Stock         = 80,
+                MinStockLevel = 15,
+                ExpiryDate    = DateTime.Today.AddMonths(18),
+                DosageInfo    = "500mg — Take 1 capsule 4x daily on empty stomach.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Hydrochlorothiazide 25mg Tablet",
+                Category      = "Antihypertensive / Diuretic",
+                Stock         = 12,
+                MinStockLevel = 20,
+                ExpiryDate    = DateTime.Today.AddDays(23),
+                DosageInfo    = "25mg — Take 1 tablet once daily in the morning.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Glibenclamide 5mg Tablet",
+                Category      = "Antidiabetic",
+                Stock         = 140,
+                MinStockLevel = 25,
+                ExpiryDate    = DateTime.Today.AddMonths(24),
+                DosageInfo    = "5mg — Take 1 tablet once daily before breakfast.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Isoniazid 300mg Tablet",
+                Category      = "Antituberculosis",
+                Stock         = 60,
+                MinStockLevel = 15,
+                ExpiryDate    = DateTime.Today.AddMonths(20),
+                DosageInfo    = "300mg — Take 1 tablet once daily on empty stomach.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Rifampicin 450mg Capsule",
+                Category      = "Antituberculosis",
+                Stock         = 55,
+                MinStockLevel = 15,
+                ExpiryDate    = DateTime.Today.AddMonths(19),
+                DosageInfo    = "450mg — Take 1 capsule once daily on empty stomach.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Doxycycline 100mg Capsule",
+                Category      = "Antibiotic",
+                Stock         = 75,
+                MinStockLevel = 15,
+                ExpiryDate    = DateTime.Today.AddMonths(21),
+                DosageInfo    = "100mg — Take 1 capsule twice daily after meals.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Ibuprofen 400mg Tablet",
+                Category      = "Anti-inflammatory / Analgesic",
+                Stock         = 180,
+                MinStockLevel = 30,
+                ExpiryDate    = DateTime.Today.AddMonths(27),
+                DosageInfo    = "400mg — Take 1 tablet 3x daily after meals.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Prednisone 20mg Tablet",
+                Category      = "Corticosteroid",
+                Stock         = 70,
+                MinStockLevel = 15,
+                ExpiryDate    = DateTime.Today.AddMonths(25),
+                DosageInfo    = "20mg — As prescribed by physician.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Folic Acid 400mcg Tablet",
+                Category      = "Vitamin / Supplement",
+                Stock         = 250,
+                MinStockLevel = 40,
+                ExpiryDate    = DateTime.Today.AddMonths(34),
+                DosageInfo    = "400mcg — Take 1 tablet once daily.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Vitamin B Complex Tablet",
+                Category      = "Vitamin / Supplement",
+                Stock         = 220,
+                MinStockLevel = 35,
+                ExpiryDate    = DateTime.Today.AddMonths(30),
+                DosageInfo    = "Take 1 tablet once daily after meals.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Erythromycin 500mg Tablet",
+                Category      = "Antibiotic",
+                Stock         = 9,
+                MinStockLevel = 20,
+                ExpiryDate    = DateTime.Today.AddDays(28),
+                DosageInfo    = "500mg — Take 1 tablet 4x daily.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
+            },
+            new Medicine
+            {
+                Name          = "Zinc Sulfate 20mg Tablet",
+                Category      = "Mineral Supplement",
+                Stock         = 190,
+                MinStockLevel = 30,
+                ExpiryDate    = DateTime.Today.AddMonths(33),
+                DosageInfo    = "20mg — Take 1 tablet once daily.",
+                IsDeleted     = false,
+                CreatedAt     = DateTime.UtcNow
             }
         };
 
         db.Medicines.AddRange(medicines);
         await db.SaveChangesAsync();
 
-        // Seed stock alerts for the low-stock and near-expiry medicine (Atorvastatin)
+        // Seed stock alerts for low-stock and near-expiry medicines
         var atorvastatin = medicines.First(m => m.Name.Contains("Atorvastatin"));
+        var hydrochlorothiazide = medicines.First(m => m.Name.Contains("Hydrochlorothiazide"));
+        var erythromycin = medicines.First(m => m.Name.Contains("Erythromycin"));
+
         db.StockAlerts.AddRange(
             new StockAlert
             {
@@ -225,6 +448,38 @@ public static class DbSeeder
                 MedicineId = atorvastatin.Id,
                 AlertType  = AlertType.NearExpiry,
                 Message    = $"Atorvastatin 20mg Tablet expires on {atorvastatin.ExpiryDate:MMMM dd, yyyy} — within 30 days.",
+                IsResolved = false,
+                CreatedAt  = DateTime.UtcNow
+            },
+            new StockAlert
+            {
+                MedicineId = hydrochlorothiazide.Id,
+                AlertType  = AlertType.LowStock,
+                Message    = $"Hydrochlorothiazide 25mg Tablet stock ({hydrochlorothiazide.Stock} units) is below minimum level ({hydrochlorothiazide.MinStockLevel} units).",
+                IsResolved = false,
+                CreatedAt  = DateTime.UtcNow
+            },
+            new StockAlert
+            {
+                MedicineId = hydrochlorothiazide.Id,
+                AlertType  = AlertType.NearExpiry,
+                Message    = $"Hydrochlorothiazide 25mg Tablet expires on {hydrochlorothiazide.ExpiryDate:MMMM dd, yyyy} — within 30 days.",
+                IsResolved = false,
+                CreatedAt  = DateTime.UtcNow
+            },
+            new StockAlert
+            {
+                MedicineId = erythromycin.Id,
+                AlertType  = AlertType.LowStock,
+                Message    = $"Erythromycin 500mg Tablet stock ({erythromycin.Stock} units) is below minimum level ({erythromycin.MinStockLevel} units).",
+                IsResolved = false,
+                CreatedAt  = DateTime.UtcNow
+            },
+            new StockAlert
+            {
+                MedicineId = erythromycin.Id,
+                AlertType  = AlertType.NearExpiry,
+                Message    = $"Erythromycin 500mg Tablet expires on {erythromycin.ExpiryDate:MMMM dd, yyyy} — within 30 days.",
                 IsResolved = false,
                 CreatedAt  = DateTime.UtcNow
             }
