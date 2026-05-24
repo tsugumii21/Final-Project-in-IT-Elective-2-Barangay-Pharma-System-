@@ -186,6 +186,10 @@ public class PatientsController : Controller
             var uploadResult = await _fileUploadService.UploadPatientPhotoAsync(model.PhotoFile, patient.Id);
             if (uploadResult.Success)
             {
+                if (!string.IsNullOrEmpty(patient.ProfilePhotoPath))
+                {
+                    _fileUploadService.DeleteFile(patient.ProfilePhotoPath);
+                }
                 patient.ProfilePhotoPath = uploadResult.RelativePath;
             }
         }

@@ -78,6 +78,13 @@ public class DispensingController : Controller
             return View(model);
         }
 
+        if (prescription.Medicine.IsExpired)
+        {
+            ModelState.AddModelError("", "Cannot dispense: the prescribed medicine has expired.");
+            await LoadPrescriptionsDropdownAsync(model.PrescriptionId);
+            return View(model);
+        }
+
         if (model.Quantity > prescription.Medicine.Stock)
         {
             ModelState.AddModelError("Quantity", $"Insufficient stock! Only {prescription.Medicine.Stock} units available.");
@@ -121,7 +128,7 @@ public class DispensingController : Controller
         var prescriptions = await _db.Prescriptions
             .Include(p => p.Patient)
             .Include(p => p.Medicine)
-            .Where(p => p.Status == PrescriptionStatus.Active || p.Status == PrescriptionStatus.Refilled)
+            .Where(p => (p.Status == PrescriptionStatus.Active || p.Status == PrescriptionStatus.Refilled) && p.Medicine.ExpiryDate >= DateTime.Today)
             .OrderBy(p => p.Patient.FullName)
             .Select(p => new { 
                 p.Id, 

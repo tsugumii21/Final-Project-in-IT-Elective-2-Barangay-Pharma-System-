@@ -225,6 +225,10 @@ public class UsersController : Controller
             var uploadResult = await _fileUploadService.UploadUserPhotoAsync(model.ProfilePhoto, user.Id);
             if (uploadResult.Success)
             {
+                if (!string.IsNullOrEmpty(user.ProfilePhotoPath))
+                {
+                    _fileUploadService.DeleteFile(user.ProfilePhotoPath);
+                }
                 user.ProfilePhotoPath = uploadResult.RelativePath;
             }
         }

@@ -81,6 +81,12 @@ public class RefillRequestsController : Controller
             return RedirectToAction(nameof(Index));
         }
 
+        if (request.Prescription.Medicine.IsExpired)
+        {
+            TempData["ErrorMessage"] = "Cannot approve refill: the prescribed medicine has expired.";
+            return RedirectToAction(nameof(Index));
+        }
+
         if (quantityToDispense > request.Prescription.Medicine.Stock)
         {
             TempData["ErrorMessage"] = $"Insufficient stock. Only {request.Prescription.Medicine.Stock} left.";

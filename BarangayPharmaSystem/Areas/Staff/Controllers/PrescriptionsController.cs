@@ -82,6 +82,14 @@ public class PrescriptionsController : Controller
             return View(model);
         }
 
+        var medicine = await _db.Medicines.FindAsync(model.MedicineId);
+        if (medicine == null || medicine.IsDeleted || medicine.IsExpired)
+        {
+            ModelState.AddModelError("MedicineId", "The selected medicine is invalid, deleted, or expired.");
+            await LoadDropdownsAsync(model.PatientId);
+            return View(model);
+        }
+
         var staffId = _userManager.GetUserId(User);
 
         var prescription = new Prescription
@@ -100,7 +108,6 @@ public class PrescriptionsController : Controller
         await _db.SaveChangesAsync();
 
         var patient = await _db.Patients.FindAsync(model.PatientId);
-        var medicine = await _db.Medicines.FindAsync(model.MedicineId);
 
         await _auditService.LogAsync("Created", "Prescriptions", prescription.Id.ToString(), $"Staff created prescription for '{patient?.FullName}' - Medicine: {medicine?.Name}.");
 
@@ -142,6 +149,14 @@ public class PrescriptionsController : Controller
     {
         if (!ModelState.IsValid)
         {
+            await LoadDropdownsAsync(model.PatientId);
+            return View(model);
+        }
+
+        var medicine = await _db.Medicines.FindAsync(model.MedicineId);
+        if (medicine == null || medicine.IsDeleted || medicine.IsExpired)
+        {
+            ModelState.AddModelError("MedicineId", "The selected medicine is invalid, deleted, or expired.");
             await LoadDropdownsAsync(model.PatientId);
             return View(model);
         }
@@ -205,6 +220,7 @@ public class PrescriptionsController : Controller
         ViewBag.Patients = new SelectList(patients, "Id", "DisplayText", selectedPatientId);
 
         var medicines = await _db.Medicines
+            .Where(m => m.ExpiryDate >= DateTime.Today)
             .OrderBy(m => m.Name)
             .Select(m => new { m.Id, DisplayText = $"{m.Name} (Stock: {m.Stock})" })
             .ToListAsync();

@@ -64,6 +64,10 @@ public class PrescriptionsController : Controller
             {
                 vm.RefillBlockReason = "Prescription is not Active.";
             }
+            else if (p.Medicine.IsExpired)
+            {
+                vm.RefillBlockReason = "The prescribed medicine has expired.";
+            }
             else if (p.RefillRequests.Any(r => r.Status == RefillRequestStatus.Pending))
             {
                 vm.RefillBlockReason = "You already have a Pending refill request for this prescription.";

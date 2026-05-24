@@ -72,6 +72,12 @@ public class RefillsController : Controller
             return RedirectToAction("Index", "Prescriptions");
         }
 
+        if (prescription.Medicine.IsExpired)
+        {
+            TempData["ErrorMessage"] = "Refill blocked: The prescribed medicine has expired.";
+            return RedirectToAction("Index", "Prescriptions");
+        }
+
         if (prescription.RefillRequests.Any(r => r.Status == RefillRequestStatus.Pending))
         {
             TempData["ErrorMessage"] = "You already have a Pending refill request for this prescription.";
@@ -115,6 +121,7 @@ public class RefillsController : Controller
         if (patient == null) return RedirectToAction("Index", "Dashboard", new { area = "Patient" });
 
         var prescription = await _db.Prescriptions
+            .Include(p => p.Medicine)
             .Include(p => p.DispensingRecords)
             .Include(p => p.RefillRequests)
             .FirstOrDefaultAsync(p => p.Id == model.PrescriptionId && p.PatientId == patient.Id);
@@ -125,6 +132,12 @@ public class RefillsController : Controller
         if (prescription.Status != PrescriptionStatus.Active && prescription.Status != PrescriptionStatus.Refilled)
         {
             TempData["ErrorMessage"] = "This prescription is not active.";
+            return RedirectToAction("Index", "Prescriptions");
+        }
+
+        if (prescription.Medicine.IsExpired)
+        {
+            TempData["ErrorMessage"] = "The prescribed medicine has expired.";
             return RedirectToAction("Index", "Prescriptions");
         }
 

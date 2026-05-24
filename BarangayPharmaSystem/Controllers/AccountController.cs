@@ -38,12 +38,12 @@ public class AccountController : Controller
 
     [AllowAnonymous]
     [HttpGet]
-    public IActionResult Login(string? returnUrl = null)
+    public async Task<IActionResult> Login(string? returnUrl = null)
     {
         // If already logged in, redirect based on role
         if (User.Identity?.IsAuthenticated == true)
         {
-            return RedirectToRoleDashboard();
+            return await RedirectToRoleDashboardAsync();
         }
 
         ViewData["ReturnUrl"] = returnUrl;
@@ -78,7 +78,7 @@ public class AccountController : Controller
                 return LocalRedirect(model.ReturnUrl);
             }
 
-            return RedirectToRoleDashboard(user);
+            return await RedirectToRoleDashboardAsync(user);
         }
 
         if (result.IsLockedOut)
@@ -95,11 +95,11 @@ public class AccountController : Controller
 
     [AllowAnonymous]
     [HttpGet]
-    public IActionResult Register()
+    public async Task<IActionResult> Register()
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            return RedirectToRoleDashboard();
+            return await RedirectToRoleDashboardAsync();
         }
 
         return View(new RegisterViewModel());
@@ -212,12 +212,21 @@ public class AccountController : Controller
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private IActionResult RedirectToRoleDashboard(ApplicationUser? user = null)
+    private async Task<IActionResult> RedirectToRoleDashboardAsync(ApplicationUser? user = null)
     {
-        // For convenience if the user object wasn't passed, check the claims
-        if (User.IsInRole("Admin")) return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
-        if (User.IsInRole("Staff")) return RedirectToAction("Index", "Dashboard", new { area = "Staff" });
-        if (User.IsInRole("Patient")) return RedirectToAction("Index", "Dashboard", new { area = "Patient" });
+        if (user != null)
+        {
+            if (await _userManager.IsInRoleAsync(user, "Admin")) return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            if (await _userManager.IsInRoleAsync(user, "Staff")) return RedirectToAction("Index", "Dashboard", new { area = "Staff" });
+            if (await _userManager.IsInRoleAsync(user, "Patient")) return RedirectToAction("Index", "Dashboard", new { area = "Patient" });
+        }
+        else
+        {
+            // For convenience if the user object wasn't passed, check the claims
+            if (User.IsInRole("Admin")) return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            if (User.IsInRole("Staff")) return RedirectToAction("Index", "Dashboard", new { area = "Staff" });
+            if (User.IsInRole("Patient")) return RedirectToAction("Index", "Dashboard", new { area = "Patient" });
+        }
 
         // Fallback to the default dashboard if area is not used yet, or just generic dashboard
         return RedirectToAction("Index", "Dashboard");
