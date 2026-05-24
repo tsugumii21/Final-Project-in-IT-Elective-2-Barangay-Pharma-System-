@@ -1,13 +1,10 @@
 <div align="center">
-  <h1>Bicol University Polangui - Barangay Pharma System</h1>
+  <h1>Barangay Pharma System</h1>
 </div>
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/tsugumii21/BU-Polangui-Student-Management-System/main/frontend/images/bup-logo.png" alt="BU Logo" width="150" height="auto" />
-  <h3>Good Health and Well-being for Calamba Communities</h3>
+  <h3>Ensuring Good Health and Well-Being (SDG 3) through Digital Pharmaceutical Care</h3>
   <p>A modern, secure, and production-ready Web-Based Pharmacy Management System designed to manage patient records, medicine inventory, prescriptions, stock dispensing, and patient refill requests.</p>
-
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)]()
 
   <br/>
 
@@ -39,6 +36,38 @@ The system directly supports **UN Sustainable Development Goal 3: Good Health an
 - **Allen P. Del Valle**
 - **Michael Justin B. Surbnano**
 - **Asthan Eilexer J. Patanao**
+
+---
+
+## 🔄 User Flows
+
+### 🛡️ Admin Flow
+1. **Login:** Admin logs in using the seeded credentials `admin@bps.com`.
+2. **Dashboard Overview:** Views aggregate KPI counts (Total Patients, Medicines, Prescriptions, Dispensing Records), pending/resolved stock alerts, and recent audit activity.
+3. **User & Account Management:** Navigates to **User Management** to create accounts for Staff or Patients.
+   - *Automated Profile Generation:* Assigning the "Patient" role prompts the admin for clinical demographic details and automatically generates a unique `PatientCode` (`PAT-YYYY-NNNNN`).
+4. **Inventory Setup:** Navigates to **Medicines** to register new medicines with custom categories, minimum stock thresholds, expiry dates, dosage details, and optional images, or manages the **Supplier Directory**.
+5. **System Oversight:** Analyzes trends in the **Reports** portal or tracks security events in the read-only **Audit Logs**.
+
+### 🩺 Staff Flow
+1. **Login:** Staff logs in using `staff@bps.com`.
+2. **Dashboard Overview:** Monitors today's dispensing statistics, pending refills, and active low-stock or expired medicine alerts.
+3. **Patient Registry:** Navigates to **Patients** to create new patient profiles. A generated `PatientCode` is issued, which allows patients to securely self-register their accounts online.
+4. **Clinical Prescribing:** Locates a patient, views their history, and creates a new prescription. The system restricts medicine selection to non-deleted and non-expired stock.
+5. **Dispensing Workflow:** Selects a prescription and dispenses the drug.
+   - Deducts stock, records the transaction, and updates alerts if inventory levels dip below minimum thresholds.
+   - Prevents dispensing operations if the selected medicine is expired.
+6. **Refill Review:** Evaluates pending patient refill requests, with the ability to **Approve** (automatically deducts stock and registers a dispensing record) or **Reject** (providing rejection reasons).
+
+### 👤 Patient Flow
+1. **Self-Registration (Optional):** Patient self-registers at `/Account/Register` using their staff-issued `PatientCode` to link their online credentials to their clinical file.
+2. **Login:** Patient logs in using `patient@bps.com`.
+3. **Personal Dashboard:** Greets the patient with their profile photo, showing active prescription details, total dispensing history, and pending refills.
+4. **Profile Photo Management:** Updates their profile avatar under **My Profile** (validated for format and a 2MB file limit, automatically clearing previous images).
+5. **Medication Tracking:** Reviews all prescriptions and filters them by state (Active, Completed, Expired, Refilled).
+6. **Refill Requesting:** Requests a refill for an active prescription.
+   - *Validation Rules:* The system blocks submission if the 20-day cooldown period since the last dispensing has not passed, or if the medicine is expired.
+7. **Dispensing Logs:** Reviews a read-only, date-filtered list of all past collections.
 
 ---
 
