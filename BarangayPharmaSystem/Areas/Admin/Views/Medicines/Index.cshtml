@@ -93,7 +93,35 @@
                         <td class="fw-bold">@medicine.Name</td>
                         <td>@medicine.Category</td>
                         <td>
-                            <span class="badge @stockBadge">@medicine.Stock</span>
+                            @{
+                                var percent = 0;
+                                var progressColorClass = "bps-stock-progress-green";
+                                
+                                if (medicine.Stock <= 0)
+                                {
+                                    percent = 100;
+                                    progressColorClass = "bps-stock-progress-red";
+                                }
+                                else if (medicine.IsLowStock)
+                                {
+                                    percent = medicine.MinStockLevel > 0 ? Math.Min(100, (medicine.Stock * 100) / medicine.MinStockLevel) : 100;
+                                    progressColorClass = medicine.Stock <= (medicine.MinStockLevel / 2) ? "bps-stock-progress-red" : "bps-stock-progress-yellow";
+                                }
+                                else
+                                {
+                                    percent = 100;
+                                    progressColorClass = "bps-stock-progress-green";
+                                }
+                            }
+                            <div class="d-flex flex-column" style="width: 110px;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge @stockBadge">@medicine.Stock</span>
+                                    <small class="text-secondary" style="font-size: 11px;">Min: @medicine.MinStockLevel</small>
+                                </div>
+                                <div class="bps-stock-progress-container">
+                                    <div class="bps-stock-progress-bar @progressColorClass" style="width: @percent%;"></div>
+                                </div>
+                            </div>
                         </td>
                         <td class="@expiryClass">
                             @medicine.ExpiryDate.ToString("MMM dd, yyyy")

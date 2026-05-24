@@ -3,113 +3,160 @@
     ViewData["Title"] = "Pharmacy Inventory";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Pharmacy Inventory</h1>
+<div class="bps-page-header">
+    <div>
+        <h1 class="bps-page-title">Pharmacy Inventory</h1>
+        <p class="bps-page-subtitle">Monitor stock levels, category filters, and medicine expiry dates</p>
+    </div>
 </div>
 
-<div class="card shadow mb-4 glass-card border-left-primary">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Medicine Stock Levels</h6>
-        <form method="get" asp-action="Index" class="form-inline">
-            <div class="input-group mr-2">
-                <select name="category" class="form-control bg-light border-0 small" onchange="this.form.submit()">
-                    <option value="">All Categories</option>
-                    @foreach (var cat in ViewBag.Categories as List<string> ?? new List<string>())
+<div class="bps-card mb-4">
+    <div class="bps-card-header bg-white d-flex flex-wrap align-items-center justify-content-between gap-3 p-3 border-bottom">
+        <h3 class="bps-card-title text-primary mb-0"><i class="bi bi-capsule me-2"></i> Medicine Stock Levels</h3>
+        
+        <form method="get" asp-action="Index" class="d-flex gap-2 flex-grow-1 flex-md-grow-0" style="max-width: 600px;">
+            <select name="category" class="form-select bg-light" style="width: 170px;" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                @foreach (var cat in ViewBag.Categories as List<string> ?? new List<string>())
+                {
+                    if (ViewData["CategoryFilter"]?.ToString() == cat)
                     {
-                        @if (ViewData["CategoryFilter"]?.ToString() == cat)
-                        {
-                            <option value="@cat" selected>@cat</option>
-                        }
-                        else
-                        {
-                            <option value="@cat">@cat</option>
-                        }
+                        <option value="@cat" selected>@cat</option>
                     }
-                </select>
-            </div>
+                    else
+                    {
+                        <option value="@cat">@cat</option>
+                    }
+                }
+            </select>
+            
             <div class="input-group">
-                <input type="text" name="search" value="@ViewData["SearchQuery"]" class="form-control bg-light border-0 small" placeholder="Search medicine..." aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                    @if (!string.IsNullOrEmpty(ViewData["SearchQuery"]?.ToString()) || !string.IsNullOrEmpty(ViewData["CategoryFilter"]?.ToString()))
-                    {
-                        <a asp-action="Index" class="btn btn-secondary">Clear</a>
-                    }
-                </div>
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" value="@ViewData["SearchQuery"]" class="form-control bg-light border-start-0" placeholder="Search medicine..." aria-label="Search">
+                <button class="btn btn-primary" type="submit">Search</button>
             </div>
+            
+            @if (!string.IsNullOrEmpty(ViewData["SearchQuery"]?.ToString()) || !string.IsNullOrEmpty(ViewData["CategoryFilter"]?.ToString()))
+            {
+                <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+            }
         </form>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Photo</th>
-                        <th>Medicine Name</th>
-                        <th>Category</th>
-                        <th>Expiry Date</th>
-                        <th>Stock Level</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        bool isExpired = item.ExpiryDate < DateTime.UtcNow;
-                        bool isNearExpiry = !isExpired && item.ExpiryDate < DateTime.UtcNow.AddDays(30);
-                        bool isOutOfStock = item.Stock == 0;
-                        bool isLowStock = !isOutOfStock && item.Stock <= item.MinStockLevel;
+    
+    <div class="table-responsive">
+        <table class="table align-middle table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 70px;">Photo</th>
+                    <th>Medicine Name</th>
+                    <th>Category</th>
+                    <th>Expiry Date</th>
+                    <th>Stock Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    bool isExpired = item.ExpiryDate < DateTime.UtcNow;
+                    bool isNearExpiry = !isExpired && item.ExpiryDate < DateTime.UtcNow.AddDays(30);
+                    bool isOutOfStock = item.Stock == 0;
+                    bool isLowStock = !isOutOfStock && item.Stock <= item.MinStockLevel;
 
-                        <tr>
-                            <td class="text-center align-middle">
+                    var stockBadge = "bg-success-subtle text-success";
+                    if (isOutOfStock) stockBadge = "bg-danger-subtle text-danger";
+                    else if (isLowStock) stockBadge = "bg-warning-subtle text-warning text-dark";
+
+                    var expiryClass = "";
+                    if (isExpired) expiryClass = "text-danger fw-bold";
+                    else if (isNearExpiry) expiryClass = "text-warning fw-bold";
+
+                    // Progress calculations
+                    var percent = 0;
+                    var progressColorClass = "bps-stock-progress-green";
+                    
+                    if (item.Stock <= 0)
+                    {
+                        percent = 100;
+                        progressColorClass = "bps-stock-progress-red";
+                    }
+                    else if (isLowStock)
+                    {
+                        percent = item.MinStockLevel > 0 ? Math.Min(100, (item.Stock * 100) / item.MinStockLevel) : 100;
+                        progressColorClass = item.Stock <= (item.MinStockLevel / 2) ? "bps-stock-progress-red" : "bps-stock-progress-yellow";
+                    }
+                    else
+                    {
+                        percent = 100;
+                        progressColorClass = "bps-stock-progress-green";
+                    }
+
+                    <tr>
+                        <td>
+                            <div class="bps-nav-avatar" style="width: 42px; height: 42px; background: var(--bps-primary-subtle); color: var(--bps-primary); font-size: 1.2rem; border-radius: var(--bps-radius-sm);">
                                 @if (!string.IsNullOrEmpty(item.PhotoPath))
                                 {
-                                    <img src="~/@item.PhotoPath" class="rounded shadow-sm" style="width: 40px; height: 40px; object-fit: cover;" alt="Photo" />
+                                    <img src="~/@item.PhotoPath" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--bps-radius-sm);" />
                                 }
                                 else
                                 {
-                                    <div class="rounded bg-secondary d-flex align-items-center justify-content-center text-white mx-auto shadow-sm" style="width: 40px; height: 40px;">
-                                        <i class="fas fa-pills"></i>
-                                    </div>
+                                    <i class="bi bi-capsule"></i>
                                 }
-                            </td>
-                            <td class="align-middle font-weight-bold">
-                                @item.Name
-                                @if (isExpired) { <span class="badge badge-danger ml-1">Expired</span> }
-                                else if (isNearExpiry) { <span class="badge badge-warning text-dark ml-1">Near Expiry</span> }
-                            </td>
-                            <td class="align-middle text-muted">@item.Category</td>
-                            <td class="align-middle @(isExpired ? "text-danger font-weight-bold" : isNearExpiry ? "text-warning font-weight-bold" : "")">
-                                @item.ExpiryDate.ToString("MMM dd, yyyy")
-                            </td>
-                            <td class="align-middle text-center">
-                                @if (isOutOfStock)
-                                {
-                                    <span class="badge badge-danger px-3 py-2" style="font-size: 1rem;">Out of Stock</span>
-                                }
-                                else if (isLowStock)
-                                {
-                                    <span class="badge badge-warning text-dark px-3 py-2" style="font-size: 1rem;">Low: @item.Stock</span>
-                                }
-                                else
-                                {
-                                    <span class="badge badge-success px-3 py-2" style="font-size: 1rem;">@item.Stock</span>
-                                }
-                            </td>
-                        </tr>
-                    }
-                    @if (!Model.Any())
-                    {
-                        <tr>
-                            <td colspan="5" class="text-center py-4 text-muted">
-                                <i class="fas fa-info-circle mb-2"></i><br/>
-                                No medicines found matching your criteria.
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-bold text-gray-900">@item.Name</span>
+                            @if (isExpired)
+                            {
+                                <span class="badge bg-danger-subtle text-danger ms-1">Expired</span>
+                            }
+                            else if (isNearExpiry)
+                            {
+                                <span class="badge bg-warning-subtle text-warning text-dark ms-1">Near Expiry</span>
+                            }
+                        </td>
+                        <td class="text-secondary">@item.Category</td>
+                        <td class="@expiryClass">
+                            @item.ExpiryDate.ToString("MMM dd, yyyy")
+                            @if (isExpired)
+                            {
+                                <i class="bi bi-exclamation-triangle-fill text-danger ms-1" title="Expired"></i>
+                            }
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column" style="width: 110px;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge @stockBadge fw-semibold">
+                                        @if (isOutOfStock)
+                                        {
+                                            @:Out of Stock
+                                        }
+                                        else
+                                        {
+                                            @item.Stock
+                                        }
+                                    </span>
+                                    <small class="text-secondary" style="font-size: 11px;">Min: @item.MinStockLevel</small>
+                                </div>
+                                <div class="bps-stock-progress-container">
+                                    <div class="bps-stock-progress-bar @progressColorClass" style="width: @percent%;"></div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <div class="bps-empty-state-icon-float text-muted fs-1 mb-3">
+                                <i class="bi bi-search text-primary" style="opacity: 0.4;"></i>
+                            </div>
+                            <p class="mb-3 fw-semibold">No medicines found matching your criteria.</p>
+                            <a asp-action="Index" class="btn btn-outline-primary btn-sm">Reset Filters</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
