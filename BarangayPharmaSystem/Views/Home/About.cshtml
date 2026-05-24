@@ -1,0 +1,143 @@
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+    ViewData["Title"] = "About — Barangay Pharma System";
+}
+
+<!-- ── Hero ────────────────────────────────────────────────────────────── -->
+<div class="bps-sdg-hero" style="padding: 3rem 1.5rem;">
+    <div class="bps-sdg-hero-content">
+        <div class="bps-sdg-hero-badge">
+            <i class="bi bi-info-circle"></i>
+            About This System
+        </div>
+        <h1>Barangay Pharma System</h1>
+        <p>
+            A digital pharmacy management solution developed to improve healthcare delivery
+            in barangay-level health centers across the Philippines.
+        </p>
+    </div>
+</div>
+
+<!-- ── System Purpose ──────────────────────────────────────────────────── -->
+<section class="bps-sdg-section">
+    <h2 class="bps-sdg-section-title">
+        <i class="bi bi-journal-medical" style="color: var(--bps-primary);"></i>
+        System Purpose
+    </h2>
+    <div class="bps-sdg-section-divider"></div>
+
+    <div class="row g-5 align-items-center">
+        <div class="col-lg-7">
+            <p style="font-size: 1.0625rem; color: var(--bps-gray-700); line-height: 1.8;">
+                The <strong>Barangay Pharma System (BPS)</strong> was created to address the common challenges
+                faced by barangay health centers in managing their pharmacy operations — from
+                tracking medicines and prescriptions, to organizing patient records and preventing
+                stock shortages.
+            </p>
+            <p style="color: var(--bps-gray-600); line-height: 1.8;">
+                By digitizing pharmacy operations, BPS reduces the administrative burden on health
+                workers, minimizes errors in medicine dispensing, and gives patients transparent
+                access to their own health records — all aligned with the United Nations
+                <a href="/Home/SDG3" style="color: var(--bps-primary); font-weight: 600;">SDG Goal 3</a>
+                on Good Health and Well-being.
+            </p>
+        </div>
+        <div class="col-lg-5">
+            <div style="background: var(--bps-primary-subtle); border-radius: 12px; padding: 2rem; border-left: 5px solid var(--bps-primary);">
+                <h4 style="font-family: var(--bps-font-heading); color: var(--bps-primary); margin-bottom: 1rem; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.06em;">Quick Facts</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+                    @foreach (var fact in new[] {
+                        ("bi-stack", "Technology Stack", "ASP.NET Core MVC + EF Core + SQL Server"),
+                        ("bi-layout-sidebar-inset", "Architecture", "Area-based MVC with Role Isolation"),
+                        ("bi-people", "User Roles", "Admin · Staff · Patient"),
+                        ("bi-database-fill", "Database", "SQL Server (LocalDB / SQLEXPRESS)"),
+                        ("bi-shield-lock", "Authentication", "ASP.NET Core Identity"),
+                        ("bi-palette2", "Design System", "Medical Blue · DM Sans · Nunito"),
+                    })
+                    {
+                        <li style="display: flex; align-items: center; gap: 0.625rem; font-size: 0.9rem;">
+                            <i class="bi @fact.Item1" style="color: var(--bps-primary); width: 20px; text-align: center;"></i>
+                            <div>
+                                <span style="font-weight: 600; color: var(--bps-gray-700);">@fact.Item2:</span>
+                                <span style="color: var(--bps-gray-600);"> @fact.Item3</span>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Key Features ────────────────────────────────────────────────────── -->
+<section style="background: var(--bps-primary-subtle); padding: 0;">
+    <div class="bps-sdg-section">
+        <h2 class="bps-sdg-section-title">
+            <i class="bi bi-stars" style="color: var(--bps-primary);"></i>
+            Key Features
+        </h2>
+        <div class="bps-sdg-section-divider"></div>
+
+        <div class="row g-4">
+            @foreach (var item in new[] {
+                ("bi-grid-1x2-fill", "Admin Dashboard", "System-wide KPIs, stock alerts, recent audit activity, and quick action buttons."),
+                ("bi-person-badge-fill", "User Management", "Create, edit, and soft-delete users (Admin/Staff/Patient) with profile photo uploads and auto-generated Patient IDs."),
+                ("bi-capsule", "Medicine Inventory", "Full CRUD for medicines with category, dosage info, stock level, expiry date, and supplier tracking."),
+                ("bi-file-earmark-medical-fill", "Prescription Management", "Digital prescription creation, status tracking (Active/Completed/Expired/Refilled), and assignment to patients."),
+                ("bi-bag-heart-fill", "Dispensing Records", "Controlled medicine dispensing with automatic stock deduction and dispensing history per patient."),
+                ("bi-arrow-repeat", "Refill Requests", "Patient-initiated refill requests with a server-enforced 20-day cooldown period. Staff approve or reject."),
+                ("bi-shield-lock-fill", "Audit Logs", "Full audit trail of every create/update/delete action across the system with timestamps and user attribution."),
+                ("bi-graph-up-arrow", "Reports", "Admin-level analytics on dispensing trends, stock levels, and patient activity."),
+            })
+            {
+                <div class="col-md-6 col-xl-3">
+                    <div class="bps-sdg-feature-card">
+                        <div style="flex-shrink: 0;">
+                            <div class="bps-sdg-feature-icon"><i class="bi @item.Item1"></i></div>
+                        </div>
+                        <div>
+                            <h3 class="bps-sdg-feature-title">@item.Item2</h3>
+                            <p class="bps-sdg-feature-desc">@item.Item3</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ── Developer Info ──────────────────────────────────────────────────── -->
+<section class="bps-sdg-section">
+    <h2 class="bps-sdg-section-title">
+        <i class="bi bi-code-slash" style="color: var(--bps-primary);"></i>
+        Development Team
+    </h2>
+    <div class="bps-sdg-section-divider"></div>
+
+    <div class="row justify-content-center g-4">
+        <div class="col-sm-8 col-md-5 col-lg-4">
+            <div class="bps-about-dev-card">
+                <div class="bps-about-dev-avatar">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <h3 style="font-family: var(--bps-font-heading); font-size: 1.125rem; font-weight: 700; color: var(--bps-gray-800); margin-bottom: 0.25rem;">Student Developer</h3>
+                <p style="color: var(--bps-primary); font-weight: 600; font-size: 0.875rem; margin-bottom: 0.75rem;">Bachelor of Science in Information Technology</p>
+                <p style="color: var(--bps-gray-500); font-size: 0.875rem; line-height: 1.6; margin: 0;">
+                    Final Project in IT Elective 2<br />
+                    Barangay Pharma System — A pharmacy management solution aligned with UN SDG Goal 3.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <p style="color: var(--bps-gray-500); font-size: 0.9375rem;">
+            Built with <span style="color: var(--bps-danger);">❤</span> using 
+            <strong>ASP.NET Core MVC</strong>, <strong>Entity Framework Core</strong>, 
+            and <strong>SQL Server</strong>.
+        </p>
+        <a href="/Account/Login" class="btn btn-primary mt-2" style="background-color: var(--bps-primary); border-color: var(--bps-primary); padding: 0.625rem 2rem; border-radius: 9999px; font-weight: 600;">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Access the System
+        </a>
+    </div>
+</section>

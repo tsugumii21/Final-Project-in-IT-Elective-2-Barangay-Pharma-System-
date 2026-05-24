@@ -110,13 +110,21 @@
 
     <div class="bps-nav-section">
         <span class="bps-nav-section-label">My Health</span>
-        <a asp-area="Patient" asp-controller="MyPrescriptions" asp-action="Index" class="@NavClass("Patient", "MyPrescriptions")">
+        <a asp-area="Patient" asp-controller="Profile" asp-action="Index" class="@NavClass("Patient", "Profile")">
+            <i class="bi bi-person-circle bps-nav-icon"></i>
+            <span>My Profile</span>
+        </a>
+        <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index" class="@NavClass("Patient", "Prescriptions")">
             <i class="bi bi-file-earmark-medical-fill bps-nav-icon"></i>
             <span>My Prescriptions</span>
         </a>
-        <a asp-area="Patient" asp-controller="MyRefillRequests" asp-action="Index" class="@NavClass("Patient", "MyRefillRequests")">
+        <a asp-area="Patient" asp-controller="History" asp-action="Index" class="@NavClass("Patient", "History")">
+            <i class="bi bi-clock-history bps-nav-icon"></i>
+            <span>Dispensing History</span>
+        </a>
+        <a asp-area="Patient" asp-controller="Refills" asp-action="Index" class="@NavClass("Patient", "Refills")">
             <i class="bi bi-arrow-repeat bps-nav-icon"></i>
-            <span>My Refill Requests</span>
+            <span>Refill Requests</span>
         </a>
     </div>
 }

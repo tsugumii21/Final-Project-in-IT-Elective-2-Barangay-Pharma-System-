@@ -1,10 +1,10 @@
-using BarangayPharmaSystem.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarangayPharmaSystem.Controllers;
 
-/// <summary>Default landing controller — redirects authenticated users to Dashboard.</summary>
+/// <summary>Default landing controller — redirects authenticated users to Dashboard.
+/// Also serves public pages: SDG3 and About.</summary>
 public class HomeController : Controller
 {
     [AllowAnonymous]
@@ -16,5 +16,19 @@ public class HomeController : Controller
         }
 
         return RedirectToAction("Login", "Account");
+    }
+
+    [AllowAnonymous]
+    public IActionResult SDG3()
+    {
+        ViewData["Title"] = "SDG 3 — Good Health and Well-being";
+        return View();
+    }
+
+    [AllowAnonymous]
+    public IActionResult About()
+    {
+        ViewData["Title"] = "About — Barangay Pharma System";
+        return View();
     }
 }

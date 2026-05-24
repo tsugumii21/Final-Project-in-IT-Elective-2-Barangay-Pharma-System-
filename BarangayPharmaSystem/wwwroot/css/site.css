@@ -840,3 +840,431 @@ h1, h2, h3, h4, h5, h6,
     background-color: #ffffff;
     border-color: #ffffff;
 }
+
+/* ── Profile Photo Avatar ─────────────────────────────────────── */
+.bps-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+.bps-nav-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.bps-sidebar-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--bps-primary-subtle);
+    color: var(--bps-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.bps-dropdown-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bps-primary-subtle);
+}
+
+/* Large profile photo in profile pages */
+.bps-profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--bps-primary-subtle);
+    box-shadow: var(--bps-shadow-md);
+}
+
+.bps-profile-photo-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--bps-primary-subtle);
+    color: var(--bps-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    border: 4px solid var(--bps-gray-200);
+    box-shadow: var(--bps-shadow-md);
+}
+
+/* ── Role Badge (navbar dropdown) ─────────────────────────────── */
+.bps-nav-user-role-badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    opacity: 0.80;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+}
+
+.bps-role-badge-pill {
+    display: inline-block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--bps-primary-subtle);
+    color: var(--bps-primary);
+    padding: 0.15em 0.6em;
+    border-radius: var(--bps-radius-full);
+}
+
+/* ── Loading Spinner Overlay ──────────────────────────────────── */
+.bps-form-spinner {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(3px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--bps-space-md);
+}
+
+.bps-form-spinner.is-active {
+    display: flex;
+}
+
+.bps-spinner-ring {
+    width: 52px;
+    height: 52px;
+    border: 4px solid var(--bps-gray-200);
+    border-top-color: var(--bps-primary);
+    border-radius: 50%;
+    animation: bps-spin 0.8s linear infinite;
+}
+
+@keyframes bps-spin {
+    to { transform: rotate(360deg); }
+}
+
+.bps-spinner-text {
+    font-family: var(--bps-font-heading);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--bps-primary);
+}
+
+/* ── Empty State ──────────────────────────────────────────────── */
+.bps-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--bps-space-2xl) var(--bps-space-xl);
+    text-align: center;
+    color: var(--bps-gray-400);
+}
+
+.bps-empty-state-icon {
+    font-size: 3.5rem;
+    margin-bottom: var(--bps-space-md);
+    opacity: 0.5;
+}
+
+.bps-empty-state-title {
+    font-family: var(--bps-font-heading);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--bps-gray-500);
+    margin-bottom: var(--bps-space-xs);
+}
+
+.bps-empty-state-subtitle {
+    font-size: 0.875rem;
+    color: var(--bps-gray-400);
+    max-width: 340px;
+}
+
+/* ── Public Navbar (unauthenticated pages) ────────────────────── */
+.bps-public-navbar {
+    background: var(--bps-primary);
+    box-shadow: var(--bps-shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.bps-public-navbar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--bps-space-lg);
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--bps-space-md);
+}
+
+.bps-public-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--bps-space-sm);
+    text-decoration: none;
+    color: #ffffff;
+    font-family: var(--bps-font-heading);
+    font-weight: 700;
+    font-size: 1.0625rem;
+    letter-spacing: 0.02em;
+}
+
+.bps-public-brand:hover { color: rgba(255,255,255,0.90); text-decoration: none; }
+
+.bps-public-brand-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.20);
+    border-radius: var(--bps-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+}
+
+.bps-public-brand-text {
+    display: none;
+}
+
+@media (min-width: 480px) {
+    .bps-public-brand-text { display: block; }
+}
+
+.bps-public-nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--bps-space-xs);
+}
+
+.bps-public-nav-link {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--bps-radius-md);
+    transition: background-color var(--bps-transition-fast), color var(--bps-transition-fast);
+    display: inline-flex;
+    align-items: center;
+}
+
+.bps-public-nav-link:hover,
+.bps-public-nav-link.active {
+    background: rgba(255,255,255,0.15);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.bps-public-nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: var(--bps-radius-full);
+    transition: background-color var(--bps-transition-fast);
+    display: inline-flex;
+    align-items: center;
+    margin-left: var(--bps-space-xs);
+}
+
+.bps-public-nav-btn:hover {
+    background: rgba(255,255,255,0.28);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* Public pages use a clean white background (not the auth gradient) */
+.bps-auth-page.bps-public-page {
+    background: var(--bps-gray-50);
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+    min-height: calc(100vh - 64px);
+}
+
+/* ── SDG3 / About Page Styles ─────────────────────────────────── */
+.bps-sdg-hero {
+    background: linear-gradient(135deg, var(--bps-primary-dark) 0%, var(--bps-primary) 60%, var(--bps-primary-light) 100%);
+    color: #ffffff;
+    padding: var(--bps-space-2xl) var(--bps-space-xl);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.bps-sdg-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(255,255,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.bps-sdg-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.bps-sdg-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.30);
+    border-radius: var(--bps-radius-full);
+    padding: 0.375rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: var(--bps-space-md);
+}
+
+.bps-sdg-hero h1 {
+    font-family: var(--bps-font-heading);
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: var(--bps-space-md);
+    line-height: 1.25;
+}
+
+.bps-sdg-hero p {
+    font-size: 1.0625rem;
+    opacity: 0.90;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.bps-sdg-section {
+    padding: var(--bps-space-2xl) var(--bps-space-xl);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.bps-sdg-section-title {
+    font-family: var(--bps-font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--bps-primary);
+    margin-bottom: var(--bps-space-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--bps-space-sm);
+}
+
+.bps-sdg-section-divider {
+    width: 48px;
+    height: 4px;
+    background: var(--bps-primary);
+    border-radius: var(--bps-radius-full);
+    margin-bottom: var(--bps-space-lg);
+}
+
+.bps-sdg-feature-card {
+    background: #ffffff;
+    border: 1px solid var(--bps-gray-200);
+    border-radius: var(--bps-radius-lg);
+    box-shadow: var(--bps-shadow-md);
+    padding: var(--bps-space-lg);
+    display: flex;
+    gap: var(--bps-space-md);
+    transition: transform var(--bps-transition-fast), box-shadow var(--bps-transition-fast);
+    height: 100%;
+}
+
+.bps-sdg-feature-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--bps-shadow-lg);
+}
+
+.bps-sdg-feature-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--bps-radius-lg);
+    background: var(--bps-primary-subtle);
+    color: var(--bps-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.bps-sdg-feature-title {
+    font-family: var(--bps-font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--bps-gray-800);
+    margin-bottom: 0.25rem;
+}
+
+.bps-sdg-feature-desc {
+    font-size: 0.9rem;
+    color: var(--bps-gray-500);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* About page team card */
+.bps-about-dev-card {
+    background: #ffffff;
+    border: 1px solid var(--bps-gray-200);
+    border-radius: var(--bps-radius-lg);
+    box-shadow: var(--bps-shadow-md);
+    padding: var(--bps-space-xl);
+    text-align: center;
+    transition: transform var(--bps-transition-fast), box-shadow var(--bps-transition-fast);
+}
+
+.bps-about-dev-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--bps-shadow-lg);
+}
+
+.bps-about-dev-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--bps-primary-subtle);
+    color: var(--bps-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.25rem;
+    margin: 0 auto var(--bps-space-md);
+    border: 3px solid var(--bps-primary);
+}

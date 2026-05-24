@@ -24,14 +24,22 @@
 </head>
 <body class="bps-app-body">
 
+@{
+    // Retrieve the logged-in user's profile photo path from claims / ViewData
+    var userPhoto = User.FindFirst("ProfilePhotoPath")?.Value
+                 ?? ViewData["UserProfilePhoto"]?.ToString();
+    var userFullName = User.Identity?.Name ?? "User";
+}
+
 @if (User.Identity?.IsAuthenticated == true)
 {
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         AUTHENTICATED LAYOUT — Sidebar + Navbar
-    ═══════════════════════════════════════════════════════════════════════ -->
+    @* ═══════════════════════════════════════════════════════════════════════
+       AUTHENTICATED LAYOUT — Sidebar + Navbar
+    ═══════════════════════════════════════════════════════════════════════ *@
+
     <div class="bps-wrapper">
 
-        <!-- ── Sidebar ────────────────────────────────────────────────────── -->
+        <!-- ── Sidebar ─────────────────────────────────────────────────── -->
         <aside id="bps-sidebar" class="bps-sidebar">
             <!-- Brand -->
             <div class="bps-sidebar-brand">
@@ -49,17 +57,24 @@
                 @await Html.PartialAsync("_SidebarPartial")
             </nav>
 
-            <!-- Sidebar footer -->
+            <!-- Sidebar footer with user info -->
             <div class="bps-sidebar-footer">
                 <div class="bps-sidebar-user-info">
                     <div class="bps-sidebar-avatar">
-                        <i class="bi bi-person-circle"></i>
+                        @if (!string.IsNullOrEmpty(userPhoto))
+                        {
+                            <img src="~/@userPhoto" alt="@userFullName" class="bps-avatar-img" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-person-circle"></i>
+                        }
                     </div>
                     <div class="bps-sidebar-user-meta">
-                        <span class="bps-sidebar-user-name">@User.Identity.Name</span>
+                        <span class="bps-sidebar-user-name">@userFullName</span>
                         <span class="bps-sidebar-user-role">
                             @if (User.IsInRole("Admin")) { <text>Administrator</text> }
-                            else if (User.IsInRole("Staff")) { <text>Staff</text> }
+                            else if (User.IsInRole("Staff")) { <text>Staff Member</text> }
                             else { <text>Patient</text> }
                         </span>
                     </div>
@@ -67,7 +82,7 @@
             </div>
         </aside>
 
-        <!-- ── Main content area ──────────────────────────────────────────── -->
+        <!-- ── Main content area ──────────────────────────────────────── -->
         <div class="bps-main">
 
             <!-- Top Navbar -->
@@ -103,17 +118,48 @@
                                 id="navUserDropdown" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                             <div class="bps-nav-avatar">
-                                <i class="bi bi-person-fill"></i>
+                                @if (!string.IsNullOrEmpty(userPhoto))
+                                {
+                                    <img src="~/@userPhoto" alt="@userFullName" class="bps-avatar-img" />
+                                }
+                                else
+                                {
+                                    <i class="bi bi-person-fill"></i>
+                                }
                             </div>
-                            <span class="bps-nav-username d-none d-md-inline">@User.Identity.Name</span>
+                            <div class="d-none d-md-flex flex-column align-items-start">
+                                <span class="bps-nav-username">@userFullName</span>
+                                <span class="bps-nav-user-role-badge">
+                                    @if (User.IsInRole("Admin")) { <text>Admin</text> }
+                                    else if (User.IsInRole("Staff")) { <text>Staff</text> }
+                                    else { <text>Patient</text> }
+                                </span>
+                            </div>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end bps-user-dropdown" aria-labelledby="navUserDropdown">
                             <li>
-                                <span class="dropdown-header bps-dropdown-header">
-                                    @if (User.IsInRole("Admin")) { <text>Administrator</text> }
-                                    else if (User.IsInRole("Staff")) { <text>Staff Member</text> }
-                                    else { <text>Patient</text> }
-                                </span>
+                                <div class="bps-dropdown-user-info px-3 py-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="bps-dropdown-avatar">
+                                            @if (!string.IsNullOrEmpty(userPhoto))
+                                            {
+                                                <img src="~/@userPhoto" alt="@userFullName" class="bps-avatar-img" />
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-person-circle" style="font-size: 1.5rem; color: var(--bps-primary);"></i>
+                                            }
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold" style="font-size: 0.875rem; color: var(--bps-gray-800);">@userFullName</div>
+                                            <span class="bps-role-badge-pill">
+                                                @if (User.IsInRole("Admin")) { <text>Administrator</text> }
+                                                else if (User.IsInRole("Staff")) { <text>Staff Member</text> }
+                                                else { <text>Patient</text> }
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li>
@@ -175,9 +221,33 @@
 }
 else
 {
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         UNAUTHENTICATED LAYOUT — Full-page centered (login/register)
-    ═══════════════════════════════════════════════════════════════════════ -->
+    @* ═══════════════════════════════════════════════════════════════════════
+       UNAUTHENTICATED LAYOUT — with Public Navbar (for SDG3, About, Login)
+    ═══════════════════════════════════════════════════════════════════════ *@
+
+    <!-- Public Navbar -->
+    <nav class="bps-public-navbar">
+        <div class="bps-public-navbar-inner">
+            <a href="/" class="bps-public-brand">
+                <div class="bps-public-brand-icon">
+                    <i class="bi bi-hospital-fill"></i>
+                </div>
+                <span class="bps-public-brand-text">Barangay Pharma System</span>
+            </a>
+            <div class="bps-public-nav-links">
+                <a href="/Home/SDG3" class="bps-public-nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "SDG3" ? "active" : "")">
+                    <i class="bi bi-globe me-1"></i> SDG 3
+                </a>
+                <a href="/Home/About" class="bps-public-nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")">
+                    <i class="bi bi-info-circle me-1"></i> About
+                </a>
+                <a href="/Account/Login" class="bps-public-nav-btn">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                </a>
+            </div>
+        </div>
+    </nav>
+
     <main class="bps-auth-page">
         @RenderBody()
     </main>
