@@ -250,7 +250,7 @@ public static class DbSeeder
             PatientCode   = SamplePatientCode,
             FullName      = patientUser.FullName,
             Birthdate     = new DateTime(1990, 6, 15),
-            Address       = "Blk 3 Lot 12, Barangay San Isidro, Taguig City, Metro Manila",
+            Address       = "Blk 5 Lot 2, Barangay Halang, Calamba City, Laguna",
             ContactNumber = "09171234567",
             LinkedUserId  = patientUser.Id,
             IsDeleted     = false,
