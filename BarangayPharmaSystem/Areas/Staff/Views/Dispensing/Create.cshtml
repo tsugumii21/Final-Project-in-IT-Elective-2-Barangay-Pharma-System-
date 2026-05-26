@@ -120,6 +120,11 @@
         const form       = document.getElementById('dispenseForm');
         const modal      = document.getElementById('confirmDispenseModal');
 
+        // Move the modal to the body to prevent stacking context z-index overlap issues
+        if (modal) {
+            document.body.appendChild(modal);
+        }
+
         // Handle form submit (e.g. from submit button or Enter key)
         form.addEventListener('submit', function (e) {
             // If already confirming and submitting, allow it

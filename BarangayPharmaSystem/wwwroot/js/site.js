@@ -140,6 +140,15 @@
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     }
 
+    // ── Stacking Context Modal Helper (Fix for CSS Transform z-index issues) ──
+    function initStackingModals() {
+        document.querySelectorAll('.modal').forEach(function (modal) {
+            if (modal && modal.parentNode !== document.body) {
+                document.body.appendChild(modal);
+            }
+        });
+    }
+
     // ── DOM Ready ───────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
         autoDismissAlerts();
@@ -147,6 +156,7 @@
         initConfirmations();
         initFileInputs();
         initTooltips();
+        initStackingModals();
     });
 
 })();
