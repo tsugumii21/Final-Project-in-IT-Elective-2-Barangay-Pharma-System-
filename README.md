@@ -143,17 +143,3 @@ On first run, the database is seeded automatically with three roles and default 
 - **My Dispensing History**: Read-only date-filtered log of all medicine collections.
 
 ---
-
-## 🛠️ System Hardening & UX Polish
-
-Recently, the system went through a comprehensive security, architecture, and UX audit to ensure production readiness:
-
-- **🔒 Unauthorized Access Protection**: Resolved unauthenticated access issues. Instead of showing generic 404 pages on unauthorized access to `/Admin` or `/Staff`, the system now programmatically and securely redirects users to the centralized `/Account/Login` screen.
-- **⚡ Bulletproof Dispensing Transactions**: Refactored the dispensing confirmation workflow to prevent double-submissions, resolve Bootstrap modal overlay freeze bugs, and disable double form execution.
-- **📊 Unified Stock Alerts**: Synchronized the background alert count on the Staff Dashboard with active row highlighting in the Medicines Inventory (visual `table-danger` and `table-warning` classes based on `Stock <= MinStockLevel` and `ExpiryDate <= 30 Days`).
-- **🎨 UX & High-Contrast Design Improvements**:
-  - Replaced legacy CSS color tags with custom high-contrast BPS badges, resolving invisible table values in both Staff and Patient dispensing history logs.
-  - Enhanced form controls (such as the Refill Requests filter select dropdown) to support modern Bootstrap 5 selectors, providing visible borders and clean dropdown chevrons.
-  - Cleaned up navigation headers by removing redundant page titles from the top blue navbar across all authenticated pages.
-  - Restructured the About Page grid feature cards and Developer Team cards to prevent text overflow and vertical cutoff on varying screen dimensions.
-
