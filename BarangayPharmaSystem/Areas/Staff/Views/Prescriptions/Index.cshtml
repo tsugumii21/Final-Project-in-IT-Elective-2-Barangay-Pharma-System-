@@ -51,110 +51,109 @@
         </form>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover mb-0">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Patient</th>
-                    <th>Medicine</th>
-                    <th>Dosage &amp; Duration</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center" style="min-width: 160px;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
+    @if (!Model.Any())
+    {
+        <div class="bps-empty-state p-5">
+            <i class="bi bi-file-earmark-medical bps-empty-state-icon bps-empty-state-icon-float text-primary" style="opacity: 0.4;"></i>
+            <div class="bps-empty-state-title">No Prescriptions Found</div>
+            <p class="bps-empty-state-subtitle">
+                @if (!string.IsNullOrEmpty(currentSearch) || !string.IsNullOrEmpty(currentStatus))
                 {
-                    <tr>
-                        <td class="align-middle text-muted" style="font-size:0.85rem; white-space:nowrap;">
-                            @item.CreatedAt.ToString("MMM dd, yyyy")
-                        </td>
-                        <td class="align-middle">
-                            <div class="fw-semibold" style="color:var(--bps-gray-800);">@item.PatientName</div>
-                            <small class="text-muted">@item.PatientCode</small>
-                        </td>
-                        <td class="align-middle fw-semibold" style="color:var(--bps-primary);">
-                            @item.MedicineName
-                        </td>
-                        <td class="align-middle" style="font-size:0.875rem;">
-                            @item.Dosage<br />
-                            <small class="text-muted">Duration: @item.Duration</small>
-                        </td>
-                        <td class="align-middle text-center">
-                            @switch (item.Status)
-                            {
-                                case PrescriptionStatus.Active:
-                                    <span class="badge bps-badge-active px-3 py-2">Active</span>
-                                    break;
-                                case PrescriptionStatus.Completed:
-                                    <span class="badge bps-badge-completed px-3 py-2">Completed</span>
-                                    break;
-                                case PrescriptionStatus.Expired:
-                                    <span class="badge bps-badge-expired px-3 py-2">Expired</span>
-                                    break;
-                                case PrescriptionStatus.Cancelled:
-                                    <span class="badge bps-badge-cancelled px-3 py-2">Cancelled</span>
-                                    break;
-                                case PrescriptionStatus.Refilled:
-                                    <span class="badge bps-badge-refilled px-3 py-2">Refilled</span>
-                                    break;
-                            }
-                        </td>
-                        <td class="align-middle text-center">
-                            @if (item.Status == PrescriptionStatus.Active)
-                            {
-                                <div class="d-flex gap-2 justify-content-center">
-                                    <a asp-action="Edit" asp-route-id="@item.Id"
-                                       class="btn btn-sm btn-primary"
-                                       style="min-width:80px;">
-                                        <i class="bi bi-pencil-fill me-1"></i>Edit
-                                    </a>
-                                    <form asp-action="Delete" asp-route-id="@item.Id"
-                                          method="post" class="d-inline"
-                                          onsubmit="return confirm('Delete this prescription? This cannot be undone.');">
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-sm btn-danger"
-                                                style="min-width:80px;">
-                                            <i class="bi bi-trash-fill me-1"></i>Delete
-                                        </button>
-                                    </form>
-                                </div>
-                            }
-                            else
-                            {
-                                <span class="text-muted small">
-                                    <i class="bi bi-lock-fill me-1"></i>Locked
-                                </span>
-                            }
-                        </td>
-                    </tr>
+                    <text>No prescriptions match your current filters.</text>
                 }
-                @if (!Model.Any())
+                else
                 {
-                    <tr>
-                        <td colspan="6" class="py-5">
-                            <div class="bps-empty-state">
-                                <i class="bi bi-file-earmark-medical bps-empty-state-icon bps-empty-state-icon-float"></i>
-                                <div class="bps-empty-state-title">No Prescriptions Found</div>
-                                <p class="bps-empty-state-subtitle">
-                                    @if (!string.IsNullOrEmpty(currentSearch) || !string.IsNullOrEmpty(currentStatus))
-                                    {
-                                        <text>No prescriptions match your current filters.</text>
-                                    }
-                                    else
-                                    {
-                                        <text>No prescriptions have been recorded yet.</text>
-                                    }
-                                </p>
-                                <a asp-action="Create" class="btn btn-primary mt-2">
-                                    <i class="bi bi-plus-lg me-2"></i>Write First Prescription
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
+                    <text>No prescriptions have been recorded yet. Click below to write one.</text>
                 }
-            </tbody>
-        </table>
-    </div>
+            </p>
+            <a asp-action="Create" class="btn btn-primary mt-2">
+                <i class="bi bi-plus-lg me-1"></i>Write New Prescription
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Patient</th>
+                        <th>Medicine</th>
+                        <th>Dosage &amp; Duration</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center" style="min-width: 160px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle text-muted" style="font-size:0.85rem; white-space:nowrap;">
+                                @item.CreatedAt.ToString("MMM dd, yyyy")
+                            </td>
+                            <td class="align-middle">
+                                <div class="fw-semibold" style="color:var(--bps-gray-800);">@item.PatientName</div>
+                                <small class="text-muted">@item.PatientCode</small>
+                            </td>
+                            <td class="align-middle fw-semibold" style="color:var(--bps-primary);">
+                                @item.MedicineName
+                            </td>
+                            <td class="align-middle" style="font-size:0.875rem;">
+                                @item.Dosage<br />
+                                <small class="text-muted">Duration: @item.Duration</small>
+                            </td>
+                            <td class="align-middle text-center">
+                                @switch (item.Status)
+                                {
+                                    case PrescriptionStatus.Active:
+                                        <span class="badge bps-badge-active px-3 py-2">Active</span>
+                                        break;
+                                    case PrescriptionStatus.Completed:
+                                        <span class="badge bps-badge-completed px-3 py-2">Completed</span>
+                                        break;
+                                    case PrescriptionStatus.Expired:
+                                        <span class="badge bps-badge-expired px-3 py-2">Expired</span>
+                                        break;
+                                    case PrescriptionStatus.Cancelled:
+                                        <span class="badge bps-badge-cancelled px-3 py-2">Cancelled</span>
+                                        break;
+                                    case PrescriptionStatus.Refilled:
+                                        <span class="badge bps-badge-refilled px-3 py-2">Refilled</span>
+                                        break;
+                                }
+                            </td>
+                            <td class="align-middle text-center">
+                                @if (item.Status == PrescriptionStatus.Active)
+                                {
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <a asp-action="Edit" asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-primary"
+                                           style="min-width:80px;">
+                                            <i class="bi bi-pencil-fill me-1"></i>Edit
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@item.Id"
+                                              method="post" class="d-inline"
+                                              onsubmit="return confirm('Delete this prescription? This cannot be undone.');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                    style="min-width:80px;">
+                                                <i class="bi bi-trash-fill me-1"></i>Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">
+                                        <i class="bi bi-lock-fill me-1"></i>Locked
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
