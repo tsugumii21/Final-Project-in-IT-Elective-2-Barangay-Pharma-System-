@@ -1,128 +1,149 @@
 @model BarangayPharmaSystem.Areas.Patient.Models.PatientDashboardViewModel
+@using BarangayPharmaSystem.Models.Entities
 @{
-    ViewData["Title"] = "Patient Dashboard";
+    ViewData["Title"] = "Dashboard";
+    ViewData["PageTitle"] = "Patient Dashboard";
+
+    var nameParts = (Model.PatientName ?? "P").Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    var initials  = nameParts.Length >= 2
+        ? $"{nameParts[0][0]}{nameParts[^1][0]}"
+        : nameParts[0][0].ToString();
 }
 
-<div class="bps-page-header">
-    <div>
-        <h1 class="bps-page-title">Patient Dashboard</h1>
-        <p class="bps-page-subtitle">Overview of your prescriptions and refills</p>
-    </div>
-</div>
-
-<div class="bps-card mb-4" style="border-left: 4px solid var(--bps-primary);">
-    <div class="bps-card-body p-4 d-flex flex-column flex-md-row align-items-center gap-4">
-        @if (!string.IsNullOrEmpty(Model.ProfilePhotoPath))
-        {
-            <img src="~/@Model.ProfilePhotoPath" alt="Profile" class="bps-profile-photo shadow-sm" style="width: 80px; height: 80px;" />
-        }
-        else
-        {
-            <div class="bps-profile-photo-placeholder shadow-sm mx-auto mx-md-0" style="width: 80px; height: 80px; font-size: 2rem;">
-                <i class="bi bi-person-fill"></i>
-            </div>
-        }
-        <div class="text-center text-md-start">
-            <h2 class="fw-bold text-gray-900 mb-1" style="font-family: var(--bps-font-heading);">Welcome back, @Model.PatientName!</h2>
-            <p class="mb-0 text-secondary">Here is the latest update on your pharmacy records and health status.</p>
+<!-- ── Greeting / Welcome Card (full-width Medical Blue gradient) ───────── -->
+<div class="bps-welcome-card mb-4">
+    <div class="bps-welcome-card-bg"></div>
+    <div class="bps-welcome-card-body">
+        <!-- Avatar -->
+        <div class="bps-welcome-avatar">
+            @if (!string.IsNullOrWhiteSpace(Model.ProfilePhotoPath))
+            {
+                <img src="~/@Model.ProfilePhotoPath.TrimStart('/')" alt="@Model.PatientName" />
+            }
+            else
+            {
+                <span>@initials.ToUpper()</span>
+            }
+        </div>
+        <!-- Text -->
+        <div class="bps-welcome-text">
+            <h1 class="bps-welcome-greeting">Welcome back, @Model.PatientName!</h1>
+            <p class="bps-welcome-sub">Here is the latest update on your pharmacy records and health status.</p>
+        </div>
+        <!-- Quick actions -->
+        <div class="bps-welcome-actions">
+            <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index"
+               class="btn btn-light btn-sm px-3">
+                <i class="bi bi-file-earmark-medical me-1"></i>Prescriptions
+            </a>
+            <a asp-area="Patient" asp-controller="Refills" asp-action="Index"
+               class="btn btn-outline-light btn-sm px-3">
+                <i class="bi bi-arrow-repeat me-1"></i>Refills
+            </a>
         </div>
     </div>
 </div>
 
+<!-- ── Summary Cards (3-column, 36px bold numbers) ──────────────────────── -->
 <div class="row g-4 mb-4">
-    <!-- Active Prescriptions -->
-    <div class="col-xl-4 col-md-6">
-        <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index" class="bps-stat-card">
+    <div class="col-xl-4 col-md-6 bps-card-animate" style="--delay: 0">
+        <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index"
+           class="bps-stat-card bps-stat-card-clickable">
             <div class="bps-stat-icon bps-stat-icon-primary">
-                <i class="bi bi-file-earmark-medical"></i>
+                <i class="bi bi-file-earmark-medical-fill"></i>
             </div>
             <div class="bps-stat-content">
-                <div class="bps-stat-value">@Model.ActivePrescriptions</div>
+                <div class="bps-stat-value bps-stat-value-lg">@Model.ActivePrescriptions</div>
                 <div class="bps-stat-label">Active Prescriptions</div>
             </div>
         </a>
     </div>
-
-    <!-- Dispensing Records -->
-    <div class="col-xl-4 col-md-6">
-        <a asp-area="Patient" asp-controller="History" asp-action="Index" class="bps-stat-card">
+    <div class="col-xl-4 col-md-6 bps-card-animate" style="--delay: 1">
+        <a asp-area="Patient" asp-controller="History" asp-action="Index"
+           class="bps-stat-card bps-stat-card-clickable">
             <div class="bps-stat-icon bps-stat-icon-success">
-                <i class="bi bi-capsule"></i>
+                <i class="bi bi-capsule-pill"></i>
             </div>
             <div class="bps-stat-content">
-                <div class="bps-stat-value">@Model.TotalDispensingRecords</div>
+                <div class="bps-stat-value bps-stat-value-lg">@Model.TotalDispensingRecords</div>
                 <div class="bps-stat-label">Total Dispensings</div>
             </div>
         </a>
     </div>
-
-    <!-- Pending Refills -->
-    <div class="col-xl-4 col-md-6">
-        <a asp-area="Patient" asp-controller="Refills" asp-action="Index" class="bps-stat-card">
+    <div class="col-xl-4 col-md-6 bps-card-animate" style="--delay: 2">
+        <a asp-area="Patient" asp-controller="Refills" asp-action="Index"
+           class="bps-stat-card bps-stat-card-clickable">
             <div class="bps-stat-icon bps-stat-icon-warning">
                 <i class="bi bi-arrow-repeat"></i>
             </div>
             <div class="bps-stat-content">
-                <div class="bps-stat-value">@Model.PendingRefillRequests</div>
+                <div class="bps-stat-value bps-stat-value-lg">@Model.PendingRefillRequests</div>
                 <div class="bps-stat-label">Pending Refills</div>
             </div>
         </a>
     </div>
 </div>
 
-<div class="row g-4">
-    <!-- Latest Prescription Widget -->
-    <div class="col-12">
-        <div class="bps-card">
-            <div class="bps-card-header bg-white border-bottom py-3">
-                <h3 class="bps-card-title text-primary"><i class="bi bi-activity me-2"></i> Latest Prescription Activity</h3>
+<!-- ── Latest Prescription Activity ─────────────────────────────────────── -->
+<div class="bps-card">
+    <div class="bps-card-header">
+        <h3 class="bps-card-title">
+            <i class="bi bi-activity text-primary me-2"></i>Latest Prescription Activity
+        </h3>
+        <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index"
+           class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="bps-card-body p-4">
+        @if (Model.LatestPrescription != null)
+        {
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center
+                        justify-content-between gap-3 p-4 rounded-3"
+                 style="background: var(--bps-primary-subtle);">
+                <div>
+                    <h4 class="fw-bold mb-1" style="color: var(--bps-primary); font-family: var(--bps-font-heading);">
+                        @Model.LatestPrescription.Medicine?.Name
+                    </h4>
+                    <p class="mb-1 fw-semibold" style="color: var(--bps-gray-700);">
+                        @Model.LatestPrescription.Dosage — @Model.LatestPrescription.Duration
+                    </p>
+                    <small class="text-muted">
+                        Prescribed on @Model.LatestPrescription.CreatedAt.ToString("MMMM dd, yyyy")
+                    </small>
+                </div>
+                <div class="text-start text-md-end">
+                    @switch (Model.LatestPrescription.Status)
+                    {
+                        case PrescriptionStatus.Active:
+                            <span class="badge bps-badge-active px-3 py-2 mb-2 d-inline-block">Active</span>
+                            break;
+                        case PrescriptionStatus.Completed:
+                            <span class="badge bps-badge-completed px-3 py-2 mb-2 d-inline-block">Completed</span>
+                            break;
+                        case PrescriptionStatus.Expired:
+                            <span class="badge bps-badge-expired px-3 py-2 mb-2 d-inline-block">Expired</span>
+                            break;
+                        case PrescriptionStatus.Cancelled:
+                            <span class="badge bps-badge-cancelled px-3 py-2 mb-2 d-inline-block">Cancelled</span>
+                            break;
+                        case PrescriptionStatus.Refilled:
+                            <span class="badge bps-badge-refilled px-3 py-2 mb-2 d-inline-block">Refilled</span>
+                            break;
+                    }
+                    <br />
+                    <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index"
+                       class="btn btn-primary btn-sm">
+                        <i class="bi bi-arrow-right me-1"></i>View All Prescriptions
+                    </a>
+                </div>
             </div>
-            <div class="bps-card-body">
-                @if (Model.LatestPrescription != null)
-                {
-                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between p-4 rounded-3 animate-fade-in" style="background-color: var(--bps-primary-subtle);">
-                        <div class="mb-3 mb-md-0 text-center text-md-start">
-                            <h4 class="fw-bold text-primary mb-1" style="font-family: var(--bps-font-heading);">@Model.LatestPrescription.Medicine.Name</h4>
-                            <p class="text-gray-800 mb-1 fw-semibold">@Model.LatestPrescription.Dosage — @Model.LatestPrescription.Duration</p>
-                            <small class="text-muted d-block">Prescribed on @Model.LatestPrescription.CreatedAt.ToString("MMMM dd, yyyy")</small>
-                        </div>
-                        <div class="text-center text-md-end">
-                            <div class="mb-3">
-                                @switch (Model.LatestPrescription.Status)
-                                {
-                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Active:
-                                        <span class="badge bg-primary rounded-pill px-3 py-1.5 fw-semibold">Active</span>
-                                        break;
-                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Completed:
-                                        <span class="badge bg-success rounded-pill px-3 py-1.5 fw-semibold">Completed</span>
-                                        break;
-                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Expired:
-                                        <span class="badge bg-warning text-dark rounded-pill px-3 py-1.5 fw-semibold">Expired</span>
-                                        break;
-                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Cancelled:
-                                        <span class="badge bg-danger rounded-pill px-3 py-1.5 fw-semibold">Cancelled</span>
-                                        break;
-                                    case BarangayPharmaSystem.Models.Entities.PrescriptionStatus.Refilled:
-                                        <span class="badge bg-info text-dark rounded-pill px-3 py-1.5 fw-semibold">Refilled</span>
-                                        break;
-                                }
-                            </div>
-                            <a asp-area="Patient" asp-controller="Prescriptions" asp-action="Index" class="btn btn-primary btn-sm">
-                                View All Prescriptions
-                            </a>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="text-center py-5">
-                        <div class="bps-empty-state-icon-float text-muted fs-1 mb-3">
-                            <i class="bi bi-file-earmark-medical text-primary" style="opacity: 0.4;"></i>
-                        </div>
-                        <p class="text-muted mb-0">You have no recorded prescriptions yet.</p>
-                    </div>
-                }
+        }
+        else
+        {
+            <div class="bps-empty-state">
+                <i class="bi bi-file-earmark-medical bps-empty-state-icon bps-empty-state-icon-float"></i>
+                <div class="bps-empty-state-title">No Prescriptions Yet</div>
+                <p class="bps-empty-state-subtitle">You have no prescriptions recorded yet. Visit your health center to get started.</p>
             </div>
-        </div>
+        }
     </div>
 </div>
