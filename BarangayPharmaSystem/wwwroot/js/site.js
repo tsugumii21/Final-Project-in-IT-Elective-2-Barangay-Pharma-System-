@@ -93,8 +93,8 @@
 
         // Hook all POST forms
         document.querySelectorAll('form[method="post"], form[method="POST"]').forEach(function (form) {
-            // Skip logout forms — they should be instant
-            if (form.id === 'logout-form') return;
+            // Skip logout and dispensing forms — they should be instant
+            if (form.id === 'logout-form' || form.id === 'dispenseForm') return;
 
             form.addEventListener('submit', function () {
                 spinner.classList.add('is-active');
