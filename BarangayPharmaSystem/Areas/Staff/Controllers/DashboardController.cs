@@ -38,9 +38,10 @@ public class DashboardController : Controller
             .Where(r => r.Status == RefillRequestStatus.Pending)
             .CountAsync();
 
-        // Low Stock Alerts (not resolved)
-        var lowStockAlerts = await _db.StockAlerts
-            .Where(s => !s.IsResolved)
+        // Active Stock Alerts (Stock <= MinStockLevel OR ExpiryDate <= 30 days from today)
+        var todayDate = DateTime.Today;
+        var lowStockAlerts = await _db.Medicines
+            .Where(m => m.Stock <= m.MinStockLevel || m.ExpiryDate <= todayDate.AddDays(30))
             .CountAsync();
 
         // Today's dispensing activity for this staff

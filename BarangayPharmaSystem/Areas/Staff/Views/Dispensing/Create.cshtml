@@ -62,8 +62,7 @@
 
                     <hr class="my-4" />
 
-                    <button type="button" class="btn btn-primary w-100"
-                            data-bs-toggle="modal" data-bs-target="#confirmDispenseModal" id="openConfirmBtn">
+                    <button type="submit" class="btn btn-primary w-100" id="openConfirmBtn">
                         <i class="bi bi-check-circle-fill me-2"></i>Dispense Now
                     </button>
                 </form>
@@ -119,34 +118,58 @@
         const confirmBtn = document.getElementById('confirmDispenseBtn');
         const cancelBtn  = document.getElementById('cancelDispenseBtn');
         const form       = document.getElementById('dispenseForm');
-        const errorAlert = document.getElementById('dispense-error-alert');
-        const errorText  = document.getElementById('dispense-error-text');
         const modal      = document.getElementById('confirmDispenseModal');
-        let   bsModal    = null;
 
-        // Bootstrap modal instance (available after Bootstrap JS loads)
-        modal.addEventListener('shown.bs.modal', function () {
-            bsModal = bootstrap.Modal.getInstance(modal);
+        // Handle form submit (e.g. from submit button or Enter key)
+        form.addEventListener('submit', function (e) {
+            // If already confirming and submitting, allow it
+            if (confirmBtn.disabled) {
+                return;
+            }
+
+            // Otherwise, prevent default browser submit
+            e.preventDefault();
+
+            // Validate the form
+            let isValid = true;
+            if (typeof $ !== 'undefined' && $(form).length > 0) {
+                isValid = $(form).valid();
+            } else {
+                isValid = form.checkValidity();
+                if (!isValid) {
+                    form.reportValidity();
+                }
+            }
+
+            // Show confirmation modal if valid
+            if (isValid) {
+                const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
+                if (bsModal) {
+                    bsModal.show();
+                }
+            }
         });
 
-        // "Yes, Dispense" click — submit form via fetch to prevent full-page freeze
-        confirmBtn.addEventListener('click', async function () {
+        // "Yes, Dispense" click - clean up and submit natively
+        confirmBtn.addEventListener('click', function () {
+            // Disable buttons immediately to prevent double submission
             confirmBtn.disabled = true;
             confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Dispensing...';
+            cancelBtn.disabled = true;
 
-            // Close modal immediately so page never stays gray
-            if (bsModal) bsModal.hide();
+            // Immediately clean up modal classes and backdrop to prevent page freeze
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
 
-            // Submit the form
-            try {
-                form.submit();
-            } catch (err) {
-                // If submission fails, re-enable the button and show inline error
-                confirmBtn.disabled = false;
-                confirmBtn.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Yes, Dispense';
-                errorText.textContent = 'Submission failed. Please try again.';
-                errorAlert.classList.remove('d-none');
+            const bsModal = bootstrap.Modal.getInstance(modal);
+            if (bsModal) {
+                bsModal.hide();
             }
+
+            // Natively submit form (bypasses form 'submit' event listener)
+            form.submit();
         });
     })();
     </script>

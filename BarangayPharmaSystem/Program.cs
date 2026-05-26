@@ -41,6 +41,10 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
     options.Cookie.HttpOnly   = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Events.OnRedirectToLogin = context => {
+        context.Response.Redirect("/Account/Login");
+        return Task.CompletedTask;
+    };
 });
 
 // ── MVC ───────────────────────────────────────────────────────────────────────

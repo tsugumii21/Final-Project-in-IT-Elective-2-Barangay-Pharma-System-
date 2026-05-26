@@ -57,10 +57,20 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    bool isExpired = item.ExpiryDate < DateTime.UtcNow;
-                    bool isNearExpiry = !isExpired && item.ExpiryDate < DateTime.UtcNow.AddDays(30);
+                    bool isExpired = item.ExpiryDate < DateTime.Today;
+                    bool isNearExpiry = !isExpired && item.ExpiryDate <= DateTime.Today.AddDays(30);
                     bool isOutOfStock = item.Stock == 0;
                     bool isLowStock = !isOutOfStock && item.Stock <= item.MinStockLevel;
+
+                    string rowClass = "";
+                    if (isOutOfStock || isExpired)
+                    {
+                        rowClass = "table-danger";
+                    }
+                    else if (isLowStock || isNearExpiry)
+                    {
+                        rowClass = "table-warning text-dark";
+                    }
 
                     var stockBadge = "bg-success-subtle text-success";
                     if (isOutOfStock) stockBadge = "bg-danger-subtle text-danger";
@@ -90,7 +100,7 @@
                         progressColorClass = "bps-stock-progress-green";
                     }
 
-                    <tr>
+                    <tr class="@rowClass">
                         <td>
                             <div class="bps-nav-avatar" style="width: 42px; height: 42px; background: var(--bps-primary-subtle); color: var(--bps-primary); font-size: 1.2rem; border-radius: var(--bps-radius-sm);">
                                 @if (!string.IsNullOrEmpty(item.PhotoPath))
