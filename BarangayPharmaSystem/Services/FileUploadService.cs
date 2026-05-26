@@ -46,7 +46,7 @@ public class FileUploadService : IFileUploadService
 
     // ── Constants ────────────────────────────────────────────────────────────
 
-    private const long   MaxFileSizeBytes       = 2 * 1024 * 1024; // 2 MB
+    private const long   MaxFileSizeBytes       = 10 * 1024 * 1024; // 10 MB
     private static readonly string[] AllowedExtensions = [".jpg", ".jpeg", ".png"];
     private static readonly string[] AllowedMimeTypes  =
     [
@@ -103,7 +103,7 @@ public class FileUploadService : IFileUploadService
     {
         // 1. Validate size
         if (file.Length > MaxFileSizeBytes)
-            return new FileUploadResult(false, null, "File size exceeds the 2MB limit. Please choose a smaller image.");
+            return new FileUploadResult(false, null, "File size exceeds the 10MB limit. Please choose a smaller image.");
 
         // 2. Validate extension
         var extension = Path.GetExtension(file.FileName).ToLowerInvariant();

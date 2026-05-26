@@ -1593,8 +1593,249 @@ h1, h2, h3, h4, .bps-page-title, .bps-card-title {
     justify-content: center;
 }
 
+
 .bps-thumbnail-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* ── Patient Notification Dropdown ───────────────────────────── */
+
+/* Bell badge — bright red, pulsing */
+.bps-badge-notif {
+    background-color: #DC2626 !important;
+    animation: pulseBadge 2s infinite;
+}
+
+/* Notification dropdown panel */
+.bps-notif-dropdown {
+    width: 360px;
+    padding: 0;
+    border: 1px solid var(--bps-gray-200);
+    border-radius: var(--bps-radius-lg);
+    box-shadow: var(--bps-shadow-xl);
+    overflow: hidden;
+    animation: notifDropIn 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+@keyframes notifDropIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.bps-notif-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    background: var(--bps-primary);
+    color: #ffffff;
+}
+
+.bps-notif-title {
+    font-family: var(--bps-font-heading);
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+.bps-notif-count-pill {
+    background: rgba(255,255,255,0.25);
+    border-radius: var(--bps-radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2em 0.7em;
+}
+
+.bps-notif-body {
+    max-height: 320px;
+    overflow-y: auto;
+    background: #ffffff;
+}
+
+.bps-notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--bps-gray-100);
+    transition: background-color var(--bps-transition-fast);
+    cursor: default;
+}
+
+.bps-notif-item:last-child {
+    border-bottom: none;
+}
+
+.bps-notif-item:hover {
+    background-color: var(--bps-primary-subtle);
+}
+
+.bps-notif-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.bps-notif-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.bps-notif-main {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--bps-gray-800);
+    line-height: 1.4;
+}
+
+.bps-notif-sub {
+    font-size: 0.8rem;
+    color: var(--bps-gray-500);
+    margin-top: 0.125rem;
+}
+
+.bps-notif-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem 1rem;
+    color: var(--bps-gray-400);
+    font-size: 0.9rem;
+}
+
+.bps-notif-empty i {
+    font-size: 2rem;
+    color: var(--bps-success);
+}
+
+.bps-notif-footer {
+    padding: 0.625rem 1rem;
+    background: var(--bps-gray-50);
+    border-top: 1px solid var(--bps-gray-200);
+    text-align: center;
+}
+
+.bps-notif-link {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--bps-primary);
+    text-decoration: none;
+}
+
+.bps-notif-link:hover {
+    text-decoration: underline;
+}
+
+/* ── Badge position fix for nav icon button ──────────────────── */
+.bps-nav-icon-btn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 1.0625rem;
+    cursor: pointer;
+    transition: background-color var(--bps-transition-fast);
+    text-decoration: none;
+}
+
+.bps-nav-icon-btn:hover {
+    background: rgba(255,255,255,0.25);
+    color: #ffffff;
+}
+
+.bps-nav-icon-btn .bps-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--bps-radius-full);
+    background: #DC2626;
+    color: #ffffff;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    pointer-events: none;
+}
+
+/* Remove Bootstrap dropdown toggle arrow from bell button */
+.bps-nav-icon-btn.dropdown-toggle::after {
+    display: none !important;
+}
+
+/* ── Reports: 48px bold summary numbers ──────────────────────── */
+.bps-stat-card .bps-stat-value {
+    font-family: var(--bps-font-heading);
+    font-size: 2.25rem;   /* 36px default */
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+/* Reports page gets 48px numbers */
+.bps-stat-card.bps-stat-xl .bps-stat-value {
+    font-size: 3rem !important; /* 48px */
+}
+
+/* ── Status badges (Bootstrap 5 compatible) ──────────────────── */
+.bps-badge-active   { background-color: var(--bps-primary) !important; color: #fff !important; }
+.bps-badge-completed { background-color: var(--bps-success) !important; color: #fff !important; }
+.bps-badge-expired  { background-color: var(--bps-danger) !important;  color: #fff !important; }
+.bps-badge-refilled { background-color: var(--bps-accent) !important;  color: #fff !important; }
+.bps-badge-pending  { background-color: var(--bps-warning) !important; color: #fff !important; }
+.bps-badge-cancelled { background-color: var(--bps-gray-500) !important; color: #fff !important; }
+
+/* ── Pill filter buttons (Patient Prescriptions) ─────────────── */
+.bps-filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--bps-gray-50);
+    border-bottom: 1px solid var(--bps-gray-200);
+}
+
+.bps-filter-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 1rem;
+    border-radius: var(--bps-radius-full);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid var(--bps-primary);
+    color: var(--bps-primary);
+    background: transparent;
+    transition: all var(--bps-transition-fast);
+    cursor: pointer;
+    line-height: 1;
+}
+
+.bps-filter-pill:hover {
+    background: var(--bps-primary-subtle);
+    color: var(--bps-primary);
+    text-decoration: none;
+}
+
+.bps-filter-pill.active {
+    background: var(--bps-primary);
+    color: #ffffff;
+    text-decoration: none;
 }

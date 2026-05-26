@@ -1,85 +1,173 @@
 @model BarangayPharmaSystem.Areas.Patient.Models.PatientProfileViewModel
 @{
     ViewData["Title"] = "My Profile";
+    ViewData["PageTitle"] = "My Profile";
+    // Derive initials for the avatar placeholder
+    var nameParts = (Model.FullName ?? "P").Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    var initials  = nameParts.Length >= 2
+        ? $"{nameParts[0][0]}{nameParts[^1][0]}"
+        : nameParts[0][0].ToString();
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-gray-800">My Profile</h1>
+<!-- Page Header -->
+<div class="bps-page-header">
+    <div>
+        <h1 class="bps-page-title">My Profile</h1>
+        <p class="bps-page-subtitle">View your personal health record details</p>
+    </div>
 </div>
 
-<div class="row">
-    <!-- Read-Only Info -->
-    <div class="col-lg-8">
-        <div class="card shadow-sm border-0 rounded mb-4" style="border-top: 4px solid #1A6FA3 !important;">
-            <div class="card-header py-3 bg-white border-bottom">
-                <h6 class="m-0 font-weight-bold" style="color: #1A6FA3;">Personal Information</h6>
+<div class="row g-4">
+
+    <!-- ── Left: Personal Information ──────────────────────────────── -->
+    <div class="col-lg-7">
+        <div class="bps-card h-100">
+            <div class="bps-card-header" style="border-top: 4px solid var(--bps-primary);">
+                <h3 class="bps-card-title">
+                    <i class="bi bi-person-lines-fill text-primary me-2"></i>Personal Information
+                </h3>
             </div>
-            <div class="card-body p-4">
-                <div class="alert alert-info border-0 rounded mb-4" style="background-color: #EAF4FB; color: #1A6FA3;">
-                    <i class="fas fa-info-circle mr-2"></i> 
-                    <strong>Notice:</strong> For security and medical accuracy, core health records cannot be edited directly. 
-                    If you need to change your name, address, or birthdate, please contact the Pharmacy Staff.
+            <div class="bps-card-body p-4">
+
+                <!-- Notice box -->
+                <div class="d-flex align-items-start gap-3 p-3 mb-4 rounded-3"
+                     style="background: var(--bps-primary-subtle); border: 1px solid rgba(26,111,163,0.2);">
+                    <i class="bi bi-info-circle-fill mt-1" style="color: var(--bps-primary); font-size: 1.1rem; flex-shrink:0;"></i>
+                    <div style="font-size: 0.875rem; color: var(--bps-gray-700); line-height: 1.6;">
+                        <strong>Notice:</strong> For security and medical accuracy, core health records cannot be
+                        edited directly. Contact the Pharmacy Staff to update your name, address, or birthdate.
+                    </div>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted font-weight-bold">Patient ID</div>
-                    <div class="col-sm-8 font-weight-bold text-primary" style="letter-spacing: 1px;">@Model.PatientCode</div>
+                <!-- Patient ID badge -->
+                <div class="d-flex align-items-center gap-3 mb-4 p-3 rounded-3"
+                     style="background: var(--bps-gray-50); border: 1px solid var(--bps-gray-200);">
+                    <div>
+                        <div class="text-muted" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">Patient ID</div>
+                        <div class="fw-bold" style="font-size: 1.125rem; letter-spacing: 0.08em; color: var(--bps-primary); font-family: monospace;">
+                            @Model.PatientCode
+                        </div>
+                    </div>
+                    <span class="ms-auto badge rounded-pill"
+                          style="background: var(--bps-primary-subtle); color: var(--bps-primary); font-size: 0.75rem; padding: 0.4em 0.9em;">
+                        Verified Patient
+                    </span>
                 </div>
-                <hr>
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted font-weight-bold">Full Name</div>
-                    <div class="col-sm-8">@Model.FullName</div>
+
+                <!-- Info rows -->
+                @{
+                    var fields = new[]
+                    {
+                        ("bi-person-fill",        "Full Name",        Model.FullName ?? "—"),
+                        ("bi-calendar-fill",      "Birthdate",        Model.Birthdate.ToString("MMMM dd, yyyy")),
+                        ("bi-telephone-fill",     "Contact Number",   string.IsNullOrEmpty(Model.ContactNumber) ? "Not Provided" : Model.ContactNumber),
+                        ("bi-geo-alt-fill",       "Address",          Model.Address ?? "—"),
+                    };
+                }
+                <div style="display: flex; flex-direction: column; gap: 0;">
+                    @foreach (var (icon, label, value) in fields)
+                    {
+                        <div class="d-flex align-items-start gap-3 py-3"
+                             style="border-bottom: 1px solid var(--bps-gray-100);">
+                            <div style="width:32px; height:32px; background:var(--bps-primary-subtle); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <i class="bi @icon" style="color:var(--bps-primary); font-size:0.875rem;"></i>
+                            </div>
+                            <div>
+                                <div class="text-muted" style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">@label</div>
+                                <div style="font-size:0.9375rem; color:var(--bps-gray-800); margin-top:0.125rem;">@value</div>
+                            </div>
+                        </div>
+                    }
                 </div>
-                <hr>
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted font-weight-bold">Birthdate</div>
-                    <div class="col-sm-8">@Model.Birthdate.ToString("MMMM dd, yyyy")</div>
-                </div>
-                <hr>
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted font-weight-bold">Contact Number</div>
-                    <div class="col-sm-8">@(string.IsNullOrEmpty(Model.ContactNumber) ? "Not Provided" : Model.ContactNumber)</div>
-                </div>
-                <hr>
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted font-weight-bold">Address</div>
-                    <div class="col-sm-8">@Model.Address</div>
-                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Photo Upload -->
-    <div class="col-lg-4">
-        <div class="card shadow-sm border-0 rounded mb-4 text-center p-4">
-            <div class="mb-4">
-                @if (!string.IsNullOrEmpty(Model.CurrentPhotoPath))
-                {
-                    <img src="~/@Model.CurrentPhotoPath" alt="Profile Photo" class="rounded-circle shadow-sm" style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #EAF4FB;" />
-                }
-                else
-                {
-                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mx-auto shadow-sm" style="width: 150px; height: 150px; border: 4px solid #EAF4FB;">
-                        <i class="fas fa-user fa-4x"></i>
-                    </div>
-                }
+    <!-- ── Right: Profile Photo ─────────────────────────────────────── -->
+    <div class="col-lg-5">
+        <div class="bps-card h-100 text-center">
+            <div class="bps-card-header" style="border-top: 4px solid var(--bps-accent);">
+                <h3 class="bps-card-title">
+                    <i class="bi bi-camera-fill text-primary me-2"></i>Profile Photo
+                </h3>
             </div>
+            <div class="bps-card-body p-4">
 
-            <h5 class="font-weight-bold text-gray-800 mb-3">Profile Photo</h5>
-            
-            <form asp-action="UpdatePhoto" method="post" enctype="multipart/form-data">
-                <input type="hidden" asp-for="Id" />
-                <div class="form-group mb-3 text-left">
-                    <div class="custom-file">
-                        <input asp-for="PhotoFile" class="custom-file-input" id="customFile" accept="image/jpeg,image/png" required>
-                        <label class="custom-file-label" for="customFile">Choose file...</label>
-                    </div>
-                    <small class="form-text text-muted mt-2">Max size: 2MB. Only .jpg and .png are allowed.</small>
+                <!-- Photo or initials avatar -->
+                <div class="d-flex justify-content-center mb-4">
+                    @if (!string.IsNullOrWhiteSpace(Model.CurrentPhotoPath))
+                    {
+                        <img src="~/@Model.CurrentPhotoPath.TrimStart('/')"
+                             alt="@Model.FullName"
+                             class="bps-profile-photo"
+                             style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid var(--bps-primary-subtle); box-shadow: 0 4px 16px rgba(0,0,0,0.12);" />
+                    }
+                    else
+                    {
+                        <div style="width:120px; height:120px; border-radius:50%; background:var(--bps-primary); color:#fff;
+                                    display:flex; align-items:center; justify-content:center;
+                                    font-family:var(--bps-font-heading); font-size:2.25rem; font-weight:700;
+                                    border:4px solid var(--bps-primary-subtle); box-shadow:0 4px 16px rgba(0,0,0,0.12);">
+                            @initials.ToUpper()
+                        </div>
+                    }
                 </div>
-                <button type="submit" class="btn btn-primary btn-block shadow-sm" style="background-color: #1A6FA3; border-color: #1A6FA3;">
-                    <i class="fas fa-upload mr-2"></i> Update Photo
-                </button>
-            </form>
+
+                <h5 class="fw-bold mb-1" style="color:var(--bps-gray-800);">@Model.FullName</h5>
+                <p class="text-muted mb-4" style="font-size:0.875rem;">Upload a new profile photo below</p>
+
+                <form asp-action="UpdatePhoto" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label fw-semibold" style="font-size:0.875rem;">Choose Image</label>
+                        <input asp-for="PhotoFile" class="form-control form-control-sm"
+                               type="file" accept=".jpg,.jpeg,.png" required
+                               id="profile-photo-input" />
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Accepted: .jpg, .jpeg, .png &nbsp;·&nbsp; Max size: 10MB
+                        </div>
+                    </div>
+
+                    <!-- Preview thumbnail -->
+                    <div id="photo-preview-wrap" class="d-none mb-3">
+                        <img id="photo-preview" src="#" alt="Preview"
+                             style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid var(--bps-primary-subtle);" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-upload me-2"></i>Update Photo
+                    </button>
+                </form>
+
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+    // Live photo preview
+    document.getElementById('profile-photo-input').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const maxBytes = 10 * 1024 * 1024;
+        if (file.size > maxBytes) {
+            alert('File exceeds the 10MB limit. Please choose a smaller image.');
+            this.value = '';
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const wrap    = document.getElementById('photo-preview-wrap');
+            const preview = document.getElementById('photo-preview');
+            preview.src   = e.target.result;
+            wrap.classList.remove('d-none');
+        };
+        reader.readAsDataURL(file);
+    });
+    </script>
+}

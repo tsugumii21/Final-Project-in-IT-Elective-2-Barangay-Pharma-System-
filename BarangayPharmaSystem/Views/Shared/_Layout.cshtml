@@ -99,19 +99,65 @@
                 <!-- Right-side nav items -->
                 <div class="bps-nav-actions">
 
-                    <!-- Stock alerts badge (Admin & Staff only) -->
-                    @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                    <!-- Patient notification bell (Patients only) -->
+                    @if (User.IsInRole("Patient"))
                     {
-                        var alertCount = ViewData["UnresolvedAlertCount"] as int? ?? 0;
-                        var alertsLink = User.IsInRole("Admin") ? "/Admin/Dashboard#alerts-section" : "/Staff/Dashboard#alerts-section";
-                        <a href="@alertsLink" class="bps-nav-icon-btn @(alertCount > 0 ? "bps-has-badge" : "")"
-                           title="Stock Alerts" id="nav-stock-alerts">
-                            <i class="bi bi-bell-fill"></i>
-                            @if (alertCount > 0)
-                            {
-                                <span class="bps-badge">@(alertCount > 99 ? "99+" : alertCount.ToString())</span>
-                            }
-                        </a>
+                        var notifCount = ViewData["PatientNotifCount"] as int? ?? 0;
+                        <div class="dropdown" id="patient-notif-dropdown-wrap">
+                            <button class="bps-nav-icon-btn @(notifCount > 0 ? "bps-has-badge" : "") dropdown-toggle"
+                                    type="button" id="patientNotifBtn"
+                                    data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                                    aria-expanded="false" title="Notifications"
+                                    style="border:none; background:none;">
+                                <i class="bi bi-bell-fill"></i>
+                                @if (notifCount > 0)
+                                {
+                                    <span class="bps-badge bps-badge-notif">@(notifCount > 9 ? "9+" : notifCount.ToString())</span>
+                                }
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end bps-notif-dropdown" aria-labelledby="patientNotifBtn">
+                                <div class="bps-notif-header">
+                                    <span class="bps-notif-title"><i class="bi bi-bell-fill me-2"></i>Notifications</span>
+                                    @if (notifCount > 0)
+                                    {
+                                        <span class="bps-notif-count-pill">@notifCount new</span>
+                                    }
+                                </div>
+                                <div class="bps-notif-body" id="patient-notif-list">
+                                    @{
+                                        var notifItems = ViewData["PatientNotifications"] as List<(string Icon, string Color, string Text, string Sub)>;
+                                    }
+                                    @if (notifItems != null && notifItems.Any())
+                                    {
+                                        foreach (var n in notifItems)
+                                        {
+                                            <div class="bps-notif-item">
+                                                <div class="bps-notif-icon" style="background: @n.Color + "1a"; color: @n.Color;">
+                                                    <i class="bi @n.Icon"></i>
+                                                </div>
+                                                <div class="bps-notif-text">
+                                                    <div class="bps-notif-main">@n.Text</div>
+                                                    @if (!string.IsNullOrEmpty(n.Sub))
+                                                    {
+                                                        <div class="bps-notif-sub">@n.Sub</div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="bps-notif-empty">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                            <span>You're all caught up!</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="bps-notif-footer">
+                                    <a href="/Patient/Refills" class="bps-notif-link">View all refill requests</a>
+                                </div>
+                            </div>
+                        </div>
                     }
 
                     <!-- User dropdown -->

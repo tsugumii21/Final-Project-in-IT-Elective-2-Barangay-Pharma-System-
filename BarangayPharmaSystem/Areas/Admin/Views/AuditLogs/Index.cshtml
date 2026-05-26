@@ -68,25 +68,52 @@
                         <td class="text-nowrap">@log.Timestamp.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</td>
                         <td>
                             @{
-                                var actionColor = log.Action switch {
-                                    "Created" or "Registered" => "text-success",
-                                    "Updated" => "text-primary",
-                                    "Deleted" => "text-danger",
-                                    "Login" => "text-info",
-                                    "Logout" => "text-secondary",
-                                    _ => "text-dark"
+                                var (actionColor, actionBg) = log.Action switch {
+                                    "Created" or "Registered"         => ("var(--bps-success)",  "var(--bps-success-subtle)"),
+                                    "Updated"                         => ("var(--bps-warning)",  "var(--bps-warning-subtle)"),
+                                    "Deleted"                         => ("var(--bps-danger)",   "var(--bps-danger-subtle)"),
+                                    "Login"                           => ("var(--bps-primary)",  "var(--bps-primary-subtle)"),
+                                    "Logout"                          => ("var(--bps-gray-600)", "var(--bps-gray-100)"),
+                                    "Dispensed" or "Dispense"         => ("var(--bps-accent)",   "var(--bps-accent-subtle)"),
+                                    "Approved"                        => ("var(--bps-success)",  "var(--bps-success-subtle)"),
+                                    "Rejected"                        => ("var(--bps-danger)",   "var(--bps-danger-subtle)"),
+                                    _                                 => ("var(--bps-gray-700)", "var(--bps-gray-100)")
                                 };
                             }
-                            <span class="fw-bold @actionColor">@log.Action</span>
+                            <span class="badge rounded-pill fw-semibold px-2 py-1"
+                                  style="background:@actionBg; color:@actionColor; font-size:0.75rem;">
+                                @log.Action
+                            </span>
                         </td>
                         <td>@(log.User?.FullName ?? "System")</td>
                         <td>@log.TableAffected</td>
-                        <td>@log.RecordId</td>
-                        <td>@log.Details</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(log.RecordId) && log.RecordId.Length > 8)
+                            {
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="@log.RecordId"
+                                      style="font-family:monospace; font-size:0.8125rem; cursor:default;">
+                                    @log.RecordId[..8]<span class="text-muted">...</span>
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="font-family:monospace; font-size:0.8125rem;">@log.RecordId</span>
+                            }
+                        </td>
+                        <td style="max-width:220px; font-size:0.8125rem; color:var(--bps-gray-600);">@log.Details</td>
                         <td><small class="text-muted">@log.IPAddress</small></td>
                     </tr>
                 }
+
             </tbody>
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+        new bootstrap.Tooltip(el);
+    });
+    </script>
+}

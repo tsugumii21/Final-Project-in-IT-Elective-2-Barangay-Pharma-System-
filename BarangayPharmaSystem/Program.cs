@@ -49,6 +49,16 @@ builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 
 builder.Services.AddControllersWithViews();
 
+// ── Request body size: 10 MB (for photo uploads) ──────────────────────────────
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 10_485_760; // 10 MB
+});
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 10_485_760; // 10 MB
+});
+
 // ── Build ─────────────────────────────────────────────────────────────────────
 var app = builder.Build();
 

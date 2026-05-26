@@ -2,104 +2,147 @@
 @model IEnumerable<BarangayPharmaSystem.Areas.Patient.Models.PatientPrescriptionListViewModel>
 @{
     ViewData["Title"] = "My Prescriptions";
+    ViewData["PageTitle"] = "My Prescriptions";
+    var currentStatus = ViewData["StatusFilter"]?.ToString() ?? "";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-gray-800">My Prescriptions</h1>
+<!-- Page Header -->
+<div class="bps-page-header">
+    <div>
+        <h1 class="bps-page-title">My Prescriptions</h1>
+        <p class="bps-page-subtitle">All prescriptions assigned to you by your health center</p>
+    </div>
 </div>
 
-<div class="card shadow-sm border-0 rounded mb-4" style="border-top: 4px solid #1A6FA3 !important;">
-    <div class="card-header py-3 bg-white border-bottom d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold" style="color: #1A6FA3;">Prescription Records</h6>
-        <form method="get" asp-action="Index" class="form-inline">
-            <select name="statusFilter" class="form-control bg-light border-0 small" onchange="this.form.submit()">
-                <option value="">All Statuses</option>
-                @foreach (var status in Enum.GetValues(typeof(PrescriptionStatus)))
-                {
-                    @if (ViewData["StatusFilter"]?.ToString() == status.ToString())
-                    {
-                        <option value="@status" selected>@status</option>
-                    }
-                    else
-                    {
-                        <option value="@status">@status</option>
-                    }
-                }
-            </select>
-        </form>
+<div class="bps-card mb-4">
+
+    <!-- Pill filter buttons -->
+    <div class="bps-filter-pills">
+        @{
+            var filters = new[] {
+                ("",           "All"),
+                ("Active",     "Active"),
+                ("Completed",  "Completed"),
+                ("Expired",    "Expired"),
+                ("Refilled",   "Refilled"),
+            };
+        }
+        @foreach (var (val, label) in filters)
+        {
+            <a href="?statusFilter=@val"
+               class="bps-filter-pill @(currentStatus == val ? "active" : "")">
+                @label
+            </a>
+        }
     </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0" width="100%" cellspacing="0">
-                <thead class="bg-light">
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="border-top-0">Date Prescribed</th>
+                    <th class="border-top-0">Medicine</th>
+                    <th class="border-top-0">Dosage</th>
+                    <th class="border-top-0">Doctor</th>
+                    <th class="border-top-0 text-center">Status</th>
+                    <th class="border-top-0 text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
                     <tr>
-                        <th class="border-top-0">Date Prescribed</th>
-                        <th class="border-top-0">Medicine</th>
-                        <th class="border-top-0">Dosage</th>
-                        <th class="border-top-0">Doctor</th>
-                        <th class="border-top-0 text-center">Status</th>
-                        <th class="border-top-0 text-center">Action</th>
+                        <td class="align-middle text-muted" style="font-size:0.85rem; white-space:nowrap;">
+                            @item.CreatedAt.ToString("MMM dd, yyyy")
+                        </td>
+                        <td class="align-middle fw-semibold" style="color: var(--bps-primary);">
+                            @item.MedicineName
+                        </td>
+                        <td class="align-middle" style="font-size:0.875rem;">
+                            @item.Dosage<br />
+                            <small class="text-muted">Duration: @item.Duration</small>
+                        </td>
+                        <td class="align-middle" style="font-size:0.875rem;">@item.DoctorName</td>
+                        <td class="align-middle text-center">
+                            @switch (item.Status)
+                            {
+                                case PrescriptionStatus.Active:
+                                    <span class="badge bps-badge-active px-3 py-2">Active</span>
+                                    break;
+                                case PrescriptionStatus.Completed:
+                                    <span class="badge bps-badge-completed px-3 py-2">Completed</span>
+                                    break;
+                                case PrescriptionStatus.Expired:
+                                    <span class="badge bps-badge-expired px-3 py-2">Expired</span>
+                                    break;
+                                case PrescriptionStatus.Cancelled:
+                                    <span class="badge bps-badge-cancelled px-3 py-2">Cancelled</span>
+                                    break;
+                                case PrescriptionStatus.Refilled:
+                                    <span class="badge bps-badge-refilled px-3 py-2">Refilled</span>
+                                    break;
+                            }
+                        </td>
+                        <td class="align-middle text-center">
+                            @if (item.CanRequestRefill)
+                            {
+                                <a asp-area="Patient" asp-controller="Refills" asp-action="Create"
+                                   asp-route-prescriptionId="@item.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-arrow-repeat me-1"></i>Request Refill
+                                </a>
+                            }
+                            else if (item.Status == PrescriptionStatus.Active || item.Status == PrescriptionStatus.Refilled)
+                            {
+                                <button class="btn btn-sm btn-light text-muted"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="@item.RefillBlockReason"
+                                        disabled>
+                                    <i class="bi bi-clock me-1"></i>Refill Soon
+                                </button>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">
+                                    <i class="bi bi-lock-fill me-1"></i>Locked
+                                </span>
+                            }
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td class="align-middle text-muted">@item.CreatedAt.ToString("MMM dd, yyyy")</td>
-                            <td class="align-middle font-weight-bold" style="color: #1A6FA3;">@item.MedicineName</td>
-                            <td class="align-middle">@item.Dosage <br/> <small class="text-muted">Duration: @item.Duration</small></td>
-                            <td class="align-middle">@item.DoctorName</td>
-                            <td class="align-middle text-center">
-                                @switch (item.Status)
-                                {
-                                    case PrescriptionStatus.Active:
-                                        <span class="badge badge-primary px-2 py-1" style="background-color: #1A6FA3;">Active</span>
-                                        break;
-                                    case PrescriptionStatus.Completed:
-                                        <span class="badge badge-success px-2 py-1">Completed</span>
-                                        break;
-                                    case PrescriptionStatus.Expired:
-                                        <span class="badge badge-warning text-dark px-2 py-1">Expired</span>
-                                        break;
-                                    case PrescriptionStatus.Cancelled:
-                                        <span class="badge badge-danger px-2 py-1">Cancelled</span>
-                                        break;
-                                    case PrescriptionStatus.Refilled:
-                                        <span class="badge badge-info px-2 py-1">Refilled</span>
-                                        break;
-                                }
-                            </td>
-                            <td class="align-middle text-center">
-                                @if (item.CanRequestRefill)
-                                {
-                                    <a asp-area="Patient" asp-controller="Refills" asp-action="Create" asp-route-prescriptionId="@item.Id" class="btn btn-sm btn-outline-primary shadow-sm" style="border-color: #1A6FA3; color: #1A6FA3;">
-                                        <i class="fas fa-sync-alt mr-1"></i> Request Refill
-                                    </a>
-                                }
-                                else if (item.Status == PrescriptionStatus.Active || item.Status == PrescriptionStatus.Refilled)
-                                {
-                                    <button class="btn btn-sm btn-light text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="@item.RefillBlockReason">
-                                        <i class="fas fa-ban mr-1"></i> Blocked
-                                    </button>
-                                }
-                                else
-                                {
-                                    <span class="text-muted small"><i class="fas fa-lock mr-1"></i> Locked</span>
-                                }
-                            </td>
-                        </tr>
-                    }
-                    @if (!Model.Any())
-                    {
-                        <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
-                                <i class="fas fa-file-medical-alt fa-3x mb-3 text-light"></i><br/>
-                                You have no prescriptions recorded.
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="py-5">
+                            <div class="bps-empty-state">
+                                <i class="bi bi-file-earmark-medical bps-empty-state-icon bps-empty-state-icon-float"></i>
+                                <div class="bps-empty-state-title">No Prescriptions Found</div>
+                                <p class="bps-empty-state-subtitle">
+                                    @if (!string.IsNullOrEmpty(currentStatus))
+                                    {
+                                        <text>No <strong>@currentStatus</strong> prescriptions on record.</text>
+                                    }
+                                    else
+                                    {
+                                        <text>You have no prescriptions recorded yet.</text>
+                                    }
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+    // Initialize Bootstrap tooltips
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+        new bootstrap.Tooltip(el);
+    });
+    </script>
+}

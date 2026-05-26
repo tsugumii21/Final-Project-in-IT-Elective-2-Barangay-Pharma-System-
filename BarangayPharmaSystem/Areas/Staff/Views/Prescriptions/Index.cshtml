@@ -1,121 +1,160 @@
 @using BarangayPharmaSystem.Models.Entities
 @model IEnumerable<BarangayPharmaSystem.Areas.Staff.Models.StaffPrescriptionListViewModel>
 @{
-    ViewData["Title"] = "Prescriptions Directory";
+    ViewData["Title"] = "Prescriptions";
+    ViewData["PageTitle"] = "Prescriptions";
+    var currentStatus = ViewData["StatusFilter"]?.ToString() ?? "";
+    var currentSearch = ViewData["SearchPatient"]?.ToString() ?? "";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Prescriptions</h1>
-    <a asp-action="Create" class="btn btn-info shadow-sm glass-button">
-        <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Write New Prescription
+<!-- Page Header -->
+<div class="bps-page-header">
+    <div>
+        <h1 class="bps-page-title">Prescriptions</h1>
+        <p class="bps-page-subtitle">Manage and track all patient prescriptions</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-2"></i>Write New Prescription
     </a>
 </div>
 
-<div class="card shadow mb-4 glass-card">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-info">Prescription Directory</h6>
-        <form method="get" asp-action="Index" class="form-inline">
-            <div class="input-group mr-2">
-                <select name="statusFilter" class="form-control bg-light border-0 small">
+<!-- Filter Bar -->
+<div class="bps-card mb-4">
+    <div class="bps-card-header bg-white">
+        <form method="get" asp-action="Index" class="row g-2 w-100 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">Status</label>
+                <select name="statusFilter" class="form-select form-select-sm bg-light">
                     <option value="">All Statuses</option>
                     @foreach (var status in Enum.GetValues(typeof(PrescriptionStatus)))
                     {
-                        @if (ViewData["StatusFilter"]?.ToString() == status.ToString())
-                        {
-                            <option value="@status" selected>@status</option>
-                        }
-                        else
-                        {
-                            <option value="@status">@status</option>
-                        }
+                        var isSelected = currentStatus == status.ToString();
+                        <option value="@status" selected="@isSelected">@status</option>
                     }
                 </select>
             </div>
-            <div class="input-group">
-                <input type="text" name="searchPatient" value="@ViewData["SearchPatient"]" class="form-control bg-light border-0 small" placeholder="Search patient..." aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-info" type="submit">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                    @if (!string.IsNullOrEmpty(ViewData["SearchPatient"]?.ToString()) || ViewData["StatusFilter"] != null)
-                    {
-                        <a asp-action="Index" class="btn btn-secondary">Clear</a>
-                    }
-                </div>
+            <div class="col-md-5">
+                <label class="form-label small text-muted mb-1">Search Patient</label>
+                <input type="text" name="searchPatient" value="@currentSearch"
+                       class="form-control form-control-sm bg-light"
+                       placeholder="Enter patient name..." />
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-primary flex-grow-1">
+                    <i class="bi bi-search me-1"></i>Search
+                </button>
+                @if (!string.IsNullOrEmpty(currentSearch) || !string.IsNullOrEmpty(currentStatus))
+                {
+                    <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Clear</a>
+                }
             </div>
         </form>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
-                <thead>
+
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient</th>
+                    <th>Medicine</th>
+                    <th>Dosage &amp; Duration</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center" style="min-width: 160px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
                     <tr>
-                        <th>Date</th>
-                        <th>Patient</th>
-                        <th>Medicine</th>
-                        <th>Dosage & Duration</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td class="align-middle">@item.CreatedAt.ToString("MMM dd, yyyy")</td>
-                            <td class="align-middle font-weight-bold">@item.PatientName<br/><small class="text-muted">@item.PatientCode</small></td>
-                            <td class="align-middle text-primary font-weight-bold">@item.MedicineName</td>
-                            <td class="align-middle">@item.Dosage<br/><small class="text-info">Duration: @item.Duration</small></td>
-                            <td class="align-middle text-center">
-                                @switch (item.Status)
-                                {
-                                    case PrescriptionStatus.Active:
-                                        <span class="badge badge-primary px-2 py-1">Active</span>
-                                        break;
-                                    case PrescriptionStatus.Completed:
-                                        <span class="badge badge-success px-2 py-1">Completed</span>
-                                        break;
-                                    case PrescriptionStatus.Expired:
-                                        <span class="badge badge-warning text-dark px-2 py-1">Expired</span>
-                                        break;
-                                    case PrescriptionStatus.Cancelled:
-                                        <span class="badge badge-danger px-2 py-1">Cancelled</span>
-                                        break;
-                                    case PrescriptionStatus.Refilled:
-                                        <span class="badge badge-info px-2 py-1">Refilled</span>
-                                        break;
-                                }
-                            </td>
-                            <td class="align-middle text-center">
-                                @if (item.Status == PrescriptionStatus.Active)
-                                {
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-circle btn-sm" title="Edit">
-                                        <i class="fas fa-edit"></i>
+                        <td class="align-middle text-muted" style="font-size:0.85rem; white-space:nowrap;">
+                            @item.CreatedAt.ToString("MMM dd, yyyy")
+                        </td>
+                        <td class="align-middle">
+                            <div class="fw-semibold" style="color:var(--bps-gray-800);">@item.PatientName</div>
+                            <small class="text-muted">@item.PatientCode</small>
+                        </td>
+                        <td class="align-middle fw-semibold" style="color:var(--bps-primary);">
+                            @item.MedicineName
+                        </td>
+                        <td class="align-middle" style="font-size:0.875rem;">
+                            @item.Dosage<br />
+                            <small class="text-muted">Duration: @item.Duration</small>
+                        </td>
+                        <td class="align-middle text-center">
+                            @switch (item.Status)
+                            {
+                                case PrescriptionStatus.Active:
+                                    <span class="badge bps-badge-active px-3 py-2">Active</span>
+                                    break;
+                                case PrescriptionStatus.Completed:
+                                    <span class="badge bps-badge-completed px-3 py-2">Completed</span>
+                                    break;
+                                case PrescriptionStatus.Expired:
+                                    <span class="badge bps-badge-expired px-3 py-2">Expired</span>
+                                    break;
+                                case PrescriptionStatus.Cancelled:
+                                    <span class="badge bps-badge-cancelled px-3 py-2">Cancelled</span>
+                                    break;
+                                case PrescriptionStatus.Refilled:
+                                    <span class="badge bps-badge-refilled px-3 py-2">Refilled</span>
+                                    break;
+                            }
+                        </td>
+                        <td class="align-middle text-center">
+                            @if (item.Status == PrescriptionStatus.Active)
+                            {
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-primary"
+                                       style="min-width:80px;">
+                                        <i class="bi bi-pencil-fill me-1"></i>Edit
                                     </a>
-                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this prescription?');">
-                                        <button type="submit" class="btn btn-danger btn-circle btn-sm" title="Delete">
-                                            <i class="fas fa-trash"></i>
+                                    <form asp-action="Delete" asp-route-id="@item.Id"
+                                          method="post" class="d-inline"
+                                          onsubmit="return confirm('Delete this prescription? This cannot be undone.');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                style="min-width:80px;">
+                                            <i class="bi bi-trash-fill me-1"></i>Delete
                                         </button>
                                     </form>
-                                }
-                                else
-                                {
-                                    <span class="text-muted small"><i class="fas fa-lock"></i> Locked</span>
-                                }
-                            </td>
-                        </tr>
-                    }
-                    @if (!Model.Any())
-                    {
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">
-                                <i class="fas fa-info-circle mb-2"></i><br/>
-                                No prescriptions found.
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">
+                                    <i class="bi bi-lock-fill me-1"></i>Locked
+                                </span>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="py-5">
+                            <div class="bps-empty-state">
+                                <i class="bi bi-file-earmark-medical bps-empty-state-icon bps-empty-state-icon-float"></i>
+                                <div class="bps-empty-state-title">No Prescriptions Found</div>
+                                <p class="bps-empty-state-subtitle">
+                                    @if (!string.IsNullOrEmpty(currentSearch) || !string.IsNullOrEmpty(currentStatus))
+                                    {
+                                        <text>No prescriptions match your current filters.</text>
+                                    }
+                                    else
+                                    {
+                                        <text>No prescriptions have been recorded yet.</text>
+                                    }
+                                </p>
+                                <a asp-action="Create" class="btn btn-primary mt-2">
+                                    <i class="bi bi-plus-lg me-2"></i>Write First Prescription
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
