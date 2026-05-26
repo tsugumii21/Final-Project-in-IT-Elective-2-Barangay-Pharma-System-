@@ -1929,3 +1929,9 @@ h1, h2, h3, h4, .bps-page-title, .bps-card-title {
 .bps-badge-admin   { background-color: var(--bps-danger-subtle) !important; color: var(--bps-danger) !important; font-weight: 700; }
 .bps-badge-staff   { background-color: var(--bps-primary-subtle) !important; color: var(--bps-primary) !important; font-weight: 700; }
 .bps-badge-patient { background-color: var(--bps-success-subtle) !important; color: var(--bps-success) !important; font-weight: 700; }
+
+/* ── Legacy Bootstrap Badges Fallback ────────────────────────── */
+.badge-success { background-color: var(--bps-success) !important; color: #fff !important; }
+.badge-primary { background-color: var(--bps-primary) !important; color: #fff !important; }
+.badge-warning { background-color: var(--bps-warning) !important; color: #fff !important; }
+.badge-danger  { background-color: var(--bps-danger) !important;  color: #fff !important; }
