@@ -43,6 +43,9 @@
                 <div class="input-group bps-hospital-input-group">
                     <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
                     <input asp-for="Password" class="form-control" placeholder="••••••••" required autocomplete="current-password" />
+                    <button class="btn bps-toggle-password" type="button" data-password-toggle="Password">
+                        <i class="bi bi-eye-slash"></i>
+                    </button>
                 </div>
                 <span asp-validation-for="Password" class="text-danger small mt-1 d-block"></span>
             </div>

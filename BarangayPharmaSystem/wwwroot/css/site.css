@@ -1935,3 +1935,17 @@ h1, h2, h3, h4, .bps-page-title, .bps-card-title {
 .badge-primary { background-color: var(--bps-primary) !important; color: #fff !important; }
 .badge-warning { background-color: var(--bps-warning) !important; color: #fff !important; }
 .badge-danger  { background-color: var(--bps-danger) !important;  color: #fff !important; }
+
+/* ── Show/Hide Password Eye Button ──────────────────────────── */
+.bps-toggle-password {
+    background-color: var(--bps-gray-100) !important;
+    border-color: var(--bps-gray-300) !important;
+    color: var(--bps-gray-500) !important;
+    font-size: 14px !important;
+    transition: background-color var(--bps-transition-fast), color var(--bps-transition-fast);
+    z-index: 10;
+}
+.bps-toggle-password:hover {
+    background-color: var(--bps-gray-200) !important;
+    color: var(--bps-gray-700) !important;
+}

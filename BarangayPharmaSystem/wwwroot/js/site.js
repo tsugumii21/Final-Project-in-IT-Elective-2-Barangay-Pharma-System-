@@ -149,6 +149,32 @@
         });
     }
 
+    // ── Password Visibility Toggles ─────────────────────────────────────────
+    function initPasswordToggles() {
+        document.body.addEventListener('click', function (e) {
+            const btn = e.target.closest('[data-password-toggle]');
+            if (!btn) return;
+
+            e.preventDefault();
+            const targetId = btn.getAttribute('data-password-toggle');
+            const input = document.getElementById(targetId);
+            if (!input) return;
+
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) {
+                    icon.className = 'bi bi-eye';
+                }
+            } else {
+                input.type = 'password';
+                if (icon) {
+                    icon.className = 'bi bi-eye-slash';
+                }
+            }
+        });
+    }
+
     // ── DOM Ready ───────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
         autoDismissAlerts();
@@ -157,6 +183,7 @@
         initFileInputs();
         initTooltips();
         initStackingModals();
+        initPasswordToggles();
     });
 
 })();
