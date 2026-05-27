@@ -18,7 +18,7 @@
         <div class="bps-welcome-avatar">
             @if (!string.IsNullOrWhiteSpace(Model.ProfilePhotoPath))
             {
-                <img src="~/@Model.ProfilePhotoPath.TrimStart('/')" alt="@Model.PatientName" />
+                <img src="@Model.ProfilePhotoPath" alt="@Model.PatientName" />
             }
             else
             {

@@ -27,7 +27,7 @@
                 <div class="d-flex justify-content-center mb-4">
                     @if (!string.IsNullOrEmpty(Model.Patient.ProfilePhotoPath))
                     {
-                        <img src="~/@Model.Patient.ProfilePhotoPath" alt="Profile Photo" class="bps-profile-photo shadow-sm" style="width: 140px; height: 140px;" />
+                        <img src="@Model.Patient.ProfilePhotoPath" alt="Profile Photo" class="bps-profile-photo shadow-sm" style="width: 140px; height: 140px;" />
                     }
                     else
                     {
